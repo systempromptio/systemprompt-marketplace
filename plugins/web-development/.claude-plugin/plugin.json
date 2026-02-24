@@ -1,0 +1,9 @@
+{
+  "name": "web-development",
+  "description": "Build web features including pages, templates, content ingestion, and front-end assets for systemprompt.io",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "name": "systemprompt-marketplace",
+  "owner": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  },
+  "metadata": {
+    "description": "Development plugins for systemprompt.io codebases",
+    "version": "1.0.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "rust-development",
+      "source": "./plugins/rust-development",
+      "description": "Build Rust extensions, CLI binaries, and MCP servers for systemprompt.io with idiomatic patterns and standards",
+      "version": "1.0.0",
+      "category": "development",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "web-development",
+      "source": "./plugins/web-development",
+      "description": "Build web features including pages, templates, content ingestion, and front-end assets for systemprompt.io",
+      "version": "1.0.0",
+      "category": "development",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "content-writing",
+      "source": "./plugins/content-writing",
+      "description": "Create, edit, and manage content including blog posts, technical documentation, and narrative writing",
+      "version": "1.0.0",
+      "category": "content",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "marketplace-management",
+      "source": "./plugins/marketplace-management",
+      "description": "Build custom skills, agents, workflows, and MCP configurations through guided Socratic interviews",
+      "version": "1.0.0",
+      "category": "platform",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "operations",
+      "source": "./plugins/operations",
+      "description": "Cloud infrastructure, monitoring, scheduling, Discord integration, and system configuration for systemprompt.io",
+      "version": "1.0.0",
+      "category": "operations",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "agent-development",
+      "source": "./plugins/agent-development",
+      "description": "Create, configure, and manage AI agents with skills, MCP tools, A2A protocol, and multi-agent architecture",
+      "version": "1.0.0",
+      "category": "development",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "general",
+      "source": "./plugins/general",
+      "description": "General assistance and utilities for systemprompt.io",
+      "version": "1.0.0",
+      "category": "general",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    }
+  ]
+}

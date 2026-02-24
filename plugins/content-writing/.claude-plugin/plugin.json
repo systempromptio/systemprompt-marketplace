@@ -1,0 +1,9 @@
+{
+  "name": "content-writing",
+  "description": "Create, edit, and manage content including blog posts, technical documentation, and narrative writing",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}

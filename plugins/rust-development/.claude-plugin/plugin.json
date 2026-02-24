@@ -1,0 +1,9 @@
+{
+  "name": "rust-development",
+  "description": "Build Rust extensions, CLI binaries, and MCP servers for systemprompt.io with idiomatic patterns and standards",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}

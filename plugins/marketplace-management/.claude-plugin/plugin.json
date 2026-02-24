@@ -1,0 +1,9 @@
+{
+  "name": "marketplace-management",
+  "description": "Build custom skills, agents, workflows, and MCP configurations through guided Socratic interviews",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}

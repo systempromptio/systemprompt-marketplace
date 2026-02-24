@@ -1,0 +1,9 @@
+{
+  "name": "operations",
+  "description": "Cloud infrastructure, monitoring, scheduling, Discord integration, and system configuration for systemprompt.io",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}
