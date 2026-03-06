@@ -65,5 +65,13 @@
     "skills": ["general_assistance"],
     "agents": [],
     "mcp_servers": []
+  },
+  "frontend-development": {
+    "description": "Front-end coding standards for systemprompt.io static site generation - JavaScript, CSS, and HTML with modular vanilla JS and Web Components",
+    "category": "development",
+    "version": "1.0.0",
+    "skills": ["coding_standards"],
+    "agents": [],
+    "mcp_servers": []
   }
 }

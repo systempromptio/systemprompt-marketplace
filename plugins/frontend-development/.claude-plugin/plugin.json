@@ -1,0 +1,9 @@
+{
+  "name": "frontend-development",
+  "description": "Front-end coding standards for systemprompt.io static site generation - JavaScript, CSS, and HTML with modular vanilla JS and Web Components",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}
