@@ -28,9 +28,10 @@ Then install individual plugins:
 | **marketplace-management** | 6 | 2 | platform | Socratic skill/agent/workflow creation |
 | **operations** | 6 | 1 | operations | Cloud, monitoring, scheduling, Discord |
 | **agent-development** | 4 | 1 | development | AI agents, MCP tools, A2A protocol |
+| **frontend-development** | 1 | 0 | development | Front-end JS, CSS, HTML coding standards |
 | **general** | 1 | 0 | general | General assistance utilities |
 
-**Total: 7 plugins, 34 skills, 4 agents**
+**Total: 8 plugins, 35 skills, 4 agents**
 
 ## Plugin Details
 
@@ -99,6 +100,12 @@ Agent lifecycle management with AI configuration.
 - `skills-development` - Create and manage skills
 - `mcp-operations` - MCP server operations
 - Agent: `welcome`
+
+### frontend-development
+
+Front-end coding standards for static site generation with modular vanilla JS.
+
+- `coding-standards` - JavaScript, CSS, and HTML standards with Web Components
 
 ### general
 

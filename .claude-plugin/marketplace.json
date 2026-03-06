@@ -77,6 +77,17 @@
       }
     },
     {
+      "name": "frontend-development",
+      "source": "./plugins/frontend-development",
+      "description": "Front-end coding standards for systemprompt.io static site generation - JavaScript, CSS, and HTML with modular vanilla JS and Web Components",
+      "version": "1.0.0",
+      "category": "development",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
       "name": "general",
       "source": "./plugins/general",
       "description": "General assistance and utilities for systemprompt.io",
