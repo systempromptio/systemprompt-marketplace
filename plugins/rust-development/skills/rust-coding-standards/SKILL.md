@@ -1,5 +1,5 @@
 ---
-name: coding-standards
+name: rust-coding-standards
 description: "Rust coding standards, documentation authoring, content workflows, and quality patterns for systemprompt.io development"
 ---
 

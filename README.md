@@ -41,7 +41,7 @@ Skills for building Rust extensions, CLI binaries, and MCP servers with idiomati
 
 - `extension-building` - Library extensions with architecture, traits, schemas, API routes, jobs
 - `cli-extension-building` - Standalone CLI extension binaries
-- `coding-standards` - Rust coding standards and quality patterns
+- `rust-coding-standards` - Rust coding standards and quality patterns
 - `mcp-building` - MCP servers with tools and AI integration
 
 ### web-development
@@ -105,7 +105,7 @@ Agent lifecycle management with AI configuration.
 
 Front-end coding standards for static site generation with modular vanilla JS.
 
-- `coding-standards` - JavaScript, CSS, and HTML standards with Web Components
+- `frontend-coding-standards` - JavaScript, CSS, and HTML standards with Web Components
 
 ### general
 
