@@ -1,8 +1,8 @@
 ---
 name: frontend-coding-standards
 description: "Front-end coding standards for systemprompt.io - JavaScript, CSS, and HTML for static site generation with modular vanilla JS and Web Components"
-version: "1.2.0"
-git_hash: "efcef61"
+version: "1.3.0"
+git_hash: "56953b8"
 ---
 
 # Front-End Coding Standards
@@ -12,6 +12,19 @@ All front-end code standards for systemprompt.io. Follow without exception.
 ## Core Principle
 
 systemprompt.io uses progressive enhancement with static HTML/CSS and minimal vanilla JavaScript. Every front-end file must be modular, framework-free, and enhance -- never replace -- server-rendered content. CSS-only solutions are always preferred over JavaScript. No frameworks, no build tools, no transpilation.
+
+## Language Separation Principle
+
+**JavaScript files contain only JavaScript. HTML belongs in `<template>` elements or `.hbs` files. CSS belongs in `.css` files or `CSSStyleSheet` objects.**
+
+Inspired by ESLint unicorn and Biome -- the most respected modern JS linters enforce strict language boundaries. Embedding one language inside another (HTML strings in JS, CSS strings in JS, inline styles) creates unmaintainable, untoolable code that no linter, formatter, or language server can analyze.
+
+| Rule | Rationale |
+|------|-----------|
+| No HTML strings in JS (template literals, concatenation, innerHTML) | Use `<template>` elements in Handlebars or DOM API |
+| No CSS strings in JS except via `CSSStyleSheet.replaceSync()` | Web Component styles use Adopted StyleSheets at module scope |
+| No inline `style` attributes set from JS | Use `classList`, `dataset`, or CSS custom properties |
+| Web Components separate styles, structure, and behavior | `CSSStyleSheet` for styles, `<template>` for structure, class methods for behavior |
 
 ## Code Locations
 
@@ -401,7 +414,7 @@ initEvents();
 
 ```javascript
 const portal = document.createElement('div');
-document.body.appendChild(portal);
+document.body.append(portal);
 
 document.addEventListener('click', handler);
 ```
@@ -410,72 +423,140 @@ document.addEventListener('click', handler);
 
 ---
 
-## Architecture -- Overlay and Portal Pattern
+## Architecture -- Overlay UI as Web Components
 
-Dropdowns, modals, tooltips, and toasts that render outside their DOM parent use a single shared portal. The portal is a positioned container that overlays host content.
+**All overlay UI (dropdowns, context menus, modals, dialogs, toasts, side panels) MUST be Web Components.** Each overlay type is a single Web Component that owns its own Shadow DOM structure, styles, open/close lifecycle, positioning, keyboard handling, and click-outside dismissal.
 
-### Standard Portal
+### Required Overlay Component Architecture
 
-```javascript
-let portalEl = null;
+Every overlay Web Component must handle:
 
-export const initPortal = () => {
-  if (portalEl) return;
-  portalEl = document.createElement('div');
-  portalEl.id = 'sp-portal';
-  portalEl.setAttribute('data-portal', '');
-  document.body.appendChild(portalEl);
-};
+| Concern | Implementation |
+|---------|---------------|
+| Structure | Static `<template>` singleton at module scope, cloned in `connectedCallback` |
+| Styles | `new CSSStyleSheet()` + `adoptedStyleSheets` at module scope |
+| Open/close | Public methods or attribute toggles (`open` attribute) |
+| Positioning | Private `#position()` method using `getBoundingClientRect()` |
+| Keyboard | Escape key closes, focus trap for modals |
+| Click-outside | Single `pointerdown` listener on `document`, registered on open, removed on close |
+| Accessibility | `role`, `aria-expanded`, `aria-haspopup`, focus management |
+| Cleanup | `disconnectedCallback` removes global listeners and clears timeouts |
 
-export const getPortal = () => portalEl;
-```
-
-### Overlay Lifecycle
-
-Every overlay follows open/position/close with cleanup:
+### Example: sp-dropdown-menu
 
 ```javascript
-import { getPortal } from '../services/portal.js';
-
-let activeOverlay = null;
-
-export const openOverlay = (triggerEl, contentEl) => {
-  closeOverlay();
-  const clone = contentEl.cloneNode(true);
-  clone.hidden = false;
-  positionRelativeTo(clone, triggerEl);
-  getPortal().appendChild(clone);
-  activeOverlay = { trigger: triggerEl, element: clone };
-};
-
-export const closeOverlay = () => {
-  if (activeOverlay) {
-    activeOverlay.element.remove();
-    activeOverlay = null;
+const menuSheet = new CSSStyleSheet();
+menuSheet.replaceSync(`
+  :host { position: relative; display: inline-block; }
+  .trigger { cursor: pointer; background: none; border: none; font: inherit; }
+  .menu {
+    position: fixed;
+    background: var(--sp-color-bg);
+    border: 1px solid var(--sp-color-border);
+    border-radius: var(--sp-radius-md);
+    box-shadow: var(--sp-shadow-lg);
+    z-index: var(--sp-z-dropdown);
+    min-width: 160px;
   }
-};
+  .menu[hidden] { display: none; }
+  ::slotted(button), ::slotted(a) {
+    display: block; width: 100%; padding: var(--sp-space-2) var(--sp-space-4);
+    border: none; background: none; text-align: start; cursor: pointer; font: inherit;
+  }
+  ::slotted(button:hover), ::slotted(a:hover) {
+    background: var(--sp-color-bg-surface);
+  }
+`);
+
+const menuTemplate = document.createElement('template');
+menuTemplate.innerHTML = `
+  <button class="trigger" type="button" aria-haspopup="menu" aria-expanded="false">
+    <slot name="trigger">&#8942;</slot>
+  </button>
+  <div class="menu" role="menu" hidden>
+    <slot></slot>
+  </div>
+`;
+
+export class SpDropdownMenu extends HTMLElement {
+  #trigger;
+  #menu;
+  #onOutsideClick;
+
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.adoptedStyleSheets = [menuSheet];
+    this.shadowRoot.append(menuTemplate.content.cloneNode(true));
+    this.#trigger = this.shadowRoot.querySelector('.trigger');
+    this.#menu = this.shadowRoot.querySelector('.menu');
+    this.#onOutsideClick = (e) => {
+      if (!this.contains(e.target)) this.close();
+    };
+    this.#trigger.addEventListener('click', () => this.toggle());
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('pointerdown', this.#onOutsideClick);
+  }
+
+  toggle() {
+    if (this.#menu.hidden) {
+      this.open();
+    } else {
+      this.close();
+    }
+  }
+
+  open() {
+    this.#menu.hidden = false;
+    this.#trigger.setAttribute('aria-expanded', 'true');
+    this.#position();
+    document.addEventListener('pointerdown', this.#onOutsideClick);
+    document.addEventListener('keydown', this.#onKeydown);
+  }
+
+  close() {
+    this.#menu.hidden = true;
+    this.#trigger.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('pointerdown', this.#onOutsideClick);
+    document.removeEventListener('keydown', this.#onKeydown);
+  }
+
+  #onKeydown = (e) => {
+    if (e.key === 'Escape') this.close();
+  };
+
+  #position() {
+    const rect = this.#trigger.getBoundingClientRect();
+    this.#menu.style.top = `${rect.bottom + 4}px`;
+    this.#menu.style.left = `${rect.left}px`;
+  }
+}
+
+customElements.define('sp-dropdown-menu', SpDropdownMenu);
 ```
 
-### Rules
+Usage in HTML:
 
-| Rule | Rationale |
-|------|-----------|
-| One portal element for the entire page | Prevents z-index wars and stacking context bugs |
-| `initPortal()` called from page entry point | Explicit, predictable, no side effects on import |
-| Every `open` has a corresponding `close` that removes DOM nodes | Prevents leaked elements |
-| Overlay state is module-scoped (`activeOverlay`) | Single source of truth for what's open |
-| Position overlays with `getBoundingClientRect()` + portal offset | Works regardless of DOM nesting |
-| Cloned content uses event delegation (not cloned listeners) | Cloned nodes lose `addEventListener` bindings -- delegation handles them |
+```html
+<sp-dropdown-menu>
+  <span slot="trigger">&#8942;</span>
+  <button data-action="edit">Edit</button>
+  <button data-action="delete" class="sp-text--danger">Delete</button>
+</sp-dropdown-menu>
+```
 
-### Forbidden: Ad-Hoc Overlay Patterns
+### Forbidden: Imperative Overlay Builders
 
 | Anti-Pattern | Resolution |
 |--------------|------------|
-| Creating a new container div per overlay type | Use the shared portal |
-| Toggling `display` on in-place elements for overlays | Clone into portal for correct stacking |
-| Relying on cloned event listeners | Use event delegation via the event registry |
-| Multiple `z-index` layers across components | Single portal with `z-index` on `#sp-portal` only |
-| Opening without tracking active state | Always track in module-scoped variable for cleanup |
+| Cloning `.actions-dropdown` and appending to body | Use `sp-dropdown-menu` Web Component |
+| `let activeDropdown = null` state tracking in services | Web Component owns its own state in private fields |
+| Building popup items with `document.createElement` loops | Declare structure in `<template>`, populate via slots or DOM API |
+| Per-page menu positioning logic | Web Component encapsulates positioning in its `#position()` method |
+| Multiple `addEventListener('click', ...)` for menus | Web Component handles its own events internally |
+| Imperative `initDropdown()` service with portal cloning | Replace with `sp-dropdown-menu` declarative component |
+| Separate `header-actions.js`, `install-widget.js` menu code | Single `sp-dropdown-menu` component handles all dropdown patterns |
 
 ---
 
@@ -515,12 +596,12 @@ Every UI capability has exactly one implementation. Duplicate systems are the mo
 
 | Concern | Single Owner | Forbidden Duplicates |
 |---------|-------------|---------------------|
+| Dropdowns/context menus | `sp-dropdown-menu` Web Component | No imperative `dropdown.js`, no per-page menu builders |
+| Modals/overlays | `sp-modal` Web Component | No imperative overlay services, no `let overlay = null` |
 | Toast notifications | `sp-toast` Web Component | No imperative `toast.js` creating DOM manually |
 | Confirm dialogs | `sp-confirm-dialog` Web Component | No imperative `confirm.js` building overlays |
-| Dropdowns/menus | `services/dropdown.js` | No per-page dropdown implementations |
-| Modals/overlays | Shared portal + overlay service | No `let overlay = null` in each feature module |
-| Side panels | `services/entity-common.js` | No per-page panel open/close logic |
-| Table row expansion | `sp-expand-row` component | No per-page `data-expand-row` click handlers |
+| Side panels | `sp-side-panel` Web Component | No per-page panel open/close logic |
+| Table row expansion | `sp-expand-row` Web Component | No per-page `data-expand-row` click handlers |
 
 ### Rules
 
@@ -538,11 +619,11 @@ let overlay = null;
 const openOverlay = () => {
   overlay = document.createElement('div');
   overlay.className = 'custom-overlay';
-  document.body.appendChild(overlay);
+  document.body.append(overlay);
 };
 ```
 
-**Why this is wrong:** Every module that creates its own overlay div, tracks its own `let overlay = null` state, and appends to `document.body` independently produces a parallel system that doesn't coordinate with other overlays, doesn't share z-index management, and duplicates open/close/cleanup logic. Use the shared portal and overlay service.
+**Why this is wrong:** Every module that creates its own overlay div, tracks its own `let overlay = null` state, and appends to `document.body` independently produces a parallel system that doesn't coordinate with other overlays, doesn't share z-index management, and duplicates open/close/cleanup logic. Use the appropriate Web Component (`sp-modal`, `sp-dropdown-menu`, `sp-side-panel`).
 
 ---
 
@@ -707,6 +788,23 @@ initLazyLoad();
 | Trailing commas | Required in multiline constructs |
 | Comments | Forbidden -- code documents itself |
 
+### Modern API Preferences
+
+Use modern DOM and language APIs. Legacy equivalents are forbidden. Inspired by eslint-plugin-unicorn and Biome.
+
+| Legacy (Forbidden) | Modern (Required) | Rule Source |
+|---------------------|-------------------|-------------|
+| `JSON.parse(JSON.stringify(obj))` | `structuredClone(obj)` | unicorn/prefer-structured-clone |
+| `el.appendChild(node)` | `el.append(node)` | unicorn/prefer-dom-node-append |
+| `el.removeChild(child)` | `child.remove()` | unicorn/prefer-dom-node-remove |
+| `el.replaceChild(newNode, oldNode)` | `oldNode.replaceWith(newNode)` | unicorn/prefer-dom-node-replace |
+| `el.insertAdjacentElement('beforebegin', node)` | `el.before(node)` / `el.after(node)` | unicorn/prefer-modern-dom-apis |
+| `Array.from(x).map(fn)` | `Array.from(x, fn)` | unicorn/prefer-array-from-map |
+| `array.indexOf(x) !== -1` | `array.includes(x)` | unicorn/prefer-includes |
+| `Object.keys(x).forEach(fn)` | `for (const [k, v] of Object.entries(x))` | unicorn/no-array-for-each |
+| `el.getAttribute('id')` | `el.id` | unicorn/prefer-dom-node-property |
+| `arr.push(...items); return arr` | `[...arr, ...items]` | prefer-spread |
+
 ## JavaScript -- Naming Conventions
 
 | Context | Convention | Example |
@@ -768,6 +866,14 @@ initLazyLoad();
 | Early returns (`if (!x) return;`) | Use structured `if`/`else` blocks -- handle all paths explicitly, never bail out with guard clauses |
 | `this.shadowRoot.innerHTML` in Web Components | Use Adopted StyleSheets + static `<template>` singleton with `cloneNode` |
 | Per-instance `<style>` in Shadow DOM via innerHTML | Use `new CSSStyleSheet()` + `adoptedStyleSheets` -- parsed once, shared across all instances |
+| Imperative overlay/dropdown/menu builders | Use Web Components (`sp-dropdown-menu`, `sp-modal`, `sp-side-panel`, etc.) |
+| `document.body.appendChild()` for overlay positioning | Web Component manages its own portal lifecycle internally |
+| HTML template literals in non-WC JS code | Use `<template>` elements defined in Handlebars templates |
+| CSS strings outside `CSSStyleSheet.replaceSync()` | Use `.css` files for regular styles, `CSSStyleSheet` for Web Component Shadow DOM |
+| `el.appendChild(node)` | Use `el.append(node)` -- modern DOM API |
+| `el.removeChild(child)` | Use `child.remove()` -- modern DOM API |
+| `JSON.parse(JSON.stringify(obj))` for cloning | Use `structuredClone(obj)` |
+| `array.indexOf(x) !== -1` | Use `array.includes(x)` |
 
 ## JavaScript -- DOM Patterns
 
@@ -878,12 +984,12 @@ const renderSkillDetail = (container, data) => {
     label: 'Description',
     value: data.description || 'No description',
   });
-  if (section) container.appendChild(section);
+  if (section) container.append(section);
 
   if (data.tags?.length) {
     for (const tag of data.tags) {
       const badge = fillTemplate('tpl-badge', { text: tag });
-      if (badge) container.appendChild(badge);
+      if (badge) container.append(badge);
     }
   }
 };
@@ -982,7 +1088,7 @@ export class SpCopyButton extends HTMLElement {
   connectedCallback() {
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.adoptedStyleSheets = [sheet];
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.shadowRoot.append(template.content.cloneNode(true));
     this.#button = this.shadowRoot.querySelector('button');
     this.#button.addEventListener('click', () => this.#copy());
   }
@@ -1133,6 +1239,10 @@ grep -rn '#[0-9a-fA-F]\{3,8\}' storage/files/css/components/ storage/files/css/a
 grep -rn "html += \|html = '<\|\.innerHTML = '<" storage/files/js/ --include='*.js' && echo "WARN: HTML string building in JS -- use <template> elements"
 grep -rn "style=\"" storage/files/js/ --include='*.js' && echo "FAIL: inline style attributes in JS strings"
 grep -rn 'if\s*(!' storage/files/js/ --include='*.js' | grep 'return;' && echo "WARN: early return found -- use structured if/else blocks"
+grep -rn 'JSON\.parse.*JSON\.stringify' storage/files/js/ --include='*.js' && echo "WARN: use structuredClone() instead of JSON roundtrip"
+grep -rn '\.appendChild(' storage/files/js/ --include='*.js' | grep -v 'template\|content\.cloneNode' && echo "WARN: prefer .append() over .appendChild()"
+grep -rn '\.removeChild(' storage/files/js/ --include='*.js' && echo "WARN: prefer .remove() over .removeChild()"
+grep -rn '\.indexOf.*!== -1\|\.indexOf.*>= 0\|\.indexOf.*> -1' storage/files/js/ --include='*.js' && echo "WARN: prefer .includes() over .indexOf() comparison"
 for f in storage/files/js/**/*.js; do
   while IFS= read -r line; do
     [[ "$line" =~ import.*\{(.+)\}.*from ]] && {
@@ -1151,7 +1261,7 @@ Architecture validation:
 
 ```bash
 grep -rn "document\.addEventListener\s*(\s*['\"]click['\"]" storage/files/js/ --include='*.js' | grep -v '/events/' && echo "FAIL: click listener outside events/ registry"
-grep -rn "document\.body\.appendChild\|document\.body\.insertBefore" storage/files/js/ --include='*.js' | grep -v '/services/portal' && echo "FAIL: DOM append outside portal service"
+grep -rn "document\.body\.appendChild\|document\.body\.insertBefore" storage/files/js/ --include='*.js' | grep -v '/components/' && echo "FAIL: DOM append outside Web Components"
 grep -rn "\.catch\s*(\s*(\s*)\s*=>\s*{}\s*)" storage/files/js/ --include='*.js' && echo "FAIL: empty .catch() handler -- silent error swallowing"
 grep -rn "\.catch\s*(\s*(\s*)\s*=>\s*(\s*{}\s*)\s*)" storage/files/js/ --include='*.js' && echo "FAIL: .catch(() => ({})) -- error swallowed as empty object"
 grep -rn "fetch\s*(" storage/files/js/pages/ --include='*.js' && echo "FAIL: raw fetch() in page module -- use apiFetch()"
@@ -1181,7 +1291,8 @@ Manual verification:
 - No comments in any JS or CSS file
 - Every `data-action` value has a corresponding handler in the event registry
 - No `document.addEventListener('click')` outside the event registry
-- All overlays use the shared portal -- no ad-hoc containers
+- All overlay UI is a Web Component -- no imperative builders, no per-page menu/modal code
+- Modern DOM APIs used: `.append()`, `.remove()`, `structuredClone()` -- no legacy equivalents
 - Handler modules export pure functions -- no listener registration
 - Page entry point is the only file calling `init*` functions
 - No self-executing code at module top level (no side effects on import)
