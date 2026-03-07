@@ -1,8 +1,8 @@
 ---
 name: frontend-coding-standards
 description: "Front-end coding standards for systemprompt.io - JavaScript, CSS, and HTML for static site generation with modular vanilla JS and Web Components"
-version: "1.1.0"
-git_hash: "2edfa80"
+version: "1.2.0"
+git_hash: "efcef61"
 ---
 
 # Front-End Coding Standards
@@ -327,9 +327,9 @@ const CLICK_ACTIONS = {
 export const initEvents = () => {
   document.addEventListener('click', (e) => {
     const trigger = e.target.closest('[data-action]');
-    if (!trigger) return;
-    const handler = CLICK_ACTIONS[trigger.dataset.action];
-    handler?.(trigger, e);
+    if (trigger) {
+      CLICK_ACTIONS[trigger.dataset.action]?.(trigger, e);
+    }
   });
 };
 ```
@@ -340,10 +340,11 @@ export const initEvents = () => {
 export const handleDropdownToggle = (trigger, e) => {
   e.stopPropagation();
   const menu = document.getElementById(trigger.dataset.target);
-  if (!menu) return;
-  const isOpen = !menu.hidden;
-  closeAllDropdowns();
-  if (!isOpen) menu.hidden = false;
+  if (menu) {
+    const isOpen = !menu.hidden;
+    closeAllDropdowns();
+    if (!isOpen) menu.hidden = false;
+  }
 };
 ```
 
@@ -448,9 +449,10 @@ export const openOverlay = (triggerEl, contentEl) => {
 };
 
 export const closeOverlay = () => {
-  if (!activeOverlay) return;
-  activeOverlay.element.remove();
-  activeOverlay = null;
+  if (activeOverlay) {
+    activeOverlay.element.remove();
+    activeOverlay = null;
+  }
 };
 ```
 
@@ -736,7 +738,7 @@ initLazyLoad();
 | `arguments` object | Use rest parameters (`...args`) |
 | `default export` | Use named exports |
 | jQuery or legacy libraries | Use vanilla JS APIs |
-| `innerHTML` for multi-element HTML | Use `<template>` elements with `cloneNode` and DOM API |
+| `innerHTML` for multi-element HTML | Use `<template>` elements with `cloneNode` and DOM API. In Web Components, use Adopted StyleSheets + static template singleton |
 | `setTimeout` for animation | Use `requestAnimationFrame` |
 | Global `window.*` assignments | Use module scope |
 | `alert()` / `confirm()` / `prompt()` | Use custom UI components |
@@ -763,6 +765,9 @@ initLazyLoad();
 | Per-module `document.addEventListener('keydown', ... 'Escape')` | Escape handling lives in the overlay manager only |
 | `let overlay = null` state in feature modules | Use the shared overlay/portal service |
 | Manual `credentials: 'include'` on fetch calls | The `apiFetch()` wrapper handles credentials |
+| Early returns (`if (!x) return;`) | Use structured `if`/`else` blocks -- handle all paths explicitly, never bail out with guard clauses |
+| `this.shadowRoot.innerHTML` in Web Components | Use Adopted StyleSheets + static `<template>` singleton with `cloneNode` |
+| Per-instance `<style>` in Shadow DOM via innerHTML | Use `new CSSStyleSheet()` + `adoptedStyleSheets` -- parsed once, shared across all instances |
 
 ## JavaScript -- DOM Patterns
 
@@ -774,15 +779,14 @@ Use `[data-*]` attributes for JS hooks. Never bind behavior to CSS classes or ID
 export function initCardActions(container) {
   container.addEventListener('click', (event) => {
     const trigger = event.target.closest('[data-action]');
-    if (!trigger) return;
-
-    const handlers = {
-      expand: () => toggleExpand(trigger),
-      copy: () => copyToClipboard(trigger),
-      dismiss: () => trigger.closest('[data-dismissible]')?.remove(),
-    };
-
-    handlers[trigger.dataset.action]?.();
+    if (trigger) {
+      const handlers = {
+        expand: () => toggleExpand(trigger),
+        copy: () => copyToClipboard(trigger),
+        dismiss: () => trigger.closest('[data-dismissible]')?.remove(),
+      };
+      handlers[trigger.dataset.action]?.();
+    }
   });
 }
 ```
@@ -832,7 +836,7 @@ HTML belongs in HTML templates, not in JavaScript strings. When JS must render d
 | Attribute/class toggle | Toggle class or attribute on existing element | Show/hide, active states, theme switching |
 | Single element | `document.createElement` + `textContent` | Badge, status indicator, simple label |
 | Structured content | `<template>` element + `cloneNode` + DOM API | Detail panels, form layouts, list items, cards |
-| Reusable interactive widget | Web Component with Shadow DOM | Dialogs, toasts, copy buttons, complex controls |
+| Reusable interactive widget | Web Component with Shadow DOM + Adopted StyleSheets + static template singleton | Dialogs, toasts, copy buttons, complex controls |
 
 ### The `<template>` Pattern
 
@@ -858,13 +862,15 @@ Place `<template>` elements in Handlebars templates. Clone and populate them fro
 ```javascript
 const fillTemplate = (id, slots) => {
   const tpl = document.getElementById(id);
-  if (!tpl) return null;
-  const frag = tpl.content.cloneNode(true);
-  for (const [name, value] of Object.entries(slots)) {
-    const el = frag.querySelector(`[data-slot="${name}"]`);
-    if (el) el.textContent = value;
+  if (tpl) {
+    const frag = tpl.content.cloneNode(true);
+    for (const [name, value] of Object.entries(slots)) {
+      const el = frag.querySelector(`[data-slot="${name}"]`);
+      if (el) el.textContent = value;
+    }
+    return frag;
   }
-  return frag;
+  return null;
 };
 
 const renderSkillDetail = (container, data) => {
@@ -920,7 +926,51 @@ const createBadge = (text, variant = 'subtle') => {
 
 ALL reusable UI elements must be Web Components. Use `sp-` prefix. Shadow DOM for style encapsulation. Private fields for internal state.
 
+### Required Pattern: Adopted StyleSheets + Static Template Singleton
+
+Web Components MUST separate styles, structure, and behavior. CSS and templates are created once at module scope and shared across all instances.
+
+| Concern | Technique | Why |
+|---------|-----------|-----|
+| Styles | `new CSSStyleSheet()` + `adoptedStyleSheets` | Parsed once, shared across all instances -- no per-instance overhead |
+| Structure | Static `<template>` element + `cloneNode(true)` | Created once at module scope, cloned per instance |
+| Behavior | Private fields + `addEventListener` in `connectedCallback` | Clean encapsulation, no leaking state |
+
+### Forbidden in Web Components
+
+| Construct | Resolution |
+|-----------|------------|
+| `this.shadowRoot.innerHTML = \`...\`` | Use static template singleton with `cloneNode` |
+| `<style>` inside innerHTML template literals | Use `new CSSStyleSheet()` + `adoptedStyleSheets` |
+| Per-instance CSS parsing | Define stylesheet at module scope, share via `adoptedStyleSheets` |
+| Inline HTML strings in `connectedCallback` | Create `<template>` at module scope, clone in callback |
+
+### Example: SpCopyButton
+
 ```javascript
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(`
+  :host { display: inline-block; }
+  button {
+    cursor: pointer;
+    border: 1px solid var(--sp-color-border, #ccc);
+    border-radius: var(--sp-radius-sm, 0.25rem);
+    background: transparent;
+    padding: var(--sp-space-xs, 0.25rem) var(--sp-space-sm, 0.5rem);
+    font: inherit;
+    transition: color var(--sp-transition-fast, 150ms ease);
+  }
+  button:hover { background: var(--sp-color-bg-hover, #f5f5f5); }
+  button[data-copied] { color: var(--sp-color-success, #16a34a); }
+`);
+
+const template = document.createElement('template');
+template.innerHTML = `
+  <button type="button" aria-label="Copy to clipboard">
+    <slot>Copy</slot>
+  </button>
+`;
+
 export class SpCopyButton extends HTMLElement {
   #button;
   #timeout;
@@ -931,25 +981,8 @@ export class SpCopyButton extends HTMLElement {
 
   connectedCallback() {
     this.attachShadow({ mode: 'open' });
-    this.shadowRoot.innerHTML = `
-      <style>
-        :host { display: inline-block; }
-        button {
-          cursor: pointer;
-          border: 1px solid var(--sp-color-border, #ccc);
-          border-radius: var(--sp-radius-sm, 0.25rem);
-          background: transparent;
-          padding: var(--sp-space-xs, 0.25rem) var(--sp-space-sm, 0.5rem);
-          font: inherit;
-          transition: color var(--sp-transition-fast, 150ms ease);
-        }
-        button:hover { background: var(--sp-color-bg-hover, #f5f5f5); }
-        button[data-copied] { color: var(--sp-color-success, #16a34a); }
-      </style>
-      <button type="button" aria-label="Copy to clipboard">
-        <slot>Copy</slot>
-      </button>
-    `;
+    this.shadowRoot.adoptedStyleSheets = [sheet];
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
     this.#button = this.shadowRoot.querySelector('button');
     this.#button.addEventListener('click', () => this.#copy());
   }
@@ -960,16 +993,16 @@ export class SpCopyButton extends HTMLElement {
 
   async #copy() {
     const target = document.querySelector(this.getAttribute('target'));
-    if (!target) return;
+    if (target) {
+      await navigator.clipboard.writeText(target.textContent);
+      this.#button.setAttribute('data-copied', '');
+      this.#button.setAttribute('aria-label', 'Copied');
 
-    await navigator.clipboard.writeText(target.textContent);
-    this.#button.setAttribute('data-copied', '');
-    this.#button.setAttribute('aria-label', 'Copied');
-
-    this.#timeout = setTimeout(() => {
-      this.#button.removeAttribute('data-copied');
-      this.#button.setAttribute('aria-label', 'Copy to clipboard');
-    }, 2000);
+      this.#timeout = setTimeout(() => {
+        this.#button.removeAttribute('data-copied');
+        this.#button.setAttribute('aria-label', 'Copy to clipboard');
+      }, 2000);
+    }
   }
 }
 
@@ -977,6 +1010,15 @@ customElements.define('sp-copy-button', SpCopyButton);
 ```
 
 Usage in HTML: `<sp-copy-button target="[data-code-block]">Copy</sp-copy-button>`
+
+### Why This Pattern
+
+- **CSS parsed once** -- `CSSStyleSheet` is created at module scope, shared by every instance via `adoptedStyleSheets`. No re-parsing per element.
+- **Template created once** -- The `<template>` element is built once at module scope. Each instance clones it with `cloneNode(true)` -- no HTML parsing per instance.
+- **Clean separation** -- Styles, structure, and behavior live in distinct blocks. Easy to read, easy to maintain.
+- **No innerHTML in connectedCallback** -- Eliminates the anti-pattern of mixing CSS + HTML in a template literal assigned to `shadowRoot.innerHTML`.
+
+**Note:** The `template.innerHTML` assignment at module scope is acceptable because it runs exactly once (not per instance) and is the standard way to define a template element's content. This is categorically different from `this.shadowRoot.innerHTML` which runs per instance.
 
 ---
 
@@ -1029,9 +1071,10 @@ Screen reader announcements for dynamic content:
 ```javascript
 export function announceToScreenReader(message) {
   const region = document.querySelector('[data-live-region]');
-  if (region == null) return;
-  region.textContent = '';
-  requestAnimationFrame(() => { region.textContent = message; });
+  if (region) {
+    region.textContent = '';
+    requestAnimationFrame(() => { region.textContent = message; });
+  }
 }
 ```
 
@@ -1079,6 +1122,7 @@ grep -rn 'document\.write' storage/files/js/ --include='*.js' && echo "FAIL: doc
 grep -rn 'eval(' storage/files/js/ --include='*.js' && echo "FAIL: eval found"
 grep -rn 'export default' storage/files/js/ --include='*.js' && echo "FAIL: default export found"
 grep -rn '\.innerHTML\s*=' storage/files/js/ --include='*.js' && echo "WARN: innerHTML assignment"
+grep -rn 'shadowRoot\.innerHTML' storage/files/js/ --include='*.js' && echo "FAIL: shadowRoot.innerHTML -- use adoptedStyleSheets + template.cloneNode"
 grep -rn '!important' storage/files/css/ --include='*.css' | grep -v 'prefers-reduced-motion' && echo "FAIL: !important found outside reduced-motion reset"
 wc -l storage/files/js/**/*.js | awk '$1 > 150 { print "FAIL: " $2 " exceeds 150 lines" }'
 wc -l storage/files/css/**/*.css | awk '$1 > 200 { print "FAIL: " $2 " exceeds 200 lines" }'
@@ -1088,6 +1132,7 @@ grep -rn 'padding:\s*[0-9]\+px\|margin:\s*[0-9]\+px\|gap:\s*[0-9]\+px' storage/f
 grep -rn '#[0-9a-fA-F]\{3,8\}' storage/files/css/components/ storage/files/css/admin/ storage/files/css/pages/ --include='*.css' && echo "WARN: hardcoded color in component CSS -- use --sp-color-* tokens"
 grep -rn "html += \|html = '<\|\.innerHTML = '<" storage/files/js/ --include='*.js' && echo "WARN: HTML string building in JS -- use <template> elements"
 grep -rn "style=\"" storage/files/js/ --include='*.js' && echo "FAIL: inline style attributes in JS strings"
+grep -rn 'if\s*(!' storage/files/js/ --include='*.js' | grep 'return;' && echo "WARN: early return found -- use structured if/else blocks"
 for f in storage/files/js/**/*.js; do
   while IFS= read -r line; do
     [[ "$line" =~ import.*\{(.+)\}.*from ]] && {
@@ -1125,6 +1170,9 @@ Manual verification:
 - Named exports only
 - Every import is used in the module
 - No HTML string building in JS (use `<template>` elements)
+- No `shadowRoot.innerHTML` in Web Components -- use `adoptedStyleSheets` + static template `cloneNode`
+- No early returns (`if (!x) return;`) -- use structured `if`/`else` control flow
+- Web Components use module-scope `CSSStyleSheet` and `<template>` singletons, not per-instance parsing
 - No inline `style` attributes in JS-generated HTML
 - `type="module" defer` on all script tags
 - Keyboard accessible (Tab through all interactive elements)
