@@ -134,6 +134,7 @@ impl PageDataProvider for ContentPageDataProvider {
         vec![]  // Empty = all pages
     }
 
+    // JSON: required by PageDataProvider trait contract
     async fn provide_page_data(&self, ctx: &PageContext<'_>) -> Result<Value> {
         let item = ctx.content_item()
             .ok_or_else(|| anyhow::anyhow!("No content item"))?;
@@ -212,6 +213,7 @@ impl ContentDataProvider for DocsContentDataProvider {
         vec!["documentation".to_string()]
     }
 
+    // JSON: required by ContentDataProvider trait contract
     async fn enrich_content(
         &self,
         ctx: &ContentDataContext<'_>,
@@ -294,6 +296,7 @@ impl TemplateDataExtender for ReadingTimeExtender {
         vec!["blog".to_string()]
     }
 
+    // JSON: required by TemplateDataExtender trait contract
     async fn extend(&self, ctx: &ExtenderContext<'_>, data: &mut Value) -> Result<()> {
         let word_count = ctx.content_html.split_whitespace().count();
         let reading_time = (word_count / 200).max(1);

@@ -63,6 +63,38 @@ tracing::error!(error = %e, "Operation failed");
 | Doc comments (`///`) | Delete -- no rustdoc |
 | `println!` in libraries | Use `tracing` |
 | Raw SQL strings | Use SQLX macros |
+| `serde_json::Value` | Define typed structs with `#[derive(Deserialize)]` -- see exceptions below |
+
+### serde_json::Value is a Code Smell
+
+`serde_json::Value` erases type information and pushes validation to runtime. Treat every occurrence as a code smell requiring heavy justification.
+
+**Always prefer typed structs:**
+
+```rust
+#[derive(Debug, Clone, Deserialize)]
+pub struct ToolInput {
+    pub input: String,
+    pub tags: Option<Vec<String>>,
+}
+
+let args: ToolInput = serde_json::from_value(raw_value)?;
+```
+
+**Narrow exceptions (require inline justification comment):**
+
+| Exception | Justification |
+|-----------|---------------|
+| MCP `Tool` schema fields (`input_schema`, `output_schema`) | Protocol requires `serde_json::Map` -- external spec boundary |
+| MCP `CallToolResult::structured_content` | Protocol defines as `Option<serde_json::Value>` |
+| `serde_json::json!()` for constructing known-shape responses | Acceptable at API boundaries when shape is fixed and outgoing-only |
+| Core trait signatures requiring `Value` | Cannot change without core modification |
+
+**When you encounter `serde_json::Value` in existing code:**
+
+1. If receiving/parsing: refactor to a typed struct with `#[derive(Deserialize)]`
+2. If constructing outgoing JSON at an API boundary: acceptable, add `// JSON: protocol boundary` comment
+3. If the trait signature requires it: acceptable, add `// JSON: required by trait contract` comment
 
 ### File Limits
 

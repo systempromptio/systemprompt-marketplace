@@ -215,6 +215,7 @@ fn create_tool(
     name: &str,
     title: &str,
     description: &str,
+    // JSON: MCP protocol boundary -- Tool schema fields require serde_json::Value
     input_schema: serde_json::Value,
     output_schema: serde_json::Value,
 ) -> Tool {
@@ -246,6 +247,8 @@ pub async fn handle_tool_call(
 
 ## Tool Module Pattern
 
+**Tool arguments MUST be deserialized into typed structs with `#[derive(Deserialize)]`. Never extract fields manually from `serde_json::Map`.**
+
 ### mod.rs
 
 ```rust
@@ -261,6 +264,7 @@ pub use helpers::{input_schema, output_schema};
 ```rust
 use serde_json::json;
 
+// JSON: MCP protocol boundary -- Tool schema must be serde_json::Value
 pub fn input_schema() -> serde_json::Value {
     json!({
         "type": "object",
@@ -274,6 +278,7 @@ pub fn input_schema() -> serde_json::Value {
     })
 }
 
+// JSON: MCP protocol boundary -- Tool schema must be serde_json::Value
 pub fn output_schema() -> serde_json::Value {
     json!({
         "type": "object",
@@ -284,14 +289,13 @@ pub fn output_schema() -> serde_json::Value {
     })
 }
 
-pub fn extract_string_array(
-    args: &serde_json::Map<String, serde_json::Value>,
-    key: &str,
-) -> Vec<String> {
-    args.get(key)
-        .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().filter_map(|v| v.as_str().map(String::from)).collect())
-        .unwrap_or_default()
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+pub struct MyToolArgs {
+    pub input: String,
+    #[serde(default)]
+    pub tags: Vec<String>,
 }
 ```
 
@@ -303,23 +307,27 @@ use rmcp::ErrorData as McpError;
 use serde_json::json;
 use systemprompt::database::DbPool;
 
+use super::helpers::MyToolArgs;
+
 pub async fn handle(
     _db_pool: &DbPool,
     request: CallToolRequestParams,
 ) -> Result<CallToolResult, McpError> {
-    let args = request.arguments.as_ref().ok_or_else(|| {
-        McpError::invalid_request("Missing arguments", None)
-    })?;
+    let args: MyToolArgs = request
+        .arguments
+        .as_ref()
+        .ok_or_else(|| McpError::invalid_request("Missing arguments", None))
+        .and_then(|map| {
+            serde_json::from_value(serde_json::Value::Object(map.clone()))
+                .map_err(|e| McpError::invalid_params(format!("Invalid arguments: {e}"), None))
+        })?;
 
-    let input = args.get("input").and_then(|v| v.as_str()).ok_or_else(|| {
-        McpError::invalid_params("Missing required parameter: input", None)
-    })?;
-
-    let result = format!("Processed: {}", input);
-    tracing::info!(input = %input, "Tool executed successfully");
+    let result = format!("Processed: {}", args.input);
+    tracing::info!(input = %args.input, "Tool executed successfully");
 
     Ok(CallToolResult {
         content: vec![Content::text(format!("Result: {result}"))],
+        // JSON: MCP protocol boundary -- structured_content is Option<serde_json::Value> per spec
         structured_content: Some(json!({ "result": result, "status": "success" })),
         is_error: Some(false),
         meta: None,

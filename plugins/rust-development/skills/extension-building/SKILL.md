@@ -239,6 +239,7 @@ impl MyExtensionError {
 
 impl axum::response::IntoResponse for MyExtensionError {
     fn into_response(self) -> axum::response::Response {
+        // JSON: API boundary -- constructing fixed-shape error response
         let body = serde_json::json!({
             "error": {
                 "code": self.code(),
@@ -488,6 +489,7 @@ let valid_items: Vec<_> = items
 | Inline comments (`//`) | Delete - code documents itself |
 | Doc comments (`///`) | Delete - no rustdoc |
 | Tests in source files | Move to separate test crate |
+| `serde_json::Value` | Define typed structs with `#[derive(Deserialize)]`. Allowed only at protocol/trait boundaries with justification comment |
 
 ### Mandatory Patterns
 
@@ -547,6 +549,7 @@ let repo = ContentRepository::new(db_pool.pool().unwrap());
 ### Page Data Providers
 
 ```rust
+// JSON: required by PageDataProvider trait contract
 let Some(db) = ctx.db_pool::<Arc<Database>>() else {
     return Ok(json!({ "data": "" }));
 };
