@@ -1,8 +1,8 @@
 ---
 name: frontend-coding-standards
 description: "Front-end coding standards for systemprompt.io - JavaScript, CSS, and HTML for static site generation with modular vanilla JS and Web Components"
-version: "1.3.0"
-git_hash: "56953b8"
+version: "1.4.0"
+git_hash: "5b86ca5"
 ---
 
 # Front-End Coding Standards
@@ -290,6 +290,9 @@ Write base styles for mobile. Add complexity with `min-width` breakpoints:
 | Monolithic bundle files | Split into focused component files |
 | `var()` fallback values in component CSS | Tokens are defined centrally -- components don't need fallbacks |
 | Hardcoded spacing (`padding: 32px`) | Use tokens: `padding: var(--sp-space-8)` |
+| Compatibility/compat CSS files (`variables-compat.css`) | Delete the file, migrate all consumers to `--sp-` names directly |
+| CSS alias declarations (`--old-name: var(--sp-new-name)`) | Grep for `--old-name`, replace with `--sp-new-name` in every consumer file |
+| Any file with "compat", "legacy", or "shim" in the name | Migrate all consumers and delete the file |
 
 ### Exceptions
 
@@ -627,6 +630,54 @@ const openOverlay = () => {
 
 ---
 
+## Architecture -- Zero Tolerance for Compatibility Layers
+
+**Compatibility files, alias maps, and migration shims are banned.** When code uses legacy names (unprefixed custom properties, old class names, outdated API patterns), the fix is to migrate the consumer code directly -- never to create a translation layer.
+
+This is a first-class architectural rule, not a suggestion. Compat layers are the most insidious form of tech debt: they appear to solve the problem while guaranteeing it persists forever. Every compat file is a permanent excuse not to finish the migration.
+
+### Why Compat Layers Are Banned
+
+| Problem | Consequence |
+|---------|-------------|
+| They duplicate every name | Two names for the same value, forever |
+| They hide unfixed code | Legacy references survive behind the alias instead of being found and fixed |
+| They grow monotonically | New aliases are added, old ones are never removed |
+| They break grep-ability | Searching for `--sp-header-height` won't find code using `--header-height` |
+| They create false confidence | "We have a design token system" while half the codebase bypasses it |
+| They defeat code review | Reviewers see the compat file and assume migration is handled |
+
+### The Only Correct Migration Pattern
+
+1. **Find every consumer** of the legacy name (grep the entire codebase)
+2. **Update each consumer** to use the new name directly
+3. **Delete the legacy definition** -- no alias, no fallback, no compat file
+4. **Verify nothing breaks** by running the validation scripts
+
+### Forbidden
+
+| Anti-Pattern | Resolution |
+|--------------|------------|
+| `variables-compat.css` mapping old names to new | Delete compat file, update all consumers to use `--sp-` names directly |
+| `--old-name: var(--sp-new-name)` alias declarations | Grep for `--old-name`, replace with `--sp-new-name` in every file, delete the alias |
+| `--header-height: var(--sp-header-height)` compat mappings | Replace every `var(--header-height)` with `var(--sp-header-height)` in consumer files |
+| `.legacy-class { @extend .sp-class }` shims | Rename the class in every template and stylesheet |
+| JS re-export shims (`export { newFn as oldFn }`) | Update all import sites to use the new name |
+| "Temporary" migration files that map old API to new | Migrate callers directly, delete the shim |
+| Any file with "compat", "legacy", "shim", or "migration" in the name | These files should not exist -- do the migration properly |
+
+### Code Review Enforcement
+
+When reviewing code, if you encounter:
+- A file with "compat" or "legacy" in its name -- **flag it for immediate removal and full migration**
+- An unprefixed custom property (`--header-height`) -- **rename it to `--sp-header-height` everywhere, not just in one file**
+- A CSS alias (`--old: var(--new)`) -- **delete the alias, fix all consumers**
+- A JS re-export shim -- **update all import sites, delete the shim**
+
+The migration is not done until the compat layer is deleted and zero references to the old name remain in the codebase.
+
+---
+
 ## Architecture -- API and Fetch Pattern
 
 All HTTP requests go through a single API wrapper. No raw `fetch()` calls in page or feature modules.
@@ -874,6 +925,8 @@ Use modern DOM and language APIs. Legacy equivalents are forbidden. Inspired by 
 | `el.removeChild(child)` | Use `child.remove()` -- modern DOM API |
 | `JSON.parse(JSON.stringify(obj))` for cloning | Use `structuredClone(obj)` |
 | `array.indexOf(x) !== -1` | Use `array.includes(x)` |
+| Re-export shims (`export { newFn as oldFn }`) | Update all import sites to use the new name, delete the shim |
+| Compatibility/migration modules | Migrate all callers directly, delete the compat module |
 
 ## JavaScript -- DOM Patterns
 
@@ -1269,6 +1322,8 @@ grep -rn "credentials:\s*['\"]include['\"]" storage/files/js/ --include='*.js' |
 grep -rn "let overlay\s*=\s*null\|let modal\s*=\s*null\|let popup\s*=\s*null" storage/files/js/ --include='*.js' | grep -v '/services/' && echo "FAIL: ad-hoc overlay state in feature module"
 grep -rn "document\.addEventListener.*Escape" storage/files/js/ --include='*.js' | grep -v '/events/' | grep -v '/services/' && echo "FAIL: per-module Escape handler -- use overlay manager"
 grep -rn "^\s*//\|/\*" storage/files/js/ --include='*.js' && echo "FAIL: comments found in JS"
+find storage/files/css/ storage/files/js/ -iname '*compat*' -o -iname '*legacy*' -o -iname '*shim*' -o -iname '*migration*' | grep . && echo "FAIL: compat/legacy/shim/migration files must be eliminated -- migrate consumers and delete"
+grep -rn "var(--[a-z]" storage/files/css/ --include='*.css' | grep -v "var(--sp-" | grep -v "var(--webkit" && echo "FAIL: unprefixed custom property reference -- use --sp- prefix"
 for f in storage/files/js/handlers/*.js storage/files/js/services/*.js; do
   head -20 "$f" | grep -q "addEventListener" && echo "FAIL: $f registers listeners -- handlers export functions only"
 done
@@ -1303,6 +1358,9 @@ Manual verification:
 - No `let overlay = null` ad-hoc state in feature modules
 - No hardcoded API base URLs -- import from `services/api.js`
 - Web Component exists? Use it. Don't build an imperative alternative
+- No compat/legacy/shim/migration files -- migrate consumers directly, delete the translation layer
+- No unprefixed custom properties (`--header-height`) -- every reference uses `--sp-` prefix
+- No CSS alias declarations (`--old: var(--new)`) -- update consumers, delete alias
 - Every JS file under 150 lines, every function under 30 lines
 
 ## Quick Reference
