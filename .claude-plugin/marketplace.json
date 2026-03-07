@@ -6,7 +6,8 @@
   },
   "metadata": {
     "description": "Development plugins for systemprompt.io codebases",
-    "version": "1.0.0",
+    "version": "1.1.0",
+    "git_hash": "2edfa80",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -80,7 +81,7 @@
       "name": "frontend-development",
       "source": "./plugins/frontend-development",
       "description": "Front-end coding standards for systemprompt.io static site generation - JavaScript, CSS, and HTML with modular vanilla JS and Web Components",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "development",
       "author": {
         "name": "systemprompt.io",
