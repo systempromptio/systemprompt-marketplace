@@ -1,0 +1,9 @@
+{
+  "name": "system-prompt-cli",
+  "description": "Comprehensive guide to the systemprompt CLI tool - 8 domains, 64+ subcommands for managing AI infrastructure",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}
