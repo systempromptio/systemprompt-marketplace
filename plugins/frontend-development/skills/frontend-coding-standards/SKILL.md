@@ -1,7 +1,7 @@
 ---
 name: frontend-coding-standards
 description: "Front-end coding standards for systemprompt.io - JavaScript, CSS, and HTML for static site generation with modular vanilla JS and Web Components"
-version: "1.4.0"
+version: "1.5.0"
 git_hash: "29d1b40"
 ---
 
@@ -107,6 +107,7 @@ Single `<h1>` per page (the page title). Headings must not skip levels -- `<h1>`
 | `<font>`, `<center>`, `<marquee>` | Use CSS |
 | Missing `alt` on `<img>` | Always provide `alt` text |
 | `<div>` or `<span>` as buttons | Use `<button>` |
+| HTML comments (`<!-- -->`) | Delete -- HTML documents itself. No comments in templates or compiled output |
 
 ### Template Syntax
 
@@ -837,7 +838,7 @@ initLazyLoad();
 | Indentation | 2 spaces |
 | Semicolons | Required |
 | Trailing commas | Required in multiline constructs |
-| Comments | Forbidden -- code documents itself |
+| Comments | Forbidden in all languages (JS, CSS, HTML) -- code documents itself |
 
 ### Modern API Preferences
 
@@ -1322,6 +1323,8 @@ grep -rn "credentials:\s*['\"]include['\"]" storage/files/js/ --include='*.js' |
 grep -rn "let overlay\s*=\s*null\|let modal\s*=\s*null\|let popup\s*=\s*null" storage/files/js/ --include='*.js' | grep -v '/services/' && echo "FAIL: ad-hoc overlay state in feature module"
 grep -rn "document\.addEventListener.*Escape" storage/files/js/ --include='*.js' | grep -v '/events/' | grep -v '/services/' && echo "FAIL: per-module Escape handler -- use overlay manager"
 grep -rn "^\s*//\|/\*" storage/files/js/ --include='*.js' && echo "FAIL: comments found in JS"
+grep -rn "<!--" storage/files/admin/compiled/ --include='*.html' && echo "FAIL: HTML comments found in templates"
+grep -rn "<!--" storage/files/css/ --include='*.css' && echo "FAIL: HTML comments found in CSS"
 find storage/files/css/ storage/files/js/ -iname '*compat*' -o -iname '*legacy*' -o -iname '*shim*' -o -iname '*migration*' | grep . && echo "FAIL: compat/legacy/shim/migration files must be eliminated -- migrate consumers and delete"
 grep -rn "var(--[a-z]" storage/files/css/ --include='*.css' | grep -v "var(--sp-" | grep -v "var(--webkit" && echo "FAIL: unprefixed custom property reference -- use --sp- prefix"
 for f in storage/files/js/handlers/*.js storage/files/js/services/*.js; do
@@ -1343,7 +1346,7 @@ Manual verification:
 - Keyboard accessible (Tab through all interactive elements)
 - Works without JavaScript (progressive enhancement)
 - `prefers-reduced-motion` respected
-- No comments in any JS or CSS file
+- No comments in any JS, CSS, or HTML file (including `<!-- -->` in templates and compiled output)
 - Every `data-action` value has a corresponding handler in the event registry
 - No `document.addEventListener('click')` outside the event registry
 - All overlay UI is a Web Component -- no imperative builders, no per-page menu/modal code
