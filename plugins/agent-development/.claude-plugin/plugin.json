@@ -1,7 +1,7 @@
 {
   "name": "agent-development",
   "description": "Create, configure, and manage AI agents with skills, MCP tools, A2A protocol, and multi-agent architecture",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "systemprompt.io",
     "email": "hello@systemprompt.io"

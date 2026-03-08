@@ -6,8 +6,8 @@
   },
   "metadata": {
     "description": "Development plugins for systemprompt.io codebases",
-    "version": "1.4.0",
-    "git_hash": "be91410",
+    "version": "1.5.0",
+    "git_hash": "0000000",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -15,7 +15,7 @@
       "name": "rust-development",
       "source": "./plugins/rust-development",
       "description": "Build Rust extensions, CLI binaries, and MCP servers for systemprompt.io with idiomatic patterns and standards",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "development",
       "author": {
         "name": "systemprompt.io",
@@ -37,7 +37,7 @@
       "name": "agent-development",
       "source": "./plugins/agent-development",
       "description": "Create, configure, and manage AI agents with skills, MCP tools, A2A protocol, and multi-agent architecture",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "development",
       "author": {
         "name": "systemprompt.io",
@@ -59,7 +59,7 @@
       "name": "theme-creator",
       "source": "./plugins/theme-creator",
       "description": "Create, edit, and perfect world-class website themes with color science, design tokens, and premium CSS patterns",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "development",
       "author": {
         "name": "systemprompt.io",
@@ -81,7 +81,7 @@
       "name": "ux-ui-excellence",
       "source": "./plugins/ux-ui-excellence",
       "description": "World-class UX and UI design standards for generating, reviewing, and updating web components, pages, and dashboards with cutting-edge visual design, interaction patterns, and modern CSS",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "development",
       "author": {
         "name": "systemprompt.io",
