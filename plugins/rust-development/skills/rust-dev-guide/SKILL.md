@@ -2,7 +2,7 @@
 name: rust-dev-guide
 description: "Entry point for rust-development — routes to the right sub-skill for your task"
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "3bc512f"
 ---
 
 # Rust Development

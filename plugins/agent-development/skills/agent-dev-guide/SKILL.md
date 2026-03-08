@@ -2,7 +2,7 @@
 name: agent-dev-guide
 description: "Entry point for agent-development — routes to the right sub-skill for your task"
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "3bc512f"
 ---
 
 # Agent Development
