@@ -2,7 +2,7 @@
 name: theme-audit
 description: "Checklists and procedures for reviewing, debugging, and improving existing website themes"
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "3c4f35d"
 ---
 
 # Theme Audit
