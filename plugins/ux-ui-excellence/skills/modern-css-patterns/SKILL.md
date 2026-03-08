@@ -2,7 +2,7 @@
 name: modern-css-patterns
 description: "Production-ready modern CSS features — container queries, :has(), subgrid, scroll-driven animations, View Transitions, anchor positioning, and cascade layers"
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "be91410"
 ---
 
 # Modern CSS Patterns

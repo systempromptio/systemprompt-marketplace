@@ -2,7 +2,7 @@
 name: visual-design-system
 description: "World-class visual design system standards — OKLCH color science, fluid typography, elevation hierarchy, branded asymmetric corners, and dark mode implementation"
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "be91410"
 ---
 
 # Visual Design System
