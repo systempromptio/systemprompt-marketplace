@@ -2,7 +2,7 @@
 name: frontend-coding-standards
 description: "Front-end coding standards for systemprompt.io - JavaScript, CSS, and HTML for static site generation with modular vanilla JS and Web Components"
 version: "1.5.0"
-git_hash: "29d1b40"
+git_hash: "f53e30e"
 ---
 
 # Front-End Coding Standards
