@@ -6,8 +6,8 @@
   },
   "metadata": {
     "description": "Development plugins for systemprompt.io codebases",
-    "version": "1.3.0",
-    "git_hash": "3c4f35d",
+    "version": "1.4.0",
+    "git_hash": "0000000",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -72,6 +72,17 @@
       "description": "Comprehensive guide to the systemprompt CLI tool - 8 domains, 64+ subcommands for managing AI infrastructure",
       "version": "1.0.0",
       "category": "operations",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "ux-ui-excellence",
+      "source": "./plugins/ux-ui-excellence",
+      "description": "World-class UX and UI design standards for generating, reviewing, and updating web components, pages, and dashboards with cutting-edge visual design, interaction patterns, and modern CSS",
+      "version": "1.0.0",
+      "category": "development",
       "author": {
         "name": "systemprompt.io",
         "email": "hello@systemprompt.io"
