@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "marketplace": {
-      "type": "http",
-      "url": "https://systemprompt.io/api/v1/mcp/marketplace/mcp"
-    }
-  }
-}

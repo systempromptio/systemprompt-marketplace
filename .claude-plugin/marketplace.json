@@ -6,8 +6,8 @@
   },
   "metadata": {
     "description": "Development plugins for systemprompt.io codebases",
-    "version": "1.1.0",
-    "git_hash": "2edfa80",
+    "version": "1.3.0",
+    "git_hash": "0000000",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -28,39 +28,6 @@
       "description": "Build web features including pages, templates, content ingestion, and front-end assets for systemprompt.io",
       "version": "1.0.0",
       "category": "development",
-      "author": {
-        "name": "systemprompt.io",
-        "email": "hello@systemprompt.io"
-      }
-    },
-    {
-      "name": "content-writing",
-      "source": "./plugins/content-writing",
-      "description": "Create, edit, and manage content including blog posts, technical documentation, and narrative writing",
-      "version": "1.0.0",
-      "category": "content",
-      "author": {
-        "name": "systemprompt.io",
-        "email": "hello@systemprompt.io"
-      }
-    },
-    {
-      "name": "marketplace-management",
-      "source": "./plugins/marketplace-management",
-      "description": "Build custom skills, agents, workflows, and MCP configurations through guided Socratic interviews",
-      "version": "1.0.0",
-      "category": "platform",
-      "author": {
-        "name": "systemprompt.io",
-        "email": "hello@systemprompt.io"
-      }
-    },
-    {
-      "name": "operations",
-      "source": "./plugins/operations",
-      "description": "Cloud infrastructure, monitoring, scheduling, Discord integration, and system configuration for systemprompt.io",
-      "version": "1.0.0",
-      "category": "operations",
       "author": {
         "name": "systemprompt.io",
         "email": "hello@systemprompt.io"
@@ -89,11 +56,22 @@
       }
     },
     {
-      "name": "general",
-      "source": "./plugins/general",
-      "description": "General assistance and utilities for systemprompt.io",
+      "name": "theme-creator",
+      "source": "./plugins/theme-creator",
+      "description": "Create, edit, and perfect world-class website themes with color science, design tokens, and premium CSS patterns",
       "version": "1.0.0",
-      "category": "general",
+      "category": "development",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "system-prompt-cli",
+      "source": "./plugins/system-prompt-cli",
+      "description": "Comprehensive guide to the systemprompt CLI tool - 8 domains, 64+ subcommands for managing AI infrastructure",
+      "version": "1.0.0",
+      "category": "operations",
       "author": {
         "name": "systemprompt.io",
         "email": "hello@systemprompt.io"

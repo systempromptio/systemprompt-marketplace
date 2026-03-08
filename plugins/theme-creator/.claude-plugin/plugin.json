@@ -1,0 +1,9 @@
+{
+  "name": "theme-creator",
+  "description": "Create, edit, and perfect world-class website themes with color science, design tokens, and premium CSS patterns",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}
