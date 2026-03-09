@@ -2,7 +2,7 @@
 name: blog-writing
 description: "Generate long-form blog posts with Edward Burton's voice for systemprompt.io. Personal narrative meets technical depth, 3500-5000 words, optimised for the guides content source."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
   git_hash: "76ef91c"
 ---
 
@@ -74,7 +74,7 @@ Good: "The LangChain Mistake Everyone Makes"
 # [Punchy Title - max 8 words]
 
 ## Prelude
-[Hook - personal story, bold claim, or question]
+[Hook - bold claim, observation, or question. Never a fabricated personal story.]
 
 ## The Problem
 [What needed solving, why it matters]
@@ -92,16 +92,16 @@ Good: "The LangChain Mistake Everyone Makes"
 ## Voice
 
 - British English (realise, optimise)
-- Personal: "I built", "I failed", "I learned"
-- 60% narrative, 40% technical
+- Use generic examples and clearly hypothetical scenarios, never fabricated personal stories
+- 60% insight, 40% technical
 - Short sentences for impact. Then longer ones for explanation.
 - Honest about failures, not just wins
 
 ## Don'ts
 
-- NO fabricated personal stories or metrics
+- NO fabricated personal stories, analogies presented as real experiences, or made-up metrics
 - NO "I discovered that...", "Fascinatingly...", "It became clear..."
-- NO generic tutorials without personal angle
+- NO first-person narratives unless Edward provides the actual story
 - NO colons or em-dashes in titles/headings
 - NO content under 3500 words
 - NO fake engagement questions ("What do you think?")

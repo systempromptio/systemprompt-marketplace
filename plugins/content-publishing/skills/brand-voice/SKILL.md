@@ -1,7 +1,7 @@
 ---
 name: brand-voice
 description: "Apply and enforce the systemprompt.io brand voice, style guide, and messaging pillars across all content. Always load identity first. Use when reviewing content for brand consistency, drafting content, or checking terminology compliance."
-version: "1.0.1"
+version: "1.0.2"
 git_hash: "c0fe73b"
 ---
 
@@ -55,8 +55,10 @@ The voice carries authority on AI governance without being academic. It is the C
 
 ## CRITICAL RULES (non-negotiable)
 
-### 1. NEVER fabricate evidence
-Never invent statistics, quotes, anecdotes, customer stories, or specific examples. Use placeholders:
+### 1. NEVER fabricate evidence or personal stories
+Never invent statistics, quotes, anecdotes, customer stories, personal narratives, or specific examples. This includes made-up "I built...", "I learned...", or "When I was..." stories. Never fabricate analogies presented as real experiences.
+
+Use generic, clearly hypothetical examples ("A 200-person SaaS company rolling out Claude...") or placeholders:
 - `[INSERT: specific example from Edward]`
 - `[INSERT: customer quote or observation]`
 - `[INSERT: specific metric or data point]`

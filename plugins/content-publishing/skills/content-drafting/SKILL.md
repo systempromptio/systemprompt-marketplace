@@ -1,7 +1,7 @@
 ---
 name: content-drafting
 description: "Draft marketing content for systemprompt.io across LinkedIn, Reddit, blog, email, and documentation. Positions systemprompt as AI governance infrastructure for CTOs at SMEs. Always load identity and brand-voice first."
-version: "1.0.1"
+version: "1.0.2"
 git_hash: "c0fe73b"
 ---
 
@@ -32,7 +32,7 @@ systemprompt.io is AI governance infrastructure. It gives organizations control 
 - Follow the 70/20/10 content funnel from brand voice
 
 ### Structure
-1. **Hook** (line 1): Contrarian take on AI governance, surprising observation about organizational AI usage, or bold claim about where the market is heading. Must earn the "see more" click from a CTO.
+1. **Hook** (line 1): Contrarian take on AI governance, surprising observation about organizational AI usage, or bold claim about where the market is heading. Must earn the "see more" click from a CTO. Never open with a fabricated personal story.
 2. **Body** (3 to 5 paragraphs): One idea per paragraph. Short sentences. Specific details.
 3. **Closing**: Strong final statement, observation, or call to action. No fake engagement questions.
 
@@ -138,7 +138,8 @@ systemprompt.io is AI governance infrastructure. It gives organizations control 
 Before publishing any content, verify:
 - [ ] Aligns with `identity` skill positioning (governance infrastructure, not consumer product)
 - [ ] Speaks to the primary ICP (CTOs at SMEs) or explicitly targets secondary/tertiary audience
-- [ ] No fabricated evidence, stats, quotes, or anecdotes
+- [ ] No fabricated evidence, stats, quotes, anecdotes, or personal stories
+- [ ] Examples are generic or clearly hypothetical, never made-up personal narratives
 - [ ] No hashtags
 - [ ] No em dashes
 - [ ] No AI cliches

@@ -92,7 +92,7 @@
       "name": "content-publishing",
       "source": "./plugins/content-publishing",
       "description": "Full content lifecycle for systemprompt.io: brand identity, blog writing, Gemini API image generation, documentation copywriting, website copy, guide writing, content drafting, brand review, and end-to-end publishing via CLI",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "category": "content",
       "author": {
         "name": "systemprompt.io",
