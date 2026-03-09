@@ -2,7 +2,7 @@
 name: blog-image-generation
 description: "Generate and edit blog featured images using the Google Gemini API via curl. Supports text-to-image generation and image editing with style guidelines optimised for social media."
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "76ef91c"
 ---
 
 # Blog Image Generation via Gemini API

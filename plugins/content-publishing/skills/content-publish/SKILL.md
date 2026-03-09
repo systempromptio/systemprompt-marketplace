@@ -2,7 +2,7 @@
 name: content-publish
 description: "End-to-end content publishing workflow for systemprompt.io. Create blog posts, generate images, sync to database, run the publish pipeline, and verify production deployment via CLI."
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "76ef91c"
 ---
 
 # Content Publishing Workflow

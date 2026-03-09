@@ -2,7 +2,7 @@
 name: website-copywriter
 description: "Expert website copywriter for systemprompt.io. Analyses, critiques, and rewrites website page copy using world-class SaaS and platform marketing strategies for enterprise credibility."
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "76ef91c"
 ---
 
 # systemprompt Website Copywriter

@@ -2,7 +2,7 @@
 name: documentation-copywriter
 description: "Expert documentation copywriter for systemprompt.io. Ensures every documentation page follows consistent structure, tone, layout, and branding. Validates accuracy, checks for broken links, enforces Anthropic terminology, and maintains quality standards across all documentation sections."
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "76ef91c"
 ---
 
 # systemprompt Documentation Copywriter
