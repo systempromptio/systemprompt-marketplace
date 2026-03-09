@@ -134,7 +134,7 @@ Use day-of-week rotation:
 |-----|-----------|-----------|
 | Monday | Dev.to | Claude Discord |
 | Tuesday | Hashnode | Claude Discord |
-| Wednesday | Medium | Claude Discord |
+| Wednesday | Medium | Hackernoon |
 | Thursday | Substack | Hacker News (only if deeply technical, otherwise Claude Discord) |
 | Friday | Dev.to | Claude Discord |
 | Saturday | Skip | Skip |
@@ -146,7 +146,8 @@ If today is a weekend, state "Weekend — no distribution today" and stop.
 - Dev.to: Tutorials with runnable code, workflow recipes, plugin build walkthroughs
 - Hashnode: Deep technical builds, step-by-step MCP server setups, hook configurations
 - Medium: Narrative-driven practitioner stories, broader audience, less code-heavy than Dev.to
-- Substack: Newsletter-style deep dives, opinionated takes, building-in-public narratives
+- Hackernoon: Original technical content with strong practitioner angle, good for SEO backlinks
+- Substack: Original newsletter-style deep dives, opinionated takes, building-in-public narratives
 - Hacker News: ONLY for deeply technical content (MCP protocol, Rust builds, novel architecture)
 - Claude Discord: Quick tips, useful configurations, community Q&A
 
@@ -234,59 +235,111 @@ tags: [relevant tags]
 - Step-by-step with real configs
 - 3-5 backlinks
 
-##### Medium
+##### Medium (HTML)
 
-```markdown
-# [Narrative title that hooks a broad developer audience]
+Output as a complete HTML file. Medium accepts HTML import.
 
-[2000-3000 word practitioner story]
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>[Narrative title]</title>
+<meta name="description" content="[One-sentence summary]">
+<meta property="og:image" content="https://systemprompt.io/files/images/blog/[slug].png">
+<link rel="canonical" href="https://systemprompt.io/guides/[slug]">
+</head>
+<body>
+<article>
+<h1>[Title]</h1>
+<img src="https://systemprompt.io/files/images/blog/[slug].png" alt="[descriptive alt]">
 
-[Open with the problem as a personal experience]
+[2000-3000 words as HTML paragraphs, headings, code blocks]
 
-[Walk through the solution with enough code to be credible but not overwhelming]
-
-[End with what changed and what you'd do differently]
-
----
-
-*Originally published on [systemprompt.io](https://systemprompt.io/guides/[slug]).*
+<hr>
+<p><em>Originally published on <a href="https://systemprompt.io/guides/[slug]">systemprompt.io</a>.</em></p>
+</article>
+</body>
+</html>
 ```
 
 **Medium rules:**
 - 2000-3000 words
 - More narrative, less tutorial. Tell the story of solving the problem
-- Code blocks should be short and illustrative, not comprehensive. Link to the guide for full configs
-- Medium readers skim. Use headers, short paragraphs, and bold key phrases
-- Import to Medium and set canonical URL to the systemprompt.io guide
-- 3-5 backlinks woven naturally
-- Tags: up to 5, choose from Medium's existing tag set (AI, Programming, Productivity, Developer Tools, etc.)
+- Code blocks as `<pre><code>` — short and illustrative, not comprehensive
+- Medium readers skim. Use `<h2>`, short `<p>` tags, and `<strong>` for key phrases
+- Set canonical URL to the systemprompt.io guide
+- 3-5 backlinks as `<a href>` woven naturally
+- Save as `.html` file
 
-##### Substack
+##### Hackernoon (HTML, original content)
 
-```markdown
-# [Opinionated title — take a position]
+Hackernoon publishes original content. Do NOT syndicate the guide. Write a NEW article on the same topic with a different angle, title, and structure. Include 3-5 backlinks to systemprompt.io guides.
 
-[1500-2500 word newsletter-style post]
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>[Original title — different from the guide]</title>
+<meta name="description" content="[One-sentence hook]">
+<meta name="keywords" content="[comma-separated keywords]">
+<meta property="og:image" content="https://systemprompt.io/files/images/blog/[slug].png">
+</head>
+<body>
+<article>
+<h1>[Title]</h1>
+<img src="https://systemprompt.io/files/images/blog/[slug].png" alt="[descriptive alt]">
 
-[Open with a specific observation or opinion about how developers work with AI]
+[2000-3000 words as HTML — original content, not a copy of the guide]
 
-[Support the opinion with real examples from building marketplace plugins]
+</article>
+</body>
+</html>
+```
 
-[Close with a forward-looking thought — what this means for how we'll work]
+**Hackernoon rules:**
+- 2000-3000 words, ORIGINAL content (not syndicated)
+- Must be a genuinely different article from the source guide — different title, different angle, different structure
+- Technical and practitioner-focused. Hackernoon readers are developers
+- Code examples as `<pre><code>` blocks
+- 3-5 backlinks to systemprompt.io guides as natural `<a href>` references
+- No canonical URL (this is original content, not a copy)
+- Save as `.html` file
 
----
+##### Substack (HTML, original content)
 
-*Full technical details: [systemprompt.io guide link]*
+Substack publishes original content. Do NOT syndicate the guide. Write a NEW newsletter-style piece on the same topic with a different angle. Include 3-5 backlinks to systemprompt.io guides.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>[Opinionated title — take a position]</title>
+<meta property="og:image" content="https://systemprompt.io/files/images/blog/[slug].png">
+</head>
+<body>
+<article>
+<h1>[Title]</h1>
+<img src="https://systemprompt.io/files/images/blog/[slug].png" alt="[descriptive alt]">
+
+[1500-2500 words as HTML — original newsletter-style content]
+
+</article>
+</body>
+</html>
 ```
 
 **Substack rules:**
-- 1500-2500 words
+- 1500-2500 words, ORIGINAL content (not syndicated)
 - Newsletter voice. More personal, more opinionated than other platforms
 - Less code than Dev.to/Hashnode. This is about ideas and experience, not step-by-step setup
 - Building-in-public angle works well. Share what you're working on, what surprised you, what failed
-- End with a question or call to subscribe for more practitioner insights
-- 3-5 backlinks woven naturally
-- No frontmatter needed. Substack uses its own editor
+- End with a question or call to subscribe
+- 3-5 backlinks to systemprompt.io guides as natural `<a href>` references
+- No canonical URL (this is original content)
+- Save as `.html` file
 
 ##### Hacker News
 
@@ -344,6 +397,7 @@ Full writeup if you want the details: [guide link]
 - Discord: Most casual, contractions everywhere, self-deprecating
 - Dev.to/Hashnode: Tutorial voice with personal angle
 - Medium: Narrative practitioner voice, more storytelling than tutorial
+- Hackernoon: Technical practitioner voice, original angle on the topic
 - Substack: Newsletter voice, opinionated, building-in-public energy
 - Hacker News: Extremely concise, technical precision above all
 
@@ -399,8 +453,9 @@ Create a date-stamped directory: `reports/seo/blog/YYYY-MM-DD/`
 **Platform files (all must be publish-ready — complete frontmatter, no placeholders):**
 - `devto-{slug}.md` — complete Dev.to frontmatter (title, published, tags, canonical_url, cover_image)
 - `hashnode-{slug}.md` — complete Hashnode frontmatter (title, slug, canonical, cover, tags)
-- `medium-{slug}.md` — narrative post with canonical link footer
-- `substack-{slug}.md` — newsletter-style post ready to paste into Substack editor
+- `medium-{slug}.html` — HTML with canonical link, ready to import
+- `hackernoon-{slug}.html` — original HTML content with backlinks
+- `substack-{slug}.html` — original HTML newsletter content with backlinks
 - `hn-{slug}.md` — title, URL, and comment ready to paste
 - `discord-{slug}.md` — message ready to paste
 
