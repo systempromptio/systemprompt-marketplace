@@ -1,6 +1,8 @@
 ---
 name: brand-voice
 description: "Apply and enforce the systemprompt.io brand voice, style guide, and messaging pillars across all content. Always load identity first. Use when reviewing content for brand consistency, drafting content, or checking terminology compliance."
+version: "1.0.1"
+git_hash: "dc55b04"
 ---
 
 # systemprompt Brand Voice
@@ -112,7 +114,7 @@ Every piece of content should reinforce systemprompt's position as AI governance
 ### Post Structure
 1. **Hook** (first line): Contrarian take on AI governance, surprising observation about how organizations use AI, or bold claim about where the market is heading. Must earn the "see more" click.
 2. **Body** (3-5 short paragraphs): One idea per paragraph. Short sentences. Mobile-formatted. Specific details that demonstrate infrastructure-level thinking.
-3. **Closing**: Question that invites comments from CTOs and technical leaders.
+3. **Closing**: Strong final statement, specific observation, or direct call to action. Never end with a generic engagement question.
 
 ### LinkedIn Rules
 - NEVER include external links in the post body
@@ -120,6 +122,8 @@ Every piece of content should reinforce systemprompt's position as AI governance
 - Post 2 to 3 times per week
 - Respond to every comment within the first 90 minutes
 - Personal observations and contrarian takes outperform generic advice
+- NEVER end posts with generic engagement questions ("What do you think?", "Have you experienced this?", "How does your team handle this?")
+- End with a strong statement, a specific insight, or a direct CTA (link in first comment)
 
 ## Reddit Strategy
 - Lead with value. Never pitch

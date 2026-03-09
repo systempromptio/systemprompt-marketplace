@@ -1,6 +1,8 @@
 ---
 name: content-drafting
 description: "Draft marketing content for systemprompt.io across LinkedIn, Reddit, blog, email, and documentation. Positions systemprompt as AI governance infrastructure for CTOs at SMEs. Always load identity and brand-voice first."
+version: "1.0.1"
+git_hash: "dc55b04"
 ---
 
 # systemprompt Content Drafting
@@ -32,7 +34,11 @@ systemprompt.io is AI governance infrastructure. It gives organizations control 
 ### Structure
 1. **Hook** (line 1): Contrarian take on AI governance, surprising observation about organizational AI usage, or bold claim about where the market is heading. Must earn the "see more" click from a CTO.
 2. **Body** (3 to 5 paragraphs): One idea per paragraph. Short sentences. Specific details.
-3. **Closing**: Question that invites comments from technical leaders.
+3. **Closing**: Strong final statement, observation, or call to action. No fake engagement questions.
+
+### Anti-Patterns
+- NEVER end posts with generic engagement questions ("What do you think?", "Have you experienced this?", "How does your team handle this?")
+- End with a strong statement, a specific insight, or a direct CTA (link in first comment)
 
 ### Post Types by Funnel Position
 
