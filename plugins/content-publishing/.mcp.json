@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "skill-manager": {
+      "type": "http",
+      "url": "https://systemprompt.io/api/v1/mcp/skill-manager/mcp"
+    }
+  }
+}

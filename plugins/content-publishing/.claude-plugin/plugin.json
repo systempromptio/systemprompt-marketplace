@@ -1,0 +1,9 @@
+{
+  "name": "content-publishing",
+  "description": "Full content lifecycle for systemprompt.io: blog writing, Gemini API image generation, documentation copywriting, website copy, guide writing, and end-to-end publishing via CLI",
+  "version": "1.0.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}
