@@ -3,7 +3,7 @@ name: content-distribution
 description: "Generate value-first platform content sharing expert Claude Code marketplace knowledge: plugins, hooks, CLAUDE.md, MCP servers, and advanced features."
 metadata:
   version: "2.0.0"
-  git_hash: "PENDING"
+  git_hash: "4c3906a"
 ---
 
 # Content Distribution Loop
