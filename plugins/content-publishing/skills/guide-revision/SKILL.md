@@ -2,8 +2,8 @@
 name: guide-revision
 description: "Deterministic quality audit for published guides. Runs a checklist of binary pass/fail checks covering facts, links, code, structure, SEO, readability, and interlinking. Load identity first."
 metadata:
-  version: "1.0.0"
-  git_hash: "1632daf"
+  version: "1.0.1"
+  git_hash: "PENDING"
 ---
 
 # Guide Revision Audit
@@ -25,7 +25,7 @@ Read the SEO Content Strategy Master Plan at `/var/www/html/systemprompt-web/ser
 3. Read the SEO Content Strategy Master Plan for cluster and interlinking context
 4. Run each of the 8 audit sections below
 5. Generate the structured report
-6. Save to `reports/guide-revision-{slug}-{YYYY-MM-DD}.md`
+6. Save to `reports/guide-revision/YYYY-MM-DD/guide-revision-{slug}.md`
 
 ## Audit Sections
 
@@ -190,6 +190,6 @@ Top 3 critical issues to fix first:
 ... (repeat for all 8 sections)
 ```
 
-Save the report to `reports/guide-revision-{slug}-{YYYY-MM-DD}.md`.
+Save the report to `reports/guide-revision/YYYY-MM-DD/guide-revision-{slug}.md`.
 
 A section passes only if ALL checks within it pass.

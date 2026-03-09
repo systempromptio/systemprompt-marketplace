@@ -2,8 +2,8 @@
 name: content-publishing-guide
 description: "Entry point for content-publishing — routes to the right sub-skill for your task"
 metadata:
-  version: "1.0.5"
-  git_hash: "7bc7909"
+  version: "1.0.6"
+  git_hash: "PENDING"
 ---
 
 # Content Publishing Guide
@@ -74,21 +74,21 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 
 1. Load `identity` and `brand-voice` for positioning and tone
 2. Load `reddit-reply` to check replies to our previous comments
-3. Review the follow-up drafts in `reports/reddit-reply-{date}.md`
+3. Review the follow-up drafts in `reports/reddit/{date}/reddit-reply.md`
 4. Post approved follow-ups manually
 
 ### Daily SEO Review
 
 1. Load `identity` for positioning and keyword strategy context
 2. Load `seo-monitor` to pull analytics and generate performance report
-3. Review the report in `reports/seo-monitor-{date}.md`
+3. Review the report in `reports/seo/{date}/seo-monitor.md`
 4. Action the prioritised recommendations
 
 ### Revise an Existing Guide
 
 1. Load `identity` for positioning and keyword strategy context
 2. Load `guide-revision` to audit the guide against the checklist
-3. Review the report in `reports/guide-revision-{slug}-{date}.md`
+3. Review the report in `reports/guide-revision/{date}/guide-revision-{slug}.md`
 4. Fix failing checks in priority order (claims, links, structure)
 5. Re-run `guide-revision` to verify fixes
 

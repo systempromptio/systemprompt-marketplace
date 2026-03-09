@@ -2,8 +2,8 @@
 name: seo-monitor
 description: "Daily SEO performance review. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports. Designed for daily /loop. Load identity first."
 metadata:
-  version: "1.0.1"
-  git_hash: "4b835fd"
+  version: "1.0.2"
+  git_hash: "PENDING"
 ---
 
 # SEO Monitor
@@ -318,7 +318,7 @@ Cross-reference all three data sources (inventory, internal analytics, GSC) to b
 Save the report to:
 
 ```
-/var/www/html/systemprompt-marketplace/reports/seo-monitor-{YYYY-MM-DD}.md
+reports/seo/YYYY-MM-DD/seo-monitor.md
 ```
 
 Use today's date in the filename.

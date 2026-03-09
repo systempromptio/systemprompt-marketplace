@@ -2,8 +2,8 @@
 name: reddit-reply
 description: "Daily follow-up on Reddit engagement. Reads recent reddit-monitor reports, checks each URL for replies to our comments, and drafts follow-up responses. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
-  version: "1.0.0"
-  git_hash: "8ada4a7"
+  version: "1.0.1"
+  git_hash: "PENDING"
 ---
 
 # Reddit Reply
@@ -27,7 +27,7 @@ Daily follow-up skill that monitors replies to our previous Reddit comments. Rea
 Read the reddit-monitor reports from the `reports/` directory:
 
 ```
-/var/www/html/systemprompt-marketplace/reports/reddit-monitor-{YYYY-MM-DD}.md
+reports/reddit/YYYY-MM-DD/reddit-monitor.md
 ```
 
 Check for today's report and yesterday's report. If neither exists, check the last 3 days. Extract all post URLs from the `## Reply Targets` section (lines matching `- **URL:**`).
@@ -35,7 +35,7 @@ Check for today's report and yesterday's report. If neither exists, check the la
 Also read any previous reddit-reply reports from the last 7 days to avoid re-drafting responses to threads already handled:
 
 ```
-/var/www/html/systemprompt-marketplace/reports/reddit-reply-{YYYY-MM-DD}.md
+reports/reddit/YYYY-MM-DD/reddit-reply.md
 ```
 
 Build a list of:
@@ -109,7 +109,7 @@ For each actionable reply, draft a follow-up. These are second or third messages
 Save the report to:
 
 ```
-/var/www/html/systemprompt-marketplace/reports/reddit-reply-{YYYY-MM-DD}.md
+reports/reddit/YYYY-MM-DD/reddit-reply.md
 ```
 
 ### Report Structure
@@ -118,7 +118,7 @@ Save the report to:
 # Reddit Reply Report
 
 **Date:** {YYYY-MM-DD}
-**Reports scanned:** reddit-monitor-{date1}.md, reddit-monitor-{date2}.md
+**Reports scanned:** reports/reddit/{date1}/reddit-monitor.md, reports/reddit/{date2}/reddit-monitor.md
 **Posts checked:** {N}
 **Posts with our comments found:** {N}
 **Replies to our comments:** {N}

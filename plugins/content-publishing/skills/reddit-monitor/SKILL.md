@@ -2,8 +2,8 @@
 name: reddit-monitor
 description: "Monitor target subreddits for reply opportunities, filter for relevance to AI governance and Claude workflows, and draft personalized replies. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
-  version: "1.0.1"
-  git_hash: "b4f3861"
+  version: "1.0.2"
+  git_hash: "PENDING"
 ---
 
 # Reddit Monitor
@@ -173,7 +173,7 @@ Output the report in this format:
 **Save the report to:**
 
 ```
-/var/www/html/systemprompt-marketplace/reports/reddit-monitor-{YYYY-MM-DD}.md
+reports/reddit/YYYY-MM-DD/reddit-monitor.md
 ```
 
 Use today's date in the filename.
