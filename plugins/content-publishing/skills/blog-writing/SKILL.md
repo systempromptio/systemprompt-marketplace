@@ -3,7 +3,7 @@ name: blog-writing
 description: "Generate long-form blog posts with Edward Burton's voice for systemprompt.io. Personal narrative meets technical depth, 3500-5000 words, optimised for the guides content source."
 metadata:
   version: "1.0.1"
-  git_hash: "76ef91c"
+  git_hash: "ab62d0e"
 ---
 
 # Blog Writing
