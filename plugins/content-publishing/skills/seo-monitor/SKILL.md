@@ -3,7 +3,7 @@ name: seo-monitor
 description: "Daily SEO performance review. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports. Designed for daily /loop. Load identity first."
 metadata:
   version: "1.0.2"
-  git_hash: "PENDING"
+  git_hash: "bc2a4a3"
 ---
 
 # SEO Monitor

@@ -3,7 +3,7 @@ name: guide-revision
 description: "Deterministic quality audit for published guides. Runs a checklist of binary pass/fail checks covering facts, links, code, structure, SEO, readability, and interlinking. Load identity first."
 metadata:
   version: "1.0.1"
-  git_hash: "PENDING"
+  git_hash: "bc2a4a3"
 ---
 
 # Guide Revision Audit
