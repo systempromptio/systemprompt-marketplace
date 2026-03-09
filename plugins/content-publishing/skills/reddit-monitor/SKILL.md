@@ -3,7 +3,7 @@ name: reddit-monitor
 description: "Monitor target subreddits for reply opportunities, filter for relevance to AI governance and Claude workflows, and draft personalized replies. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "d7effc7"
 ---
 
 # Reddit Monitor

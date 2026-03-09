@@ -7,7 +7,7 @@
   "metadata": {
     "description": "Development plugins for systemprompt.io codebases",
     "version": "1.6.0",
-    "git_hash": "ab62d0e",
+    "git_hash": "d7effc7",
     "pluginRoot": "./plugins"
   },
   "plugins": [
