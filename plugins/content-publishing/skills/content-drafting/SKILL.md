@@ -2,7 +2,7 @@
 name: content-drafting
 description: "Draft marketing content for systemprompt.io across LinkedIn, Reddit, blog, email, and documentation. Positions systemprompt as AI governance infrastructure for CTOs at SMEs. Always load identity and brand-voice first."
 version: "1.0.1"
-git_hash: "dc55b04"
+git_hash: "c0fe73b"
 ---
 
 # systemprompt Content Drafting
