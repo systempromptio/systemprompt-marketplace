@@ -3,7 +3,7 @@ name: content-distribution
 description: "Generate daily platform-adapted content from published guides, driven by SEO strategy gaps and keyword targets."
 metadata:
   version: "1.0.0"
-  git_hash: "PENDING"
+  git_hash: "7bc7909"
 ---
 
 # Content Distribution Loop
