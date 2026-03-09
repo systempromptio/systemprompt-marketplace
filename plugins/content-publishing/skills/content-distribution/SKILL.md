@@ -2,7 +2,7 @@
 name: content-distribution
 description: "Generate value-first platform content sharing expert Claude Code marketplace knowledge: plugins, hooks, CLAUDE.md, MCP servers, and advanced features."
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   git_hash: "4c3906a"
 ---
 
@@ -83,25 +83,33 @@ Score each eligible guide using this value-first algorithm:
 | Expertise Match | 30% | Deep marketplace/plugin/hooks expertise = 10, Claude Code workflows = 7, Adjacent topic = 4, Generic AI = 0 |
 | SEO Opportunity | 20% | P1 gap = 10, P2 = 7, Existing guide syndication = 3 |
 
-**Critical rule: ANY topic scoring below 4 on Expertise Match is rejected regardless of SEO score.**
+**Critical rule: ANY topic scoring below 7 on Expertise Match is rejected regardless of SEO score.**
 
 **Exclusion rules:**
 - NEVER syndicate a guide published less than 5 days ago
 - NEVER distribute the same guide to the same platform within 30 days
 - NEVER distribute guides marked `public: false`
-- NEVER write generic comparisons that don't connect to our ecosystem expertise
+- NEVER distribute comparison or "vs" guides — they are not about our expertise, they are about other tools
+- NEVER choose a topic where the main subject is a third-party tool (LangChain, Cursor, Copilot) — our content must be about Claude Code and the marketplace ecosystem
 
 **Output:** State the selected guide and why, showing score breakdown.
 
-**Reframing existing guides through our lens:**
+**Topic must BE our expertise, not just reference it:**
 
-When syndicating a guide that covers a broad topic (like SDK vs LangChain), the distributed version MUST reframe it through our expertise. Examples:
+The topic itself must be about Claude Code, marketplace plugins, hooks, CLAUDE.md, MCP servers, skills, or enterprise deployment. Do not pick a guide about a third-party tool and try to reframe it. Readers see through this immediately.
 
-- "Agent SDK vs LangChain" becomes "How we rebuilt our LangChain agents as marketplace plugins" — showing how marketplace infrastructure replaces custom agent code
-- "MCP Server Authentication" becomes "The authentication patterns we use across 8 production MCP servers" — sharing real configuration
-- "Cost Optimisation" becomes "How hooks and CLAUDE.md cut our Claude Code spend by 40%" — showing the actual technique
+GOOD topics (the guide IS about our expertise):
+- `claude-code-hooks-workflows` → "5 hooks that changed how I use Claude Code" — sharing real hook configurations
+- `publish-plugin-claude-marketplace` → "How to package your Claude Code setup as a shareable plugin" — the actual publishing process
+- `claude-code-cost-optimisation` → "The CLAUDE.md pattern that cut our Claude spend by 40%" — a specific, actionable technique
+- `claude-md-monorepos` → "How we share Claude Code standards across 8 projects" — real monorepo configuration
+- `claude-code-daily-workflows` → "My actual Claude Code workflow after 6 months" — genuine daily usage patterns
 
-The distributed content is NOT a summary of the guide. It is a new angle that shares genuine expertise and links back to the guide for the full picture.
+BAD topics (the guide is about something else, and we force our expertise in):
+- `claude-agent-sdk-vs-langchain` → trying to make a framework comparison about marketplace plugins
+- `claude-plugins-vs-mcp-vs-skills` → a comparison guide, not a practitioner guide
+
+The distributed content shares a specific technique or workflow from the source guide, told as a practitioner story. It links back to the guide for the complete picture.
 
 ---
 
