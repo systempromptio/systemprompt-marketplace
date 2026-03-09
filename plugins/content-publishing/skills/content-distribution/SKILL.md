@@ -462,13 +462,15 @@ Create a date-stamped directory: `reports/seo/blog/YYYY-MM-DD/`
 ```
 
 **Platform files (all must be publish-ready — complete frontmatter, no placeholders):**
-- `devto-{slug}.md` — complete Dev.to frontmatter (title, published, tags, canonical_url, cover_image)
-- `hashnode-{slug}.html` — HTML with canonical link, ready to import
-- `medium-{slug}.html` — HTML with canonical link, ready to import
-- `hackernoon-{slug}.html` — original HTML content with backlinks
-- `substack-{slug}.html` — original HTML newsletter content with backlinks
-- `hn-{slug}.md` — title, URL, and comment ready to paste
-- `discord-{slug}.md` — message ready to paste
+For each platform, generate BOTH a markdown (.md) and HTML (.html) version. Some platforms accept markdown, others need HTML. Both should be publish-ready.
+
+- `devto-{slug}.md` + `devto-{slug}.html`
+- `hashnode-{slug}.md` + `hashnode-{slug}.html`
+- `medium-{slug}.md` + `medium-{slug}.html`
+- `hackernoon-{slug}.md` + `hackernoon-{slug}.html`
+- `substack-{slug}.md` + `substack-{slug}.html`
+- `hn-{slug}.md` — title, URL, and comment (markdown only)
+- `discord-{slug}.md` — message (markdown only)
 
 **Cover image:**
 Every report must include a cover image saved in the report directory. One image is shared across all platform posts for that day.
