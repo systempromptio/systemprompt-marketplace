@@ -1,5 +1,6 @@
 .env
 .env.*
+gsc.json
 .DS_Store
 __pycache__/
 *.pyc

@@ -110,70 +110,72 @@ GSC integration requires a service account. If not configured, skip this step an
 1. Create a Google Cloud project with the Search Console API enabled
 2. Create a service account and download the JSON key
 3. Add the service account email as a user in Google Search Console for `sc-domain:systemprompt.io`
-4. Store the key:
+4. Save the JSON key as `gsc.json` in the project root
+
+### Service Account Key
+
+The key file is at:
 
 ```
-Tool: manage_secrets
-Action: set
-Key: GSC_SERVICE_ACCOUNT_KEY
-Value: <paste the full JSON key contents>
+/var/www/html/systemprompt-marketplace/gsc.json
 ```
 
-### Retrieving the Key
-
-```
-Tool: get_secrets
-Keys: GSC_SERVICE_ACCOUNT_KEY
-```
+If this file does not exist, skip the GSC step and note "GSC data: Not configured" in the report.
 
 ### Authentication
 
 Generate a JWT and exchange it for an access token. The service account JSON contains `client_email`, `private_key`, and `token_uri`.
 
 ```bash
-# Extract fields from the service account key
-CLIENT_EMAIL=$(echo "$GSC_SERVICE_ACCOUNT_KEY" | python3 -c "import sys,json; print(json.load(sys.stdin)['client_email'])")
-PRIVATE_KEY=$(echo "$GSC_SERVICE_ACCOUNT_KEY" | python3 -c "import sys,json; print(json.load(sys.stdin)['private_key'])")
+# Load the service account key from file
+GSC_KEY_FILE="/var/www/html/systemprompt-marketplace/gsc.json"
 
-# Generate JWT (header.payload.signature)
-# Header: {"alg":"RS256","typ":"JWT"}
-# Payload: {"iss":CLIENT_EMAIL,"scope":"https://www.googleapis.com/auth/webmasters.readonly","aud":"https://oauth2.googleapis.com/token","iat":NOW,"exp":NOW+3600}
-
-# Use python3 to generate and sign the JWT:
+# Use python3 to authenticate and get an access token:
 ACCESS_TOKEN=$(python3 -c "
-import json, time, base64, hashlib
+import json, sys, time, base64
 from urllib.request import urlopen, Request
 from urllib.parse import urlencode
+from pathlib import Path
 
-# Load key
-key_data = json.loads('''$GSC_SERVICE_ACCOUNT_KEY''')
+# Load key from file
+key_file = Path('$GSC_KEY_FILE')
+if not key_file.exists():
+    print('GSC_NOT_CONFIGURED', file=sys.stderr)
+    sys.exit(1)
+
+try:
+    key_data = json.loads(key_file.read_text())
+except json.JSONDecodeError as e:
+    print(f'ERROR: gsc.json is not valid JSON: {e}', file=sys.stderr)
+    sys.exit(1)
+
+# Validate required fields
+for field in ('client_email', 'private_key', 'token_uri'):
+    if field not in key_data:
+        print(f'ERROR: gsc.json missing required field: {field}', file=sys.stderr)
+        sys.exit(1)
+
 email = key_data['client_email']
 private_key = key_data['private_key']
 
-# Build JWT
+# Build and sign JWT
 now = int(time.time())
-header = base64.urlsafe_b64encode(json.dumps({'alg':'RS256','typ':'JWT'}).encode()).rstrip(b'=').decode()
-payload = base64.urlsafe_b64encode(json.dumps({
+claims = {
     'iss': email,
     'scope': 'https://www.googleapis.com/auth/webmasters.readonly',
     'aud': 'https://oauth2.googleapis.com/token',
     'iat': now,
     'exp': now + 3600
-}).encode()).rstrip(b'=').decode()
+}
 
-# Sign with RSA (requires cryptography or jwt library)
 try:
-    import jwt
-    token = jwt.encode({
-        'iss': email,
-        'scope': 'https://www.googleapis.com/auth/webmasters.readonly',
-        'aud': 'https://oauth2.googleapis.com/token',
-        'iat': now,
-        'exp': now + 3600
-    }, private_key, algorithm='RS256')
+    import jwt as pyjwt
+    token = pyjwt.encode(claims, private_key, algorithm='RS256')
 except ImportError:
     from cryptography.hazmat.primitives import hashes, serialization
     from cryptography.hazmat.primitives.asymmetric import padding
+    header = base64.urlsafe_b64encode(json.dumps({'alg':'RS256','typ':'JWT'}).encode()).rstrip(b'=').decode()
+    payload = base64.urlsafe_b64encode(json.dumps(claims).encode()).rstrip(b'=').decode()
     key = serialization.load_pem_private_key(private_key.encode(), password=None)
     message = f'{header}.{payload}'.encode()
     signature = key.sign(message, padding.PKCS1v15(), hashes.SHA256())
@@ -185,12 +187,31 @@ data = urlencode({
     'assertion': token
 }).encode()
 req = Request('https://oauth2.googleapis.com/token', data=data, method='POST')
-resp = json.loads(urlopen(req).read())
+try:
+    resp = json.loads(urlopen(req).read())
+except Exception as e:
+    print(f'ERROR: Token exchange failed: {e}', file=sys.stderr)
+    sys.exit(1)
+
+if 'access_token' not in resp:
+    print(f'ERROR: No access_token in response. Check service account permissions. Response: {resp}', file=sys.stderr)
+    sys.exit(1)
+
 print(resp['access_token'])
 ")
+
+# If authentication failed, skip GSC and note it in the report
+if [ $? -ne 0 ]; then
+    echo "GSC authentication failed. Skipping Search Console data."
+    GSC_AVAILABLE=false
+else
+    GSC_AVAILABLE=true
+fi
 ```
 
 ### Querying Search Analytics
+
+Only run these queries if `GSC_AVAILABLE=true`. For each API call, check the HTTP response for errors. A 403 means the service account does not have permission in Search Console. A 401 means the access token is invalid or expired. Any error response should be logged and the GSC section skipped gracefully.
 
 ```bash
 # Last 7 days performance by page
