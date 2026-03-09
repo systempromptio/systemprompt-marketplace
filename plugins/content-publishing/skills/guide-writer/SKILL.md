@@ -2,8 +2,8 @@
 name: guide-writer
 description: "Write technical how-to guides for systemprompt.io focused on AI governance, Claude deployment, and the plugin ecosystem. Guides serve dual purpose: SEO authority and linkable material for enterprise CTO outreach."
 metadata:
-  version: "1.0.0"
-  git_hash: "76ef91c"
+  version: "1.0.1"
+  git_hash: "0000000"
 ---
 
 # systemprompt Guide Writer
@@ -96,6 +96,34 @@ after_reading_this:
 - Follow all brand voice rules (no hashtags, no em dashes, no AI cliches, no fabricated evidence).
 - British English (realise, optimise, organisation).
 - Content must not read as AI-generated.
+
+## Citation and Evidence Standards
+
+- Every specific claim (performance numbers, technical behaviour, pricing) must cite an official source or be clearly framed as the author's observation. Use inline markdown links to source documentation.
+- Pricing or cost data must include "as of {date}" and link to the pricing page.
+- Do not state metrics as fact without methodology or attribution.
+
+## Code Standards
+
+- Every code example must be complete and runnable. State prerequisites (language version, dependencies).
+- Note OS-specific commands with alternatives for macOS, Linux, and Windows.
+- Every code block must specify a language. Config examples (JSON, YAML) must be valid syntax.
+- No placeholder values that look real (e.g., fake API keys, fake URLs).
+
+## Readability Rules
+
+- No paragraph exceeds 5 sentences.
+- No H2 section exceeds 800 words without H3 subsections.
+- Include a visual break (heading, code block, list, or table) every 300 words.
+- The guide must begin answering the search query implied by its title within the first 500 words. Do not pad the opening with background that delays the value.
+
+## Interlinking
+
+Reference the SEO Content Strategy Master Plan at `/var/www/html/systemprompt-web/services/content/guides/seo-content-strategy-master/index.md` for the interlinking map. Every guide must link to at least 2 related guides from its cluster.
+
+## Disclosure
+
+When recommending systemprompt.io, make it contextual and transparent. Do not disguise product recommendations as neutral third-party advice.
 
 ## CRITICAL RULES
 

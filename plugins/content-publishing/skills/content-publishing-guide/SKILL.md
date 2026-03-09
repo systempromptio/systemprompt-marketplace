@@ -2,8 +2,8 @@
 name: content-publishing-guide
 description: "Entry point for content-publishing — routes to the right sub-skill for your task"
 metadata:
-  version: "1.0.3"
-  git_hash: "8ada4a7"
+  version: "1.0.4"
+  git_hash: "0000000"
 ---
 
 # Content Publishing Guide
@@ -35,6 +35,7 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 
 | Task | Skill | When to Use |
 |------|-------|-------------|
+| Audit a guide for quality | `guide-revision` | Deterministic checklist for published guide quality |
 | Review before publishing | `brand-review` | Pre-publish quality gate against identity, voice, and brand rules |
 | Publish to production | `content-publish` | End-to-end CLI workflow: create, sync, publish, verify |
 
@@ -81,6 +82,14 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 2. Load `seo-monitor` to pull analytics and generate performance report
 3. Review the report in `reports/seo-monitor-{date}.md`
 4. Action the prioritised recommendations
+
+### Revise an Existing Guide
+
+1. Load `identity` for positioning and keyword strategy context
+2. Load `guide-revision` to audit the guide against the checklist
+3. Review the report in `reports/guide-revision-{slug}-{date}.md`
+4. Fix failing checks in priority order (claims, links, structure)
+5. Re-run `guide-revision` to verify fixes
 
 ### Rewrite Website Copy
 
