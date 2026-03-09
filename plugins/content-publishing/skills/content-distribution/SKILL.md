@@ -374,8 +374,12 @@ Create a date-stamped directory: `reports/seo/blog/YYYY-MM-DD/`
 - `hn-{slug}.md` — title, URL, and comment ready to paste
 - `discord-{slug}.md` — message ready to paste
 
-**Cover images:**
-After generating all content, use the `blog-image-generation` skill to generate a cover image for each platform piece that requires one (Dev.to, Hashnode). Save images in the same report directory. Reference the correct path in each file's `cover_image`/`cover` frontmatter field.
+**Cover image:**
+Every report must include a cover image saved in the report directory. One image is shared across all platform posts for that day.
+
+1. **Check for existing image first:** Look in `storage/files/images/blog/{slug}.png`. If the source guide already has a published image, copy it into the report directory as `cover-{slug}.png`.
+2. **Generate if none exists:** Use the `blog-image-generation` skill to create one. Save it in the report directory as `cover-{slug}.png`.
+3. **Reference in frontmatter:** All platform files that support cover images (Dev.to, Hashnode) must reference the published URL in their frontmatter: `https://systemprompt.io/files/images/blog/{slug}.png`
 
 ---
 
