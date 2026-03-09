@@ -2,7 +2,7 @@
 name: content-distribution
 description: "Generate daily platform-adapted content from published guides, driven by SEO strategy gaps and keyword targets."
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   git_hash: "7bc7909"
 ---
 
@@ -67,11 +67,11 @@ Use day-of-week rotation to avoid flooding any single platform:
 
 | Day | Platform 1 | Platform 2 |
 |-----|-----------|-----------|
-| Monday | Dev.to | Reddit r/ClaudeAI |
-| Tuesday | Hashnode | Reddit r/artificial |
+| Monday | Dev.to | Claude Discord |
+| Tuesday | Hashnode | Claude Discord |
 | Wednesday | DZone | Claude Discord |
-| Thursday | Dev.to | Reddit r/singularity |
-| Friday | Hashnode | Hacker News (only if deeply technical, otherwise Claude Discord) |
+| Thursday | Dev.to | Hacker News (only if deeply technical, otherwise Claude Discord) |
+| Friday | Hashnode | Claude Discord |
 | Saturday | Skip | Skip |
 | Sunday | Skip | Skip |
 
@@ -81,9 +81,6 @@ If today is a weekend, state "Weekend - no distribution today" and stop.
 - Dev.to: Best for tutorials, workflows, code-heavy guides
 - Hashnode: Best for technical deep-dives, step-by-step builds
 - DZone: Best for enterprise content (rollout, managed settings, production deployment, security)
-- Reddit r/ClaudeAI: Best for personal experience posts, tips, cost optimisation, comparisons
-- Reddit r/artificial: Best for broader AI implications, agent frameworks, industry trends
-- Reddit r/singularity: Best for future implications, paradigm shifts, what's possible now
 - Hacker News: ONLY for deeply technical content (MCP servers, Rust builds, agent architecture)
 - Claude Discord: Casual community sharing, helpful resource recommendations
 
@@ -183,54 +180,6 @@ tags: [relevant tags]
 - 3-5 backlinks with enterprise positioning
 - Include a "Key Takeaways" section for engineering leaders
 
-#### Reddit Template
-
-Format varies by subreddit:
-
-**r/ClaudeAI (300-800 words):**
-```markdown
-**Title:** [Personal experience framing: "I [did X] and [result]" or "TIL: [insight]"]
-
-[Body: Personal experience post. NO links in the body. Share genuine value, practical tips, real results. Write as if you're helping a colleague, not promoting a product.]
-
-[End with a question to encourage discussion]
-
----
-COMMENT (post separately):
-"I wrote up the full details here if anyone wants the complete walkthrough: [link to systemprompt.io guide]"
-```
-
-**r/artificial (200-500 words):**
-```markdown
-**Title:** [Broader AI implications framing]
-
-[Body: Connect the specific topic to broader AI trends. What does this mean for the industry? What's changing?]
-
----
-COMMENT (post separately):
-"Wrote a detailed guide on this: [link]"
-```
-
-**r/singularity (200-400 words):**
-```markdown
-**Title:** [Future implications framing]
-
-[Body: What's now possible that wasn't before? What does this enable?]
-
----
-COMMENT (post separately):
-"Full technical breakdown: [link]"
-```
-
-**Reddit rules (ALL subreddits):**
-- 90% genuine community value, 10% self-promotion maximum
-- The post itself must be valuable even if nobody clicks any link
-- NO links in the post body. The guide link goes in a SEPARATE comment
-- Personal experience framing: "I built", "I tried", "I switched from X to Y"
-- End the post with a genuine question to encourage discussion
-- NO promotional language ("check out my guide", "we built this amazing tool")
-- Be genuinely helpful. Share real insights, not teasers
-
 #### Hacker News Template
 
 ```markdown
@@ -296,7 +245,7 @@ All content must follow Edward Burton's voice. Key rules:
 - Hashtags (except where a platform requires them)
 
 **Platform-specific voice adjustments:**
-- Reddit/Discord: More casual, more self-deprecating, shorter sentences, contractions everywhere
+- Discord: More casual, more self-deprecating, shorter sentences, contractions everywhere
 - Dev.to/Hashnode: Tutorial voice with personal angle, still conversational
 - DZone: Slightly more formal, enterprise vocabulary acceptable, still no buzzwords
 - Hacker News: Extremely concise, technical precision above all else
@@ -330,8 +279,6 @@ Key interlinking relationships:
    - BAD: `[click here](https://systemprompt.io/guides/build-mcp-server-rust)`
    - BAD: `[systemprompt.io](https://systemprompt.io/guides/build-mcp-server-rust)`
 5. Weave links naturally into the text as inline citations. NEVER dump links in a list (except the "Further Reading" section on Dev.to/Hashnode)
-
-**Reddit exception:** NO links in the post body. All links go in a separate comment.
 
 ---
 
@@ -383,7 +330,6 @@ Based on the rotation schedule and distribution log:
    - `devto-{slug}.md` - Dev.to draft with frontmatter
    - `hashnode-{slug}.md` - Hashnode draft with frontmatter
    - `dzone-{slug}.md` - DZone draft
-   - `reddit-{subreddit}-{slug}.md` - Reddit post + comment (clearly separated)
    - `hn-{slug}.md` - HN title + URL + comment
    - `discord-{slug}.md` - Discord message
 
@@ -400,7 +346,7 @@ Append new rows to `reports/seo/blog/distribution-log.md` for each piece generat
 One row per platform. Example:
 ```markdown
 | 2026-03-10 | claude-code-cost-optimisation | Dev.to | Cost reduction tutorial adaptation | GENERATED |
-| 2026-03-10 | claude-code-cost-optimisation | Reddit r/ClaudeAI | Personal cost savings experience | GENERATED |
+| 2026-03-10 | claude-code-cost-optimisation | Claude Discord | Community resource sharing | GENERATED |
 ```
 
 ---
@@ -411,12 +357,10 @@ Before saving any output, verify:
 
 - [ ] Canonical URL is set correctly for Dev.to/Hashnode/DZone
 - [ ] Guide was published 5+ days ago (or content is original for a P1 gap)
-- [ ] 3-5 backlinks are included per piece (except Reddit body)
-- [ ] Reddit post has NO links in the body (links in separate comment only)
+- [ ] 3-5 backlinks are included per piece
 - [ ] British English is used throughout
 - [ ] No colons or em dashes in titles or headings
 - [ ] No fabricated stories or metrics
-- [ ] No promotional language on Reddit
 - [ ] HN content is deeply technical (if not, switched to Discord)
 - [ ] Distribution log is updated
 - [ ] All files saved to `reports/seo/blog/YYYY-MM-DD/`
