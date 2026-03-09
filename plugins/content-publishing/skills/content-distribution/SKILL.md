@@ -178,7 +178,7 @@ Every piece of content MUST:
 ---
 title: "[Problem-focused title that promises a specific technique]"
 published: false
-tags: [max 4 tags]
+tags: tag1, tag2, tag3, tag4
 canonical_url: https://systemprompt.io/guides/[original-slug]
 cover_image: https://systemprompt.io/files/images/blog/[slug].png
 ---
