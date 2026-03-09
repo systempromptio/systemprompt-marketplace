@@ -2,8 +2,8 @@
 name: seo-monitor
 description: "Daily SEO performance review. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports. Designed for daily /loop. Load identity first."
 metadata:
-  version: "1.0.0"
-  git_hash: "b4f3861"
+  version: "1.0.1"
+  git_hash: "0000000"
 ---
 
 # SEO Monitor
@@ -14,27 +14,57 @@ Daily performance review of all published content. Pulls internal analytics and 
 
 **Load `identity` before this skill.** Identity defines positioning, ICP, and keyword strategy context. This skill handles performance measurement and recommendations.
 
+## Source of Truth
+
+**Read the SEO Content Strategy Master Plan before running this skill:**
+
+```
+/var/www/html/systemprompt-web/services/content/guides/seo-content-strategy-master/index.md
+```
+
+This document (also available at `/guides/seo-content-strategy-master/` on the site) is the single source of truth for:
+- Complete guide inventory with primary keywords, long-tail keywords, and search intent
+- Keyword cluster map (which guides belong to which clusters and their pillar pages)
+- Content gap analysis (high-priority topics not yet covered)
+- Internal linking strategy (which guides should link to which)
+- SEO metadata standards (title length, description format, slug conventions)
+- Performance tracking benchmarks (100+ organic sessions/month within 90 days, page 1 within 90 days)
+- Content refresh triggers (ranking drop, traffic decline, product updates)
+- Suggested future publishing schedule with target dates and priorities
+- Competitive benchmarking targets
+
+Use this document to evaluate whether each guide is hitting its keyword targets, whether clusters are strengthening, and whether gap-filling content is being published on schedule.
+
 ## Overview
 
 This skill runs five steps:
 
-1. Inventory all published guides
+1. Read the SEO strategy and inventory all published guides
 2. Pull internal analytics (systemprompt CLI)
 3. Pull Google Search Console data (if configured)
-4. Analyse performance across all dimensions
+4. Analyse performance against strategy targets
 5. Generate and save a structured report
 
-## Step 1: Inventory Published Content
+## Step 1: Read Strategy and Inventory Content
 
-Read the frontmatter from every guide in `/var/www/html/systemprompt-web/services/content/guides/*/index.md`.
+First, read the SEO Content Strategy Master Plan at `/var/www/html/systemprompt-web/services/content/guides/seo-content-strategy-master/index.md`. Extract:
+- The complete guide inventory tables (slugs, primary keywords, long-tail keywords, search intent, status)
+- Keyword cluster map (pillar pages, sub-topics, cluster strength assessments)
+- Content gap analysis (high-priority topics not yet covered)
+- Suggested future publishing schedule (what should have been published by now)
+- Performance benchmarks (100+ sessions/month within 90 days, page 1 ranking within 90 days)
+- Internal linking recommendations (what links should exist)
 
-For each guide, extract:
+Then read the frontmatter from every guide in `/var/www/html/systemprompt-web/services/content/guides/*/index.md` to get current metadata:
 - `title`, `slug`, `keywords`, `category`, `tags`
 - `published_at`, `updated_at`
 - `public` (true/false)
 - `description` (used as meta description)
 
-Build a table of all guides with their metadata. This is the baseline for measuring coverage and performance.
+Cross-reference the live inventory against the strategy document to identify:
+- Guides that exist in the strategy but have not been published yet
+- Guides that are past their target publication date
+- Keyword targets from the strategy that are not reflected in guide frontmatter
 
 ## Step 2: Pull Internal Analytics
 
@@ -238,10 +268,19 @@ Cross-reference all three data sources (inventory, internal analytics, GSC) to b
 - Queries where average position is 5-20 (close to page 1 but not there)
 - Action: strengthen the targeting page with better keyword placement, internal links, content depth
 
-**Content gaps:**
+**Content gaps (cross-reference with strategy document):**
+- High-priority gaps listed in the strategy document that have not been published yet
+- Guides past their target publication date from the suggested future publishing schedule
 - Keywords from guide frontmatter with no GSC impressions (not indexed or not ranking)
 - GSC queries with impressions but no matching guide (content to create)
-- Topics covered by competitors but not by systemprompt
+- Keyword clusters with weak strength ratings that need supporting content
+
+**Strategy compliance:**
+- Are guides hitting the benchmark of 100+ organic sessions/month within 90 days of publication?
+- Are primary keywords ranking page 1 within 90 days?
+- Are the recommended internal links from the strategy document actually in place?
+- Is the publishing cadence on track with the suggested schedule?
+- Are there content refresh triggers firing (ranking drops, traffic declines, product updates)?
 
 ### Anti-Sludge Rules
 
@@ -359,9 +398,43 @@ Use today's date in the filename.
 
 ---
 
+## Strategy Compliance
+
+**Source:** [SEO Content Strategy Master Plan](/guides/seo-content-strategy-master/)
+
+### Publishing Schedule
+
+| Planned Guide | Target Date | Status |
+|--------------|-------------|--------|
+| {Guide from strategy} | {date} | Published | On track | Overdue |
+
+### Benchmark Tracking
+
+| Guide | Days Since Published | Organic Sessions/Month | Target (100+) | Status |
+|-------|---------------------|----------------------|---------------|--------|
+| {slug} | {N} | {N} | {met/not met} | {on track/at risk/missed} |
+
+### Missing Internal Links
+
+| From | To | Recommended By Strategy | Status |
+|------|----|------------------------|--------|
+| {slug} | {slug} | Yes | Missing | Present |
+
+### Cluster Health
+
+| Cluster | Pillar Page | Guides | Strength | Change |
+|---------|------------|--------|----------|--------|
+| Claude Code | claude-code-daily-workflows | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
+| MCP | claude-code-mcp-servers-extensions | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
+| Marketplace | getting-started-anthropic-marketplace | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
+| Agent SDK | build-custom-claude-agent | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
+| Enterprise | enterprise-claude-code-managed-settings | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
+
+---
+
 ## Opportunities
 
-1. **{Topic}**: {Why this is an opportunity, citing specific data}
+1. **{Topic}**: {Why this is an opportunity, citing specific data from analytics or strategy gaps}
 2. ...
 
 ## Prioritised Next Steps
