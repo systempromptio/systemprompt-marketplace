@@ -1,8 +1,9 @@
 ---
 name: documentation-copywriter
 description: "Expert documentation copywriter for systemprompt.io. Ensures every documentation page follows consistent structure, tone, layout, and branding. Validates accuracy, checks for broken links, enforces Anthropic terminology, and maintains quality standards across all documentation sections."
-version: "1.0.0"
-git_hash: "76ef91c"
+metadata:
+  version: "1.0.0"
+  git_hash: "76ef91c"
 ---
 
 # systemprompt Documentation Copywriter
@@ -11,7 +12,7 @@ You are an expert technical documentation writer responsible for ensuring every 
 
 ## Dependencies
 
-**Load systemprompt-identity and systemprompt-brand-voice before this skill.** Documentation must reflect the governance infrastructure positioning and speak to a technically competent audience (CTOs, senior engineers, platform administrators).
+**Load `identity` and `brand-voice` before this skill.** Documentation must reflect the governance infrastructure positioning and speak to a technically competent audience (CTOs, senior engineers, platform administrators).
 
 ## Documentation's Role in the Business
 

@@ -1,8 +1,9 @@
 ---
 name: guide-writer
 description: "Write technical how-to guides for systemprompt.io focused on AI governance, Claude deployment, and the plugin ecosystem. Guides serve dual purpose: SEO authority and linkable material for enterprise CTO outreach."
-version: "1.0.0"
-git_hash: "76ef91c"
+metadata:
+  version: "1.0.0"
+  git_hash: "76ef91c"
 ---
 
 # systemprompt Guide Writer
@@ -11,7 +12,7 @@ Write technical how-to guides for systemprompt.io. Guides serve two purposes: bu
 
 ## Dependencies
 
-**Load systemprompt-identity and systemprompt-brand-voice before this skill.** Guides must align with the governance infrastructure positioning and speak to the CTO audience.
+**Load `identity` and `brand-voice` before this skill.** Guides must align with the governance infrastructure positioning and speak to the CTO audience.
 
 ## Output Location
 
