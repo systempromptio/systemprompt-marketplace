@@ -205,35 +205,46 @@ cover_image: https://systemprompt.io/files/images/blog/[slug].png
 - 3-5 backlinks woven naturally into "for the full setup, see..." or "we covered this in depth in..."
 - End with "Further Reading" section linking 2-3 related guides
 
-##### Hashnode
+##### Hashnode (HTML)
 
-```markdown
----
-title: "[Technique-focused title]"
-slug: "[slug]"
-canonical: https://systemprompt.io/guides/[original-slug]
-cover: https://systemprompt.io/files/images/blog/[slug].png
-tags: [relevant tags]
----
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>[Technique-focused title]</title>
+<meta name="description" content="[One-sentence summary]">
+<meta property="og:image" content="https://systemprompt.io/files/images/blog/[slug].png">
+<link rel="canonical" href="https://systemprompt.io/guides/[slug]">
+</head>
+<body>
+<article>
+<h1>[Title]</h1>
+<img src="https://systemprompt.io/files/images/blog/[slug].png" alt="[descriptive alt]">
 
-## What You'll Be Able To Do
+<h2>What You'll Be Able To Do</h2>
+<ul>
+<li>[Concrete outcome 1 — not "understand X" but "configure X to do Y"]</li>
+<li>[Concrete outcome 2]</li>
+<li>[Concrete outcome 3]</li>
+</ul>
 
-- [Concrete outcome 1 — not "understand X" but "configure X to do Y"]
-- [Concrete outcome 2]
-- [Concrete outcome 3]
+[Step-by-step build with real configuration and code as HTML]
 
-[Step-by-step build with real configuration and code]
-
----
-
-*Originally published on [systemprompt.io](https://systemprompt.io/guides/[slug]).*
+<hr>
+<p><em>Originally published on <a href="https://systemprompt.io/guides/[slug]">systemprompt.io</a>.</em></p>
+</article>
+</body>
+</html>
 ```
 
 **Hashnode rules:**
 - 2000-3000 words
 - Outcomes must be actionable, not informational
-- Step-by-step with real configs
-- 3-5 backlinks
+- Step-by-step with real configs as `<pre><code>` blocks
+- 3-5 backlinks as `<a href>` woven naturally
+- Set canonical URL in `<link rel="canonical">`
+- Save as `.html` file
 
 ##### Medium (HTML)
 
@@ -452,7 +463,7 @@ Create a date-stamped directory: `reports/seo/blog/YYYY-MM-DD/`
 
 **Platform files (all must be publish-ready — complete frontmatter, no placeholders):**
 - `devto-{slug}.md` — complete Dev.to frontmatter (title, published, tags, canonical_url, cover_image)
-- `hashnode-{slug}.md` — complete Hashnode frontmatter (title, slug, canonical, cover, tags)
+- `hashnode-{slug}.html` — HTML with canonical link, ready to import
 - `medium-{slug}.html` — HTML with canonical link, ready to import
 - `hackernoon-{slug}.html` — original HTML content with backlinks
 - `substack-{slug}.html` — original HTML newsletter content with backlinks
