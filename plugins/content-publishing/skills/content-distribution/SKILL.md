@@ -134,9 +134,9 @@ Use day-of-week rotation:
 |-----|-----------|-----------|
 | Monday | Dev.to | Claude Discord |
 | Tuesday | Hashnode | Claude Discord |
-| Wednesday | DZone | Claude Discord |
-| Thursday | Dev.to | Hacker News (only if deeply technical, otherwise Claude Discord) |
-| Friday | Hashnode | Claude Discord |
+| Wednesday | Medium | Claude Discord |
+| Thursday | Substack | Hacker News (only if deeply technical, otherwise Claude Discord) |
+| Friday | Dev.to | Claude Discord |
 | Saturday | Skip | Skip |
 | Sunday | Skip | Skip |
 
@@ -145,7 +145,8 @@ If today is a weekend, state "Weekend — no distribution today" and stop.
 **Platform-topic matching:**
 - Dev.to: Tutorials with runnable code, workflow recipes, plugin build walkthroughs
 - Hashnode: Deep technical builds, step-by-step MCP server setups, hook configurations
-- DZone: Enterprise deployment patterns, team governance, managed settings
+- Medium: Narrative-driven practitioner stories, broader audience, less code-heavy than Dev.to
+- Substack: Newsletter-style deep dives, opinionated takes, building-in-public narratives
 - Hacker News: ONLY for deeply technical content (MCP protocol, Rust builds, novel architecture)
 - Claude Discord: Quick tips, useful configurations, community Q&A
 
@@ -233,32 +234,59 @@ tags: [relevant tags]
 - Step-by-step with real configs
 - 3-5 backlinks
 
-##### DZone
+##### Medium
 
 ```markdown
-# [Enterprise problem-focused title]
+# [Narrative title that hooks a broad developer audience]
 
-**TL;DR:** [One sentence: the technique and its business impact]
+[2000-3000 word practitioner story]
 
-## The Problem at Scale
+[Open with the problem as a personal experience]
 
-[200-300 words: the enterprise pain point — team consistency, cost control, security, governance]
+[Walk through the solution with enough code to be credible but not overwhelming]
 
-[1500-2500 words: the solution using marketplace infrastructure — managed settings, hooks, CLAUDE.md standards, plugin governance]
+[End with what changed and what you'd do differently]
 
-## What This Enables
+---
 
-- [Outcome for engineering leaders]
-- [Outcome for platform engineers]
-- [Outcome for security teams]
-
-*Full technical walkthrough: [guide link]*
+*Originally published on [systemprompt.io](https://systemprompt.io/guides/[slug]).*
 ```
 
-**DZone rules:**
-- Enterprise framing but with real technical substance
-- Show how marketplace infrastructure solves governance problems
-- 3-5 backlinks with enterprise positioning
+**Medium rules:**
+- 2000-3000 words
+- More narrative, less tutorial. Tell the story of solving the problem
+- Code blocks should be short and illustrative, not comprehensive. Link to the guide for full configs
+- Medium readers skim. Use headers, short paragraphs, and bold key phrases
+- Import to Medium and set canonical URL to the systemprompt.io guide
+- 3-5 backlinks woven naturally
+- Tags: up to 5, choose from Medium's existing tag set (AI, Programming, Productivity, Developer Tools, etc.)
+
+##### Substack
+
+```markdown
+# [Opinionated title — take a position]
+
+[1500-2500 word newsletter-style post]
+
+[Open with a specific observation or opinion about how developers work with AI]
+
+[Support the opinion with real examples from building marketplace plugins]
+
+[Close with a forward-looking thought — what this means for how we'll work]
+
+---
+
+*Full technical details: [systemprompt.io guide link]*
+```
+
+**Substack rules:**
+- 1500-2500 words
+- Newsletter voice. More personal, more opinionated than other platforms
+- Less code than Dev.to/Hashnode. This is about ideas and experience, not step-by-step setup
+- Building-in-public angle works well. Share what you're working on, what surprised you, what failed
+- End with a question or call to subscribe for more practitioner insights
+- 3-5 backlinks woven naturally
+- No frontmatter needed. Substack uses its own editor
 
 ##### Hacker News
 
@@ -315,7 +343,8 @@ Full writeup if you want the details: [guide link]
 **Platform-specific voice:**
 - Discord: Most casual, contractions everywhere, self-deprecating
 - Dev.to/Hashnode: Tutorial voice with personal angle
-- DZone: Slightly more formal, enterprise vocabulary acceptable
+- Medium: Narrative practitioner voice, more storytelling than tutorial
+- Substack: Newsletter voice, opinionated, building-in-public energy
 - Hacker News: Extremely concise, technical precision above all
 
 ---
@@ -370,7 +399,8 @@ Create a date-stamped directory: `reports/seo/blog/YYYY-MM-DD/`
 **Platform files (all must be publish-ready — complete frontmatter, no placeholders):**
 - `devto-{slug}.md` — complete Dev.to frontmatter (title, published, tags, canonical_url, cover_image)
 - `hashnode-{slug}.md` — complete Hashnode frontmatter (title, slug, canonical, cover, tags)
-- `dzone-{slug}.md` — complete with TL;DR and Key Takeaways
+- `medium-{slug}.md` — narrative post with canonical link footer
+- `substack-{slug}.md` — newsletter-style post ready to paste into Substack editor
 - `hn-{slug}.md` — title, URL, and comment ready to paste
 - `discord-{slug}.md` — message ready to paste
 
@@ -423,7 +453,7 @@ Before saving any output, verify in this order:
    - [ ] No placeholder text remaining
 
 4. **Distribution mechanics:**
-   - [ ] Canonical URL is correct for Dev.to/Hashnode/DZone
+   - [ ] Canonical URL is correct for Dev.to/Hashnode/Medium
    - [ ] Guide was published 5+ days ago
    - [ ] 3-5 backlinks woven naturally
    - [ ] Distribution log is updated
