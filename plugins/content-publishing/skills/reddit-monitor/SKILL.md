@@ -2,8 +2,8 @@
 name: reddit-monitor
 description: "Monitor target subreddits for reply opportunities, filter for relevance to AI governance and Claude workflows, and draft personalized replies. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
-  version: "1.0.0"
-  git_hash: "d7effc7"
+  version: "1.0.1"
+  git_hash: "0000000"
 ---
 
 # Reddit Monitor
@@ -70,6 +70,8 @@ Assign a relevance score to each post:
 **Low**: Post is tangentially related but we can still contribute something specific and valuable.
 
 Select the **top 10** highest-scoring posts for reply drafting. Prefer a mix of categories over clustering in one topic.
+
+**Include 1-2 pure person replies.** Not every reply should be about content or products. Find 1-2 posts where someone is sharing a personal experience, asking for encouragement, or just venting about AI tooling. Reply as a human being, not as a brand. This makes the overall reply pattern look natural and avoids the appearance of only engaging when there is something to promote.
 
 ## Step 4: Draft Replies
 
@@ -167,6 +169,14 @@ Output the report in this format:
 - {Subreddits with unusually high or low activity}
 - {Emerging questions or pain points worth noting}
 ```
+
+**Save the report to:**
+
+```
+/var/www/html/systemprompt-marketplace/reports/reddit-monitor-{YYYY-MM-DD}.md
+```
+
+Use today's date in the filename.
 
 ## Quality Checklist
 

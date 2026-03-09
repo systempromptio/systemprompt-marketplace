@@ -2,8 +2,8 @@
 name: content-publishing-guide
 description: "Entry point for content-publishing — routes to the right sub-skill for your task"
 metadata:
-  version: "1.0.1"
-  git_hash: "d7effc7"
+  version: "1.0.2"
+  git_hash: "0000000"
 ---
 
 # Content Publishing Guide
@@ -28,6 +28,7 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 | Write or review documentation | `documentation-copywriter` | Docs structure, terminology, and quality standards |
 | Write or review website copy | `website-copywriter` | Analyse and rewrite pages for enterprise credibility |
 | Monitor Reddit for reply opportunities | `reddit-monitor` | Daily subreddit scanning, filtering, and reply drafting |
+| Review SEO and content performance | `seo-monitor` | Daily analytics review with actionable recommendations |
 
 ## Quality and Publishing Skills
 
@@ -65,6 +66,13 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 2. Load `reddit-monitor` to scan subreddits and draft replies
 3. Review the generated report and adjust drafts as needed
 4. Post approved replies manually
+
+### Daily SEO Review
+
+1. Load `identity` for positioning and keyword strategy context
+2. Load `seo-monitor` to pull analytics and generate performance report
+3. Review the report in `reports/seo-monitor-{date}.md`
+4. Action the prioritised recommendations
 
 ### Rewrite Website Copy
 
