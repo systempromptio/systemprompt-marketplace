@@ -3,7 +3,7 @@ name: content-publishing-guide
 description: "Entry point for content-publishing — routes to the right sub-skill for your task"
 metadata:
   version: "1.0.4"
-  git_hash: "0000000"
+  git_hash: "1632daf"
 ---
 
 # Content Publishing Guide

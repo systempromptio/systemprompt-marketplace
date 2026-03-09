@@ -3,7 +3,7 @@ name: guide-writer
 description: "Write technical how-to guides for systemprompt.io focused on AI governance, Claude deployment, and the plugin ecosystem. Guides serve dual purpose: SEO authority and linkable material for enterprise CTO outreach."
 metadata:
   version: "1.0.1"
-  git_hash: "0000000"
+  git_hash: "1632daf"
 ---
 
 # systemprompt Guide Writer
