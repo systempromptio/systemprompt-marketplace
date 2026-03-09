@@ -2,8 +2,8 @@
 name: content-publishing-guide
 description: "Entry point for content-publishing — routes to the right sub-skill for your task"
 metadata:
-  version: "1.0.4"
-  git_hash: "1632daf"
+  version: "1.0.5"
+  git_hash: "PENDING"
 ---
 
 # Content Publishing Guide
@@ -30,6 +30,7 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 | Monitor Reddit for reply opportunities | `reddit-monitor` | Daily subreddit scanning, filtering, and reply drafting |
 | Review SEO and content performance | `seo-monitor` | Daily analytics review with actionable recommendations |
 | Follow up on Reddit engagement | `reddit-reply` | Check replies to our comments and draft follow-ups |
+| Distribute guides to platforms | `content-distribution` | Daily platform-adapted syndication with backlinks and SEO scoring |
 
 ## Quality and Publishing Skills
 
@@ -90,6 +91,13 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 3. Review the report in `reports/guide-revision-{slug}-{date}.md`
 4. Fix failing checks in priority order (claims, links, structure)
 5. Re-run `guide-revision` to verify fixes
+
+### Distribute Content to External Platforms
+
+1. Load `identity` and `brand-voice` for positioning and tone
+2. Load `content-distribution` to generate platform-adapted versions
+3. Review generated drafts in `reports/seo/blog/YYYY-MM-DD/`
+4. Post approved content to each platform manually
 
 ### Rewrite Website Copy
 

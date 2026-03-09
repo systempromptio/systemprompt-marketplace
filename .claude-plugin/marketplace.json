@@ -6,8 +6,8 @@
   },
   "metadata": {
     "description": "Development plugins for systemprompt.io codebases",
-    "version": "1.6.0",
-    "git_hash": "8ada4a7",
+    "version": "1.7.0",
+    "git_hash": "PENDING",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -91,8 +91,8 @@
     {
       "name": "content-publishing",
       "source": "./plugins/content-publishing",
-      "description": "Full content lifecycle for systemprompt.io: brand identity, blog writing, Gemini API image generation, documentation copywriting, website copy, guide writing, guide revision audits, content drafting, brand review, SEO monitoring, Reddit monitoring, Reddit reply follow-up, and end-to-end publishing via CLI",
-      "version": "1.5.0",
+      "description": "Full content lifecycle for systemprompt.io: brand identity, blog writing, Gemini API image generation, documentation copywriting, website copy, guide writing, guide revision audits, content drafting, content distribution, brand review, SEO monitoring, Reddit monitoring, Reddit reply follow-up, and end-to-end publishing via CLI",
+      "version": "1.6.0",
       "category": "content",
       "author": {
         "name": "systemprompt.io",
