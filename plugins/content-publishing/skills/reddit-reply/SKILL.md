@@ -3,7 +3,7 @@ name: reddit-reply
 description: "Daily follow-up on Reddit engagement. Reads recent reddit-monitor reports, checks each URL for replies to our comments, and drafts follow-up responses. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "8ada4a7"
 ---
 
 # Reddit Reply
