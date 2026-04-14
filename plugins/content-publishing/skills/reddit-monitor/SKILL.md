@@ -1,196 +1,280 @@
 ---
 name: reddit-monitor
-description: "Monitor target subreddits for reply opportunities, filter for relevance to AI governance and Claude workflows, and draft personalized replies. Designed for daily /loop. Load identity and brand-voice first."
+description: "Daily multi-channel social-engagement briefing for AI governance positioning. Scans Reddit (daily) plus X/Twitter and forums (weekly), filters for AI governance / compliance / shadow-AI conversations aligned with the systemprompt ICP, and outputs a prioritised action list. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
-  version: "1.0.2"
-  git_hash: "bc2a4a3"
+  version: "1.1.0"
+  git_hash: "pending"
 ---
 
-# Reddit Monitor
+# Social Monitor (reddit-monitor)
 
-Scan target subreddits, find high-value reply opportunities, and draft personalized replies. Designed for daily execution via `/loop 1d`. Output is a structured report with links and draft replies ready for human review.
+Daily social-engagement briefing for systemprompt.io. Scans Reddit as the primary channel and sweeps X/Twitter and relevant forums on a weekly cadence. Output is a prioritised **action list** of concrete places to engage today, plus drafted replies ready for human review. Designed for daily execution via `/loop 1d`.
+
+The skill name is kept as `reddit-monitor` for compatibility with existing `/loop` entries and the `reddit-reply` follow-up skill. It is, in practice, a multi-channel social monitor.
 
 ## Dependencies
 
-**Load `identity` and `brand-voice` before this skill.** Identity defines what we say and to whom. Brand voice defines how we sound. This skill handles Reddit discovery and reply drafting.
+**Load `identity` and `brand-voice` before this skill.** Identity defines what we say and to whom (AI governance infrastructure for CTOs at 20-500 person orgs). Brand voice defines how we sound. This skill handles channel discovery, scoring, and reply drafting.
 
-## Subreddits
+## Channels and Cadence
 
-| Priority | Subreddit | Typical Tone | Focus |
-|----------|-----------|-------------|-------|
-| Primary | r/ClaudeAI | Casual, technical, fellow-user | Claude usage, plugins, skills, workflows |
-| Primary | r/Anthropic | Technical, product-focused | Anthropic products, API, enterprise features |
-| Secondary | r/artificial | Mixed technical and general | Broader AI trends, governance, adoption |
-| Secondary | r/SaaS | Business-oriented | SaaS tooling, AI for business, team workflows |
-| Secondary | r/CTO | Formal, strategic | Infrastructure decisions, team governance, build vs. buy |
-| Secondary | r/LocalLLaMA | Deeply technical, open-source ethos | Local models, self-hosted AI, model comparisons |
+| Channel | Scope | Cadence | Runs today? |
+|---------|-------|---------|-------------|
+| Reddit Tier A + B | Governance and practitioner subreddits | Daily | Always |
+| Reddit Tier C | Broad signal subreddits | Weekly (Monday) | If today is Monday |
+| X / Twitter | Keyword + author streams | Weekly (Wednesday) | If today is Wednesday |
+| Forums (HN, Lobsters, LinkedIn, MLOps, ISACA) | High-leverage governance threads | Weekly (Friday) | If today is Friday |
 
-## Step 1: Fetch Posts
+On the first run after install, run **all** channels regardless of weekday so the user gets a full picture. After that, follow the cadence.
 
-For each subreddit, fetch recent posts using Reddit's public JSON API:
+## Reddit Targets
+
+### Tier A: governance and decision-makers (daily, highest priority)
+
+| Subreddit | Focus | Tone |
+|-----------|-------|------|
+| r/cto | Build vs. buy, infrastructure decisions, team governance | Formal, strategic |
+| r/ExperiencedDevs | Senior ICs handling AI rollout standards across teams | Technical, no-nonsense |
+| r/ITManagers | Shadow AI, enforcement, audit trails, policy | Practical, governance-literate |
+| r/sysadmin | Endpoint AI, policy enforcement, compliance headaches | Dry, operational |
+| r/cybersecurity | Prompt injection, MCP risk, data exfiltration via AI tools | Rigorous, threat-model-aware |
+| r/msp | Managed service providers reselling governance to SMEs | Business, margin-aware |
+| r/compliance | Regulated orgs, EU AI Act, SOC2, audit trails | Formal, regulation-literate |
+| r/devops | AI ops, pipeline governance, observability | Technical, pragmatic |
+| r/mlops | Model lifecycle, evaluation, governance tooling | Deeply technical |
+
+### Tier B: practitioner and technical (daily, where governance pain surfaces)
+
+| Subreddit | Focus | Tone |
+|-----------|-------|------|
+| r/ClaudeAI | Claude-specific workflows, standardisation, team pain | Casual, fellow-user |
+| r/AI_Agents | Multi-agent architecture, boundary enforcement | Technical, curious |
+| r/LLMDevs | Prompt infra, eval, deployment | Technical |
+| r/LocalLLaMA | Self-hosted, open-source ethos, sovereignty | Deeply technical, respect the ethos |
+| r/PromptEngineering | Standardisation, prompt libraries, team patterns | Practitioner |
+| r/RAG | Knowledge governance, access control, data lineage | Technical |
+
+### Tier C: broad signal (weekly sweep, Monday only)
+
+`r/artificial`, `r/singularity`, `r/OpenAI`, `r/Anthropic`, `r/SaaS`, `r/smallbusiness`, `r/Entrepreneur`. These are noisier and less on-ICP; scan for occasional high-signal threads but do not draft replies unless there is a clear governance angle.
+
+## Part 1: Reddit Daily Scan
+
+### Step 1.1: Fetch posts
+
+For each subreddit in Tier A and Tier B (and Tier C on Mondays), fetch recent posts via Reddit's public JSON API:
 
 ```
 https://www.reddit.com/r/{subreddit}/new.json?t=day&limit=50
 ```
 
-Use `WebFetch` if available, otherwise fall back to `bash curl`. Add a 2-second delay between subreddit requests to respect rate limits.
+Use `WebFetch` if available; fall back to `curl` in `bash`. Add a 2-second delay between requests to respect rate limits. On weekly runs use `?t=week`.
 
-On weekly runs (or first run), use `?t=week` instead of `?t=day`.
+From each post extract: `title`, `selftext`, `url`, `permalink`, `author`, `created_utc`, `score`, `num_comments`, `subreddit`.
 
-From each post, extract: `title`, `selftext`, `url`, `permalink`, `author`, `created_utc`, `score`, `num_comments`, `subreddit`.
+### Step 1.2: Filter for governance relevance
 
-## Step 2: Filter for Relevance
-
-Categorise each post into one of these categories. Skip posts that do not match any category.
+Categorise each post. Skip posts that do not match.
 
 | Category | Signals |
 |----------|---------|
-| Plugin/Setup | Claude plugins, skills, installation, configuration, team standardisation |
-| MCP Servers | MCP protocol, server setup, tool configuration, MCP security |
-| Agents | Agent architecture, multi-agent systems, agent workflows, Agent SDK |
-| Marketplace | Sharing, distributing, or discovering AI tools, plugins, skills |
-| AI Governance | Team AI adoption, standards, control, observability, compliance |
-| Build vs. Buy | Building AI infrastructure in-house vs. using platforms, maintenance burden |
-| General Workflow | Claude Code productivity, prompting, project setup, best practices |
+| Governance and Control | Team standards, observability, enforcement, permissions, multi-user AI |
+| Shadow AI and Enforcement | Unsanctioned tools, discovery, policy, endpoint control, DLP |
+| Compliance and Audit | EU AI Act, SOC2, ISO 42001, audit trails, regulated industries |
+| Build vs. Buy | In-house AI infra vs. platforms, maintenance burden, roadmap risk |
+| Agent Boundaries and Safety | Agent scope, permissioning, autonomous action risk, CLAUDE.md limits |
+| MCP Security | MCP server trust, prompt injection via tools, scoping, sandboxing |
+| Claude Workflow and Standardisation | Teams standardising Claude usage, shared skills, plugin distribution |
 
-**Skip these posts:**
-- Pure memes or screenshots with no discussion
-- Simple troubleshooting with obvious answers ("Claude won't load", "API key not working")
-- Posts already answered thoroughly by multiple commenters
+**Skip:**
+- Pure memes, screenshots with no discussion
+- Simple troubleshooting with an obvious answer
+- Posts already answered thoroughly
 - Posts older than the scan window
 
-## Step 3: Score and Rank
+### Step 1.3: Score and rank
 
-Assign a relevance score to each post:
+- **High:** post directly describes a problem systemprompt solves (governance, enforcement, compliance, standardisation, build-vs-buy) OR is a substantive technical discussion where we have genuine expertise.
+- **Medium:** adjacent topic (Claude workflows, MCP, agent architecture) where we can add useful perspective.
+- **Low:** tangentially related but there is something specific and valuable to contribute.
 
-**High**: Post directly discusses a problem systemprompt solves (governance, plugin distribution, team standardisation) OR is a substantive technical discussion where we have genuine expertise to contribute.
+Select the **top 8 Reddit posts** for reply drafting. Prefer a mix of categories over clustering. Include 1 Tier A post at minimum.
 
-**Medium**: Post touches on adjacent topics (Claude workflows, MCP, agent architecture) where we can add useful perspective.
+Include **1 pure-person reply**: a post where someone is sharing a personal experience or venting, reply as a human not a brand. This keeps the engagement pattern natural.
 
-**Low**: Post is tangentially related but we can still contribute something specific and valuable.
+### Step 1.4: Draft replies
 
-Select the **top 10** highest-scoring posts for reply drafting. Prefer a mix of categories over clustering in one topic.
+**Structure:**
+1. Open by engaging directly with the poster's specific situation. Reference their exact problem.
+2. Provide value: concrete technical insight, useful perspective, or specific suggestion (2-4 sentences).
+3. Close with a forward-looking thought, practical next step, or specific resource. Never close with a generic engagement question.
 
-**Include 1-2 pure person replies.** Not every reply should be about content or products. Find 1-2 posts where someone is sharing a personal experience, asking for encouragement, or just venting about AI tooling. Reply as a human being, not as a brand. This makes the overall reply pattern look natural and avoids the appearance of only engaging when there is something to promote.
+Typical length: 3-6 sentences. Longer only when warranted.
 
-## Step 4: Draft Replies
+**Tone by subreddit:** match the tone column in the Tier A/B tables. r/cybersecurity and r/compliance want precise threat-model and regulation language. r/sysadmin wants dry, operational framing. r/LocalLLaMA wants respect for open-source sovereignty.
 
-### Reply Structure
+### Step 1.5: systemprompt mention rules
 
-1. **Open** by directly engaging with the poster's specific situation. Reference their exact problem, question, or observation.
-2. **Provide value** with actionable technical insight, a useful perspective, or a concrete suggestion (2-4 sentences).
-3. **Close** with a forward-looking thought, practical next step, or specific resource. Never close with a generic engagement question.
+- ONLY mention systemprompt.io when the post is specifically about a problem systemprompt solves: governance, enforcement, standardisation, shadow-AI discovery, build-vs-buy, white-label AI for SaaS.
+- **Maximum 30% of Reddit replies** may mention systemprompt. Flag each reply with `systemprompt mention: Yes/No`.
+- When mentioned, it must be a natural part of the answer. Example: "systemprompt.io exists for this, it is self-hosted governance infrastructure that lets you enforce rules across every team using Claude instead of hoping CLAUDE.md files stay in sync." NOT: "Check out systemprompt.io for AI governance!"
+- If the post does not involve a governance-adjacent problem, do not mention it. Period.
 
-Typical length: 3-6 sentences. Go longer only when the topic genuinely warrants depth.
+## Part 2: X / Twitter Weekly Sweep (Wednesdays)
 
-### Tone by Subreddit
+No API access. Use public search URLs via `WebFetch`, or nitter mirrors if those fail.
 
-- **r/ClaudeAI**: Casual, first-person where authentic. Short paragraphs. Fellow-user energy.
-- **r/Anthropic**: Slightly more formal, product-aware. Acknowledge Anthropic's roadmap where relevant.
-- **r/artificial**: Accessible but informed. Broader AI context welcome.
-- **r/SaaS**: Business language. ROI, efficiency, team workflows. Less code, more outcomes.
-- **r/CTO**: Formal, strategic. Infrastructure thinking. Governance and standards language.
-- **r/LocalLLaMA**: Deeply technical. Respect the open-source ethos. Never dismissive of local models.
+### Keyword streams
 
-### systemprompt Mention Rules
+Sample one or two posts per keyword (not exhaustive):
+- `"AI governance"`, `"AI compliance"`, `"EU AI Act"`, `"shadow AI"`
+- `"Claude enterprise"`, `"Claude Code"`, `"MCP security"`, `"AI audit trail"`, `"ISO 42001"`
 
-- ONLY mention systemprompt.io when the post is specifically about a problem systemprompt solves: plugin distribution, team governance, skill marketplaces, standardising Claude usage across teams.
-- **Maximum 3 out of 10 replies** may mention systemprompt (30% cap). Flag each reply with "systemprompt mention: Yes/No" in the report.
-- When mentioned, it must be a natural part of the answer. Example: "systemprompt.io was built around this use case, it lets teams standardise and distribute plugins as installable packages." NOT: "Check out systemprompt.io for all your AI governance needs!"
-- If the post does not involve a problem systemprompt solves, do not mention it. Period.
+### Author streams
 
-### Anti-Sludge Rules (MANDATORY)
+Pull recent threads from governance-adjacent voices whose posts attract the right audience:
+- `@jackclarkSF`, `@AnthropicAI`, `@simonw`, `@swyx`, `@AINowInstitute`, `@HelenToner`, `@dwarkesh_sp`
+- CTO and VP-Eng voices as discovered (expand over time)
 
-Every reply must pass these checks. No exceptions.
+### Output
+
+Select **3-5 reply-worthy threads** per weekly run. For each, produce the same draft-reply format as Reddit (open / value / close). Anti-sludge rules apply. No hashtags ever.
+
+## Part 3: Forums Weekly Digest (Fridays)
+
+| Forum | URL / entry point | Action type |
+|-------|-------------------|-------------|
+| Hacker News | `news.ycombinator.com/newest` + `/from?site=anthropic.com` + front-page keyword match | Reply / upvote / note |
+| Lobsters | `lobste.rs/t/ai` + `/t/security` + `/t/practices` | Reply / note |
+| MLOps Community | Public blog and newsletter threads (no private Slack quoting) | Note / reply on public posts |
+| LinkedIn | Search "AI governance" + "Claude" from CTO/VP Eng authors | Reply with substance |
+| ISACA public forums | Regulated-industry AI governance threads | Note / reply |
+| CTO Craft | Public newsletter and blog replies | Note / reply |
+| GitHub Discussions | Covered by `github-monitor`; link to it here for completeness | Cross-reference only |
+
+Select **3-5 forum items** per weekly run. Hacker News is the highest-leverage single channel; one thoughtful HN reply on a trending thread beats a week of Reddit. Prioritise HN when a governance or Claude thread is live.
+
+For each item, draft a reply or a one-line "why this matters and what to say" note if drafting a full reply is premature.
+
+## Part 4: Daily Action List
+
+Every run, emit a top-of-report **Action List** — a flat, prioritised checklist the user can work through in 30 minutes or less.
+
+### Structure
+
+```markdown
+## Today's Action List
+
+| # | Action | Channel | Target | Time | Mention |
+|---|--------|---------|--------|------|---------|
+| 1 | Reply to {poster} on {brief topic} | r/ITManagers | {permalink} | 10 min | Yes |
+| 2 | Comment on HN thread about {topic} | HN | {url} | 15 min | No |
+| ... |
+```
+
+### Rules
+
+- Maximum **10 actions**. Less is fine if quality is low.
+- Order by priority (High relevance + Tier A subreddit first, then HN, then others).
+- Include at least **one Tier A Reddit item** if any scored High or Medium.
+- On weekly-channel days, include at least one X or forum item.
+- Each action must have: verb-first phrasing, channel, target URL, time estimate (5 / 10 / 15 min), `systemprompt mention: Yes/No`.
+- Keep the 30% systemprompt-mention cap across the whole list, not per channel.
+- Actions must map 1:1 to drafted replies below. If a reply is not drafted, the action is a "read-only / note" item.
+
+## Anti-Sludge Rules (MANDATORY)
+
+Applies to every drafted reply on every channel.
 
 **Banned openings:**
-- NO generic praise: "Great question!", "Nice work!", "This is really interesting!", "Love this!", "Awesome project!"
-- NO sludge greetings: "Hey there!", "Thanks for sharing!", "Fellow Claude user here!", "As someone who..."
+- NO generic praise: "Great question", "Nice work", "Love this", "Awesome project"
+- NO sludge greetings: "Hey there", "Thanks for sharing", "Fellow Claude user here", "As someone who..."
 - NO opening with a question back to the poster
 
 **Banned patterns:**
 - NO em dashes anywhere. Use commas, periods, or parentheses.
-- NO fabricated personal stories or analogies presented as real experiences. Never write "When I was building...", "I ran into this too...", or "In my experience..." unless Edward provides the actual story. Use generic examples or clearly hypothetical scenarios instead.
+- NO fabricated personal stories. Never "When I was building...", "I ran into this too", "In my experience..." unless Edward provided the actual story.
 - NO AI cliches: revolutionize, game-changer, unlock, supercharge, seamlessly, cutting-edge, harness, next-generation, paradigm shift, disrupt, empower, leverage (as verb), reimagine, transform (without specifics)
-- NO hashtags
-- NO forced product mentions. If systemprompt is not genuinely relevant to the post, do not shoehorn it in.
+- NO hashtags on any channel
+- NO forced product mentions
 
 **Quality standard:**
-- Content must NOT read as AI-generated. Vary sentence length. Be specific. Include observations only someone building in this space would make.
-- Each reply must be visibly personalised to the specific post. A reply that could apply to any similar post is too generic.
-- Read the reply as if you are the poster. Would you find it genuinely helpful, or would you scroll past it?
+- Content must not read as AI-generated. Vary sentence length. Be specific.
+- Each reply must be visibly personalised to the specific post.
+- Read the reply as the poster. Would you find it genuinely helpful?
 
-## Step 5: Generate Report
+## Output Files
 
-Output the report in this format:
+Write two files per run:
+
+1. **Reddit section** (for `reddit-reply` compatibility):
+   ```
+   reports/reddit/YYYY-MM-DD/reddit-monitor.md
+   ```
+   Contains the Reddit scan summary, categorised posts, and drafted Reddit replies in the legacy format.
+
+2. **Combined action list** (new):
+   ```
+   reports/social/YYYY-MM-DD/action-list.md
+   ```
+   Contains the Part 4 action list at the top, followed by the X and forum sections (if weekly cadence triggered), followed by a short Observations block.
+
+Use today's date in both filenames.
+
+## Report Template (action-list.md)
 
 ```markdown
-# Reddit Monitor Report
+# Social Monitor Action List
 
 **Date:** {YYYY-MM-DD}
-**Window:** Last 24 hours | Last 7 days
-**Subreddits:** r/ClaudeAI, r/Anthropic, r/artificial, r/SaaS, r/CTO, r/LocalLLaMA
-**Posts scanned:** {N} | **Relevant:** {N} | **Reply targets:** {N}
+**Channels run today:** Reddit daily{, X weekly}{, Forums weekly}
+**Subreddits scanned:** {N} | **Posts scanned:** {N} | **Reply targets:** {N}
 
 ---
 
-## Reply Targets
+## Today's Action List
 
-### 1. "{Post Title}"
-- **Subreddit:** r/{subreddit}
-- **URL:** https://reddit.com{permalink}
-- **Category:** {category}
-- **Relevance:** High | Medium
-- **systemprompt mention:** Yes | No
-
-**Draft reply:**
-
-> {The drafted reply text, properly formatted}
+{action table per Part 4}
 
 ---
 
-(repeat for each target)
+## X / Twitter (weekly)
 
-## Summary
+{3-5 threads with drafts, or "Not run today"}
 
-| Category | Posts Found |
-|----------|-----------|
-| Plugin/Setup | {N} |
-| MCP Servers | {N} |
-| Agents | {N} |
-| Marketplace | {N} |
-| AI Governance | {N} |
-| Build vs. Buy | {N} |
-| General Workflow | {N} |
+---
+
+## Forums (weekly)
+
+{3-5 items with drafts or notes, or "Not run today"}
+
+---
 
 ## Observations
 
-- {Trending topics or recurring themes this period}
-- {Subreddits with unusually high or low activity}
-- {Emerging questions or pain points worth noting}
-```
+- {Trending governance topics this period}
+- {Subreddits with unusual activity}
+- {Emerging pain points worth noting in future content}
 
-**Save the report to:**
+---
 
+See `reports/reddit/{YYYY-MM-DD}/reddit-monitor.md` for the full Reddit scan and drafted replies.
 ```
-reports/reddit/YYYY-MM-DD/reddit-monitor.md
-```
-
-Use today's date in the filename.
 
 ## Quality Checklist
 
-Before finalising the report, verify every reply against:
+Before finalising, verify:
 
-- [ ] No em dashes
+- [ ] No em dashes anywhere in the report or drafts
 - [ ] No generic praise or sludge openings
-- [ ] No fabricated personal stories or analogies
+- [ ] No fabricated personal stories
 - [ ] No AI cliches
 - [ ] No hashtags
-- [ ] Does not read as AI-generated
-- [ ] systemprompt mentioned in 30% or fewer replies
-- [ ] systemprompt only mentioned where genuinely relevant
-- [ ] Each reply directly addresses the specific post content
-- [ ] Tone matches the target subreddit
-- [ ] Aligns with `identity` positioning (governance infrastructure)
-- [ ] Aligns with `brand-voice` Reddit strategy (value first, never pitch)
+- [ ] Nothing reads as AI-generated
+- [ ] systemprompt mentioned in 30% or fewer replies, only where genuinely relevant
+- [ ] Each reply directly addresses the specific post
+- [ ] Tone matches the target channel
+- [ ] Action list has at least one Tier A Reddit item (if any scored)
+- [ ] On weekly-channel days, action list includes at least one X or forum item
+- [ ] Aligns with `identity` (AI governance infrastructure, CTO-first)
+- [ ] Aligns with `brand-voice` (value first, never pitch)
