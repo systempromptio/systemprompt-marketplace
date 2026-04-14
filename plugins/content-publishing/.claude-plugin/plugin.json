@@ -1,7 +1,7 @@
 {
   "name": "content-publishing",
-  "description": "Full content lifecycle for systemprompt.io: brand identity, blog writing, Gemini API image generation, documentation copywriting, website copy, feature copywriting, guide writing, guide revision audits, content drafting, brand review, SEO monitoring, GitHub monitoring, Reddit monitoring, Reddit reply follow-up, and end-to-end publishing via CLI",
-  "version": "1.7.0",
+  "description": "Full content lifecycle for systemprompt.io: brand identity, blog writing, Gemini API image generation, documentation copywriting, website copy, feature copywriting, guide writing, guide revision audits, guide optimisation with GSC-driven scoring, content drafting, brand review, SEO monitoring, GitHub monitoring, Reddit monitoring, Reddit reply follow-up, and end-to-end publishing via CLI",
+  "version": "1.8.0",
   "author": {
     "name": "systemprompt.io",
     "email": "hello@systemprompt.io"
