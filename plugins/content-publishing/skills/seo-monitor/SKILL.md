@@ -37,13 +37,14 @@ Use this document to evaluate whether each guide is hitting its keyword targets,
 
 ## Overview
 
-This skill runs five steps:
+This skill runs six steps:
 
 1. Read the SEO strategy and inventory all published guides
 2. Pull internal analytics (systemprompt CLI)
 3. Pull Google Search Console data (if configured)
-4. Analyse performance against strategy targets
-5. Generate and save a structured report
+4. Cross-reference GitHub engagement data (from latest github-monitor report)
+5. Analyse performance against strategy targets
+6. Generate and save a structured report
 
 ## Step 1: Read Strategy and Inventory Content
 
@@ -450,6 +451,45 @@ Use today's date in the filename.
 | Marketplace | getting-started-anthropic-marketplace | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
 | Agent SDK | build-custom-claude-agent | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
 | Enterprise | enterprise-claude-code-managed-settings | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
+
+---
+
+## GitHub Engagement (External Authority)
+
+Cross-reference with the latest github-monitor report. Read the most recent report from:
+
+```bash
+ls -t reports/github/*/github-monitor.md 2>/dev/null | head -1
+```
+
+If a github-monitor report exists, include this section. If not, note "GitHub monitor: Not yet configured. Run `github-monitor` skill to start tracking."
+
+### GitHub Referral Traffic
+
+| Metric | This Week | Last Week | Change |
+|--------|-----------|-----------|--------|
+| GitHub referral sessions | {N} | {N} | {+/-N%} |
+| GitHub % of total traffic | {N%} | {N%} | {+/-pp} |
+
+(Pull from `analytics traffic sources` data, filter for GitHub referrer)
+
+### Contributions Made
+
+| Date | Repo | Action | Guide Linked | Engagement |
+|------|------|--------|-------------|------------|
+| {date} | {repo} | Issue comment #{N} | {guide} | {upvotes/replies} |
+
+(Pull from the tracking table in the github-monitor report)
+
+### Backlink Status
+
+| Source | Type | URL | Status | Domain Authority |
+|--------|------|-----|--------|-----------------|
+| {awesome-list or repo} | {PR/comment/discussion} | {URL} | {merged/pending/open} | {stars}k stars |
+
+### Pending Opportunities
+
+List the top 3 opportunities from the latest github-monitor report that have not yet been actioned.
 
 ---
 

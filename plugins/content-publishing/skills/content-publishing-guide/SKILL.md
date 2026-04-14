@@ -28,6 +28,7 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 | Write or review documentation | `documentation-copywriter` | Docs structure, terminology, and quality standards |
 | Write or review website copy | `website-copywriter` | Analyse and rewrite pages for enterprise credibility |
 | Monitor Reddit for reply opportunities | `reddit-monitor` | Daily subreddit scanning, filtering, and reply drafting |
+| Monitor GitHub for contribution opportunities | `github-monitor` | Daily GitHub repo scanning for issues, discussions, and awesome-list submissions |
 | Review SEO and content performance | `seo-monitor` | Daily analytics review with actionable recommendations |
 | Follow up on Reddit engagement | `reddit-reply` | Check replies to our comments and draft follow-ups |
 | Distribute guides to platforms | `content-distribution` | Daily platform-adapted syndication with backlinks and SEO scoring |
@@ -83,6 +84,14 @@ Entry point for the content-publishing plugin. Use this to find the right skill 
 2. Load `seo-monitor` to pull analytics and generate performance report
 3. Review the report in `reports/seo/{date}/seo-monitor.md`
 4. Action the prioritised recommendations
+
+### Daily GitHub Marketing
+
+1. Load `identity` for positioning and keyword strategy context
+2. Load `github-monitor` to scan target repos for contribution opportunities
+3. Review the report in `reports/github/{date}/github-monitor.md`
+4. Post approved comments manually (max 2 per repo per week)
+5. Submit awesome-list entries via each repo's required submission process
 
 ### Revise an Existing Guide
 
