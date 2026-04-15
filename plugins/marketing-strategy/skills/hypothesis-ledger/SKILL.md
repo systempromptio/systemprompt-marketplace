@@ -12,7 +12,8 @@ Append-only ledger of every marketing action. The single source of truth for wha
 ## Storage
 
 ```
-/var/www/html/systemprompt-marketplace/plugins/marketing-strategy/data/hypothesis-ledger.md
+{project_root}/reports/marketing/data/hypothesis-ledger.md
+(e.g. /var/www/html/systemprompt-web/reports/marketing/data/hypothesis-ledger.md)
 ```
 
 Single markdown file. One table, append-only. Newest rows at the bottom. Never rewrite history — failed predictions are the most valuable data in the ledger.
@@ -46,7 +47,7 @@ Fields:
 Full drafts and context live in a sibling directory:
 
 ```
-plugins/marketing-strategy/data/actions/H-###.md
+{project_root}/reports/marketing/data/actions/H-###.md
 ```
 
 Each file contains: timestamp, full post/DM draft, target URL, Ed's post-hoc notes, any screenshots/links collected on maturation. The ledger table stays compact; the story lives in the action file.

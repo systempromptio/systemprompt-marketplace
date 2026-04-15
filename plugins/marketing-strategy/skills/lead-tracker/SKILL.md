@@ -350,7 +350,8 @@ The JSON tail is what `hypothesis-ledger` reads to pull baselines and score metr
 ## Output 2 — Persistent Leads Database
 
 ```
-/var/www/html/systemprompt-marketplace/plugins/marketing-strategy/data/leads.json
+{project_root}/reports/marketing/data/leads.json
+(e.g. /var/www/html/systemprompt-web/reports/marketing/data/leads.json)
 ```
 
 Schema:
@@ -378,7 +379,8 @@ Stages: `cloner` (unique cloner only) → `feedback_given` (posted an Issue with
 ## Output 3 — Append to Funnel History
 
 ```
-/var/www/html/systemprompt-marketplace/plugins/marketing-strategy/data/funnel-history.jsonl
+{project_root}/reports/marketing/data/funnel-history.jsonl
+(e.g. /var/www/html/systemprompt-web/reports/marketing/data/funnel-history.jsonl)
 ```
 
 One JSON line per daily run, just the `metrics` object plus `run_at`. This is the 14-day-retention workaround: once we append a day, we never lose it regardless of what the GitHub Traffic API decides to forget.
