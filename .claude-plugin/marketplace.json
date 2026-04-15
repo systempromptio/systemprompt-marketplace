@@ -6,8 +6,8 @@
   },
   "metadata": {
     "description": "Development plugins for systemprompt.io codebases",
-    "version": "1.8.0",
-    "git_hash": "a427047",
+    "version": "1.9.0",
+    "git_hash": "278092d",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -94,6 +94,17 @@
       "description": "Full content lifecycle for systemprompt.io: brand identity, blog writing, Gemini API image generation, documentation copywriting, website copy, feature copywriting, guide writing, guide revision audits, content drafting, content distribution, brand review, SEO monitoring, GitHub monitoring, Reddit monitoring, Reddit reply follow-up, and end-to-end publishing via CLI",
       "version": "1.7.0",
       "category": "content",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "marketing-strategy",
+      "source": "./plugins/marketing-strategy",
+      "description": "Lead-generation and distribution strategy for systemprompt.io. Maintains a living marketing strategy doc, tracks every action as a falsifiable hypothesis, measures the funnel from impressions through GitHub clones to qualified leads, drives AI-agent answer-engine visibility, and produces a daily action brief for Ed. Complements content-publishing with outreach and measurement.",
+      "version": "0.1.0",
+      "category": "marketing",
       "author": {
         "name": "systemprompt.io",
         "email": "hello@systemprompt.io"
