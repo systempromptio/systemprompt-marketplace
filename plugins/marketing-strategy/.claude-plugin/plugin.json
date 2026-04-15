@@ -1,0 +1,9 @@
+{
+  "name": "marketing-strategy",
+  "description": "Lead generation and distribution strategy for systemprompt.io. Maintains a living marketing strategy doc, tracks every action as a falsifiable hypothesis, measures the funnel from impressions through GitHub clones to qualified leads, and produces a daily action brief for Ed to execute. Complements content-publishing (which handles content creation) with distribution and outreach.",
+  "version": "0.1.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}
