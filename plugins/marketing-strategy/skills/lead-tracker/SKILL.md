@@ -17,9 +17,37 @@ The measurable truth. Runs daily. Pulls every signal we have into a single funne
 
 Load `marketing-identity` first (for ICP context on referrer analysis). This skill does not depend on `marketing-strategy-master` — it is upstream of it.
 
+## CRITICAL: Profile must be `systemprompt-prod` for analytics reads
+
+**Before running any `systemprompt analytics *` command**, verify the active profile is `systemprompt-prod`. The `local` profile reads a dev database that does not receive real traffic, so every analytics number will be silently wrong. This is the single biggest footgun in this skill.
+
+**Step 0 of every run:**
+
+```bash
+# Check the active profile
+systemprompt admin session list --json 2>&1 | grep -A1 '"is_active": true' | head -3
+
+# If it is not systemprompt-prod, switch:
+systemprompt admin session switch systemprompt-prod
+
+# Confirm
+systemprompt admin session list 2>&1 | grep -A2 systemprompt-prod
+```
+
+Expected output of the list command should show `"name": "systemprompt-prod"`, `"is_active": true`, and a non-expired `session_status` (e.g. `23h 59m remaining`). If the session is expired, tell Ed to log back in (`systemprompt cloud auth login` or equivalent) and stop — do NOT fall back to `local`.
+
+**Rule of thumb (from memory):**
+
+- `systemprompt-prod` = reading production analytics, GSC, content stats, sessions, traffic, costs. **This skill.**
+- `local` = running jobs, writing to local dev DB, testing schema changes, publishing content pipeline dry-runs. **NOT this skill.**
+
+After finishing the run, this skill does **not** switch back to local. If Ed needs local afterwards, he switches manually. Auto-switching back would mask which profile is active in any follow-up command.
+
+Every report this skill writes must include a top-line `profile: systemprompt-prod` marker so a reader can instantly verify the data source.
+
 ## Data Sources & Verified Commands
 
-All commands below were validated against real repos and the local `systemprompt` CLI as of 2026-04-15. They are copy-paste ready.
+All commands below were validated against the real `systempromptio/systemprompt-core` and `systempromptio/systemprompt-template` GitHub repos and the production `systemprompt` CLI as of 2026-04-15. They are copy-paste ready. **All `systemprompt analytics *` commands assume the active profile is `systemprompt-prod` — see the section above.**
 
 ### 1. GitHub Traffic API — `systempromptio/systemprompt-core`
 
@@ -154,7 +182,9 @@ Confirmed shapes (2026-04-15, 7d window):
 //   avg_time_seconds, trend: "up|stable|down" }
 ```
 
-**Session-expired warning:** if any command prints `session_status: expired`, tell Ed to run `systemprompt admin session switch local` before the skill can continue. Do not silently fall back.
+**Session-expired warning:** if any command prints `session_status: expired`, tell Ed to re-authenticate to the `systemprompt-prod` profile. Do NOT fall back to `local` — the data will be silently wrong.
+
+**Wrong-profile warning:** if the active profile is `local`, STOP. Running analytics against `local` produces silently incorrect numbers because the local DB does not receive real traffic (Ed occasionally syncs prod→local, so `local` contains a frozen point-in-time snapshot from whenever the last sync happened). You must switch to `systemprompt-prod` before continuing. This is not optional.
 
 ### 7. Google Search Console (optional)
 
@@ -179,8 +209,9 @@ Structure:
 
 **Date:** {YYYY-MM-DD}
 **Run by:** lead-tracker v{version}
+**Profile:** **systemprompt-prod** (required — see skill dependencies)
 **GSC:** {available | not configured}
-**Session profile:** {profile name | EXPIRED — run `systemprompt admin session switch local`}
+**Session status:** {time remaining | EXPIRED — re-authenticate to systemprompt-prod}
 
 ---
 

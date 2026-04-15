@@ -17,6 +17,16 @@ The only skill Ed reads every morning. Everything else in this plugin feeds it. 
 4. `lead-tracker` — funnel data (this skill triggers a fresh run, unless one already exists for today)
 5. `marketing-strategy-master` — current weekly theme, channel priorities, objectives
 
+## CRITICAL: Profile must be `systemprompt-prod`
+
+Before this skill does anything, verify `systemprompt admin session list` shows `systemprompt-prod` as the active profile. `lead-tracker` enforces this on its own — but this skill also calls `systemprompt analytics` directly in places (for example, to pull a freshness check or a specific content stat), so the rule applies here too. If the active profile is `local`, switch before proceeding:
+
+```bash
+systemprompt admin session switch systemprompt-prod
+```
+
+The `local` profile reads a frozen dev DB that was last prod-synced at an earlier date; every analytics number will be silently wrong. Never run this skill against `local`. Every brief written by this skill must carry a `Profile: systemprompt-prod` line at the top.
+
 ## Run Sequence
 
 1. **Check today's `lead-tracker` report exists.** Path: `reports/leads/{today}/lead-tracker.md`. If missing, invoke `lead-tracker` to generate it. If it failed, surface failure and stop — we do not run the brief blind.

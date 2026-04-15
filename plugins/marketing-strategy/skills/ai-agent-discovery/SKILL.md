@@ -18,6 +18,17 @@ Load in order:
 4. `/var/www/html/systemprompt-web/COMPETITOR_ANALYSIS.md` — the source of truth for comparison pages
 5. `lead-tracker` — to read the `web_traffic_ai_referrers_7d` bucket (see §Probe below)
 
+## CRITICAL: Profile must be `systemprompt-prod`
+
+Every `systemprompt analytics` call in this skill (and its upstream `lead-tracker` calls) must run against the `systemprompt-prod` profile. The `local` profile reads a frozen dev DB and silently returns wrong numbers. Before running:
+
+```bash
+systemprompt admin session list         # verify systemprompt-prod is active
+systemprompt admin session switch systemprompt-prod   # if not
+```
+
+The AI-referrer traffic signal (sessions from `claude.ai`, `chatgpt.com`, `perplexity.ai`, `copilot.microsoft.com`, `gemini.google.com`) is the whole point of this skill — reading it from the wrong DB is catastrophic, not merely inaccurate. Never run this skill against `local`.
+
 ## The Two Mechanisms This Skill Targets
 
 **1. Training-data inclusion** (slow, mostly out of our control). High-authority surfaces that labs crawl: GitHub READMEs, HN threads, awesome-lists, Reddit, Stack Overflow, docs.rs, crates.io, arxiv citations. We can't out-spend Microsoft AGT but we can out-specific them.
