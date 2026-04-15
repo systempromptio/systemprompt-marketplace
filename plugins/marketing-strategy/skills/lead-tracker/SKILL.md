@@ -186,11 +186,55 @@ Confirmed shapes (2026-04-15, 7d window):
 
 **Wrong-profile warning:** if the active profile is `local`, STOP. Running analytics against `local` produces silently incorrect numbers because the local DB does not receive real traffic (Ed occasionally syncs prod→local, so `local` contains a frozen point-in-time snapshot from whenever the last sync happened). You must switch to `systemprompt-prod` before continuing. This is not optional.
 
-### 7. Google Search Console (optional)
+### 7. Google Search Console
 
-Follow the exact GSC bash pattern from `content-publishing:seo-monitor` SKILL.md (JWT → access token → POST to Search Analytics). Key file at `/var/www/html/systemprompt-marketplace/gsc.json`.
+Service account key lives at **`/var/www/html/systemprompt-web/gsc.json`** (NOT in the marketplace repo). Confirmed working 2026-04-15 with service account `gsc-559@gen-lang-client-0891438583.iam.gserviceaccount.com` against site `sc-domain:systemprompt.io`.
 
-**Current state: key file does NOT exist.** This skill must detect that and set `gsc_available: false` in the report, not fail.
+Follow the exact GSC bash pattern from `content-publishing:seo-monitor` SKILL.md (JWT → access token → POST to Search Analytics), but with the correct key path.
+
+**What to pull every run** (7-day window, compared against prior 7d):
+
+```bash
+GSC_KEY_FILE="/var/www/html/systemprompt-web/gsc.json"
+
+# Get access token (full bash block is in content-publishing:seo-monitor SKILL.md — copy from there)
+
+# Top queries (dimension: query)
+curl -s -X POST "https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Asystemprompt.io/searchAnalytics/query" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{"startDate": "'$(date -d '7 days ago' +%Y-%m-%d)'", "endDate": "'$(date -d 'yesterday' +%Y-%m-%d)'", "dimensions": ["query"], "rowLimit": 100}'
+
+# Top pages (dimension: page)
+curl -s -X POST "https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Asystemprompt.io/searchAnalytics/query" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{"startDate": "'$(date -d '7 days ago' +%Y-%m-%d)'", "endDate": "'$(date -d 'yesterday' +%Y-%m-%d)'", "dimensions": ["page"], "rowLimit": 100}'
+
+# Query x page pairing (for quick-win title/meta analysis)
+curl -s -X POST "https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Asystemprompt.io/searchAnalytics/query" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{"startDate": "'$(date -d '7 days ago' +%Y-%m-%d)'", "endDate": "'$(date -d 'yesterday' +%Y-%m-%d)'", "dimensions": ["query", "page"], "rowLimit": 500}'
+```
+
+**Metrics to emit** into the JSON tail (each gets a whitelist entry in `hypothesis-ledger`):
+
+```
+gsc_impressions_7d         gsc_impressions_prev_7d       gsc_impressions_31d
+gsc_clicks_7d              gsc_clicks_prev_7d            gsc_clicks_31d
+gsc_avg_ctr_7d             gsc_avg_position_7d
+gsc_top_query_{slug}_clicks_7d        (for each of the top 15 queries)
+gsc_top_page_{slug}_impressions_7d    (for each of the top 15 pages)
+gsc_top_page_{slug}_ctr_7d
+gsc_top_page_{slug}_position_7d
+```
+
+**Quick-win detection rule:** flag any page with `impressions > 1000 AND ctr < 0.02 AND position < 10` as a title/meta rewrite opportunity. Forward these to `content-publishing:guide-optimiser` as hypothesis candidates.
+
+**Ranking-opportunity detection rule:** flag any query where `position 5-20` with `impressions > 50` as a page-strengthening opportunity (internal links, content depth, keyword placement).
+
+**Error handling:** if the key file is missing or the token exchange fails, set `gsc_available: false` in the report's top frontmatter and emit a loud flag in the anomalies section. Do not silently skip — GSC is the single biggest SEO signal source.
 
 ### 8. LinkedIn / X / Reddit — manual paste-in
 
