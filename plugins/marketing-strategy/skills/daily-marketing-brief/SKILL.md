@@ -29,13 +29,13 @@ The `local` profile reads a frozen dev DB that was last prod-synced at an earlie
 
 ## Run Sequence
 
-1. **Check today's `lead-tracker` report exists.** Path: `reports/leads/{today}/lead-tracker.md`. If missing, invoke `lead-tracker` to generate it. If it failed, surface failure and stop — we do not run the brief blind.
+1. **Check today's `lead-tracker` report exists.** Path: `/var/www/html/systemprompt-web/reports/marketing/{today}/lead-tracker.md`. If missing, invoke `lead-tracker` to generate it. If it failed, surface failure and stop — we do not run the brief blind.
 2. **Read strategy doc.** `marketing-strategy-master read` to get current phase, weekly theme, channel priorities.
 3. **Read in-flight and maturing hypotheses.** `hypothesis-ledger in-flight` and `hypothesis-ledger maturing {today}`.
 4. **Score any hypothesis whose `window_end` <= today.** For each, pull `metric` value from `lead-tracker`'s JSON tail, compare to baseline + target, call `hypothesis-ledger score {id} {result} {PASS|FAIL|INCONCLUSIVE} {note}`.
 5. **Generate 3–5 actions for today** (see next section).
 6. **Log each generated action** via `hypothesis-ledger log` — each action gets a new `H-###` and its full draft written to `data/actions/H-###.md`.
-7. **Write the brief** to `reports/leads/{today}/daily-brief.md` and print to Ed.
+7. **Write the brief** to `/var/www/html/systemprompt-web/reports/marketing/{today}/daily-brief.md` and print to Ed.
 
 ## How Actions Are Chosen
 

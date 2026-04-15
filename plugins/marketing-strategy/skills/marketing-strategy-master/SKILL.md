@@ -1,6 +1,6 @@
 ---
 name: marketing-strategy-master
-description: "Maintains the living marketing strategy doc at /var/www/html/systemprompt-web/reports/marketing-strategy-master.md. Never rewrites wholesale — writes diffs. Contains objectives, 30/60/90 targets, channel hypotheses in flight, dead hypotheses, winning tactics, and funnel snapshots. Load marketing-identity first."
+description: "Maintains the living marketing strategy doc at /var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md. Never rewrites wholesale — writes diffs. Contains objectives, 30/60/90 targets, channel hypotheses in flight, dead hypotheses, winning tactics, and funnel snapshots. Load marketing-identity first."
 metadata:
   version: "0.1.0"
 ---
@@ -16,8 +16,10 @@ Load `marketing-identity` first. It defines ICP, hook, and hypothesis format.
 ## The Strategy Doc
 
 ```
-/var/www/html/systemprompt-web/reports/marketing-strategy-master.md
+/var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md
 ```
+
+Lives inside `reports/marketing/` alongside the dated `lead-tracker.md` / `daily-brief.md` outputs and the `drafts/` folder. Single living file, not dated — diffs are appended, never rewritten.
 
 Structure (enforced on every write):
 

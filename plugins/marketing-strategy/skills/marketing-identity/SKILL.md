@@ -17,7 +17,7 @@ Load these once per session in order:
 2. `/var/www/html/systemprompt-web/MIDMARKET_VALUE_PROP.md` — **ICP2, the lead-gen target**
 3. `/var/www/html/systemprompt-web/ENTERPRISE_VALUE_PROP.md` — ICP1 (content audience, **not** outreach target)
 4. `/var/www/html/systemprompt-web/COMPETITOR_ANALYSIS.md` — positioning wedges (provable governance, single binary, own-it)
-5. `/var/www/html/systemprompt-web/reports/marketing-strategy-master.md` — current strategy state (read-only here, written by `marketing-strategy-master` skill)
+5. `/var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md` — current strategy state (read-only here, written by `marketing-strategy-master` skill)
 
 If any file is missing, stop and tell Ed.
 

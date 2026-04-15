@@ -97,7 +97,7 @@ For each surface, score pass/fail on:
 8. **No cliches**: scans for banned words from `content-publishing:identity`.
 9. **Freshness**: was the surface updated within the last 60 days?
 
-Write the audit to `reports/ai-agent-discovery/YYYY-MM-DD/audit.md`.
+Write the audit to `/var/www/html/systemprompt-web/reports/ai-agent-discovery/YYYY-MM-DD/audit.md`.
 
 ### `draft` — generating a specific surface
 
@@ -140,7 +140,7 @@ Store every probe result in `data/probe-results.jsonl` as one line per `(date, q
 
 ### `report` — weekly AEO report
 
-Writes to `reports/ai-agent-discovery/YYYY-MM-DD/weekly-report.md`:
+Writes to `/var/www/html/systemprompt-web/reports/ai-agent-discovery/YYYY-MM-DD/weekly-report.md`:
 
 - Citation rate this week by target (Perplexity, Claude, ChatGPT, Gemini, manual)
 - Citation rate by query (which queries we're winning, which we're losing)
