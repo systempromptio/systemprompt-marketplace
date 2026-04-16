@@ -3,7 +3,7 @@ name: guide-writer
 description: "Write deep, researched long-form technical guides. Optimised for content quality, accuracy, and reader value. No brand references in the content body."
 metadata:
   version: "2.0.0"
-  git_hash: "1632daf"
+  git_hash: "626cd59"
 ---
 
 # Guide Writer
