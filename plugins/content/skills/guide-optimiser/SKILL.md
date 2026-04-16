@@ -1,14 +1,16 @@
 ---
 name: guide-optimiser
-description: "Deterministically optimise a published guide for value density, brand discipline, search-intent alignment, and CTR. Reads 28-day GSC query data per URL, enforces quantitative rules including FAQ keyword alignment, external resource minimums, shareable asset requirements, and metadata rationale tracking. Produces a 100-point score delta across 11 dimensions. Load identity and brand-voice first."
+description: "Deterministically audit and optimise a published guide. Runs a 14-section quality audit, applies 7 rewrite rules for value density, brand discipline, search-intent alignment, and CTR. Reads 28-day GSC query data per URL, produces a 100-point score delta across 11 dimensions, commits changes, and updates the per-guide report. Handles guides without GSC data. Load identity and brand-voice first."
 metadata:
-  version: "2.0.0"
-  git_hash: "c24c577"
+  version: "3.0.0"
+  git_hash: "8e40a90"
 ---
 
 # Guide Optimiser
 
-Run a **deterministic, data-driven rewrite** on a single published guide. This skill is the action counterpart to `guide-revision` (which is audit-only). Every decision is grounded in a quantitative rule or a 28-day Google Search Console signal. No vibes, no "use your judgement" gaps.
+Run a **deterministic, data-driven audit and rewrite** on a single published guide. This skill is the complete lifecycle tool for guide quality: audit, fix, score, commit, log. Every decision is grounded in a quantitative rule or a 28-day Google Search Console signal. No vibes, no "use your judgement" gaps.
+
+**Critical rule:** Section 14 (Search Intent Resolution) is a critical override. If Section 14 fails, the entire audit fails regardless of how many other sections pass. A guide that does not resolve the searcher's intent has no value, regardless of how well it scores on technical criteria.
 
 ## Dependencies
 
@@ -16,8 +18,6 @@ Run a **deterministic, data-driven rewrite** on a single published guide. This s
 
 - `identity` — positioning, ICP, messaging hierarchy, what the brand actually stands for
 - `brand-voice` — the cliche list, terminology rules, em-dash ban, and voice targets
-
-This skill reuses the 14-section audit checklist from `guide-revision` verbatim during Phase 1. Do not duplicate that checklist here — read the file at `plugins/content/skills/guide-revision/SKILL.md` when you need it.
 
 ## Source of Truth
 
@@ -27,17 +27,16 @@ Read these before starting:
 - `/var/www/html/systemprompt-web/reports/seo/data/keyword-targets.json` — canonical keyword registry with assigned guides, volumes, difficulty, target positions. Find the entry where `assigned_guide` matches this guide's slug to identify the primary keyword and its current metrics.
 - The latest `reports/seo/daily/YYYY-MM-DD/seo-monitor.md` — per-guide CTR, impressions, position, quick-wins list
 - `/var/www/html/systemprompt-web/reports/seo/data/hypothesis-ledger.md` — check if an S-### hypothesis exists for this guide's title/meta rewrite. If yes, note the hypothesis ID in your output so we can score it later.
-- `/var/www/html/systemprompt-web/reports/content/guides/{slug}/guide-report.md` — the per-guide report (search intent analysis, FAQ mappings, external resources, asset inventory, action log, metadata rationale). If this file does not exist, create it from the template in `guide-revision` before proceeding. Populate with available data from keyword-targets.json and any GSC data pulled in Phase 0.
+- `/var/www/html/systemprompt-web/reports/content/guides/{slug}/guide-report.md` — the per-guide report (search intent analysis, FAQ mappings, external resources, asset inventory, action log, metadata rationale). If this file does not exist, create it from the template in the "Per-Guide Report Template" section below before proceeding. Populate with available data from keyword-targets.json and any GSC data pulled in Phase 0.
 
 ## Inputs
 
 Caller must provide:
 - **Guide slug** (e.g. `getting-started-anthropic-marketplace`), OR the absolute path to the guide's `index.md`
-- Optional: `audit_only: true` — compute the score without rewriting (used for corpus re-baselining)
 
 ## Phases
 
-The skill runs sequentially: **0 → 1 → 2 → 2.5 → 3**. Do not skip. If any phase aborts, exit cleanly without committing.
+The skill runs sequentially: **0 -> 1 -> 2 -> 2.5 -> 3**. Do not skip. If any phase aborts, exit cleanly without committing.
 
 ---
 
@@ -122,7 +121,7 @@ curl -s -X POST \
   }" > /tmp/gsc-guide-queries/$SLUG.page.json
 ```
 
-Cache both files. If the guide has no rows, record `no_gsc_data: true` and proceed — content rules still apply, only CTR scoring and title rewrites are skipped.
+Cache both files. If the guide has no rows, record `no_gsc_data: true` and proceed — content rules still apply.
 
 Build the working set:
 - `top_queries`: sorted by impressions, filter `impressions >= 20` (signal floor)
@@ -131,7 +130,7 @@ Build the working set:
 
 ### Initialise Guide Report
 
-Read the per-guide report at `reports/content/guides/{slug}/guide-report.md`. If it does not exist, create it from the template (see `guide-revision` skill) and populate with:
+Read the per-guide report at `reports/content/guides/{slug}/guide-report.md`. If it does not exist, create it from the template (see "Per-Guide Report Template" section below) and populate with:
 - Primary keyword data from keyword-targets.json
 - GSC data just pulled (impressions, clicks, CTR, position)
 - Any existing FAQ, resource, and asset data extractable from the guide's current content
@@ -140,17 +139,227 @@ This ensures every optimiser run has a guide report to work with, even for guide
 
 ---
 
-## Phase 1 — Audit
+## Phase 1 — 14-Section Audit
 
-Run the full `guide-revision` 14-section checklist against the target guide. Record pass/fail per check. This phase writes nothing to disk — it produces a dict held in memory for Phase 2.5 scoring.
+Run the full 14-section checklist against the target guide. Record pass/fail per check. This phase writes nothing to disk — it produces a dict held in memory for Phase 2.5 scoring.
 
-When Phase 1 produces a failing check, Phase 2 is responsible for fixing it only where the fix is covered by the rules below. Out-of-scope failures (e.g. broken external links pointing to 404s) are reported but not auto-fixed.
+When Phase 1 produces a failing check, Phase 2 is responsible for fixing it only where the fix is covered by the rewrite rules below. Out-of-scope failures (e.g. broken external links pointing to 404s) are reported but not auto-fixed.
+
+### Section 1: Frontmatter Completeness
+
+- [ ] `title` present and under 60 characters
+- [ ] `description` present and under 160 characters
+- [ ] `description` starts with a verb, not "This guide" or "In this article"
+- [ ] `slug` present, lowercase, hyphenated, 3-6 words, contains primary keyword
+- [ ] `keywords` present with 5-10 comma-separated phrases
+- [ ] `author` present
+- [ ] `published_at` and `updated_at` present and valid dates
+- [ ] `image` path present and follows `/files/images/blog/{slug}.png` pattern
+- [ ] `after_reading_this` has 3 specific, measurable outcomes (not vague "understand X")
+- [ ] `links` array has at least 2 reference links with titles and full URLs
+- [ ] `public` is explicitly set
+- [ ] `kind` and `category` are set
+
+### Section 2: Claim Verification
+
+For every specific claim in the guide:
+
+- [ ] Performance claims (percentages, times, costs) have methodology or source
+- [ ] Technical behaviour claims (caching, context isolation, API behaviour) cite official documentation
+- [ ] Product integration claims (connectors, tools) are verified to exist
+- [ ] Pricing/cost data includes "as of {date}" and links to pricing page
+- [ ] No unattributed quotes or testimonials
+- [ ] Claims about what "teams" or "CTOs" do are either sourced or clearly framed as the author's observation
+
+Flag each unverified claim with exact line number and suggested fix: add source, add "[as of date]", reframe as observation, or remove.
+
+### Section 3: Link Audit
+
+- [ ] Every external link uses a full URL (not just domain)
+- [ ] Every external link has descriptive anchor text (not "click here" or bare URLs)
+- [ ] Links to Anthropic docs point to current, non-deprecated pages
+- [ ] Internal links to other guides use relative paths (`/guides/{slug}`)
+- [ ] Guide links to all related guides recommended by the SEO strategy interlinking map
+- [ ] No orphan guide (must link to at least 2 other guides AND be linked from at least 2)
+- [ ] `links` frontmatter references are real, accessible URLs
+- [ ] No links to placeholder or example domains
+
+### Section 4: Code and Command Verification
+
+- [ ] Every code block specifies a language (```rust, ```json, ```bash, etc.)
+- [ ] Every code example is complete enough to run (not fragments that assume context)
+- [ ] Every CLI command is correct for the stated tool version
+- [ ] File paths in code examples are realistic and consistent within the guide
+- [ ] OS-specific commands note alternatives for other platforms (macOS, Linux, Windows)
+- [ ] Config examples (JSON, YAML) are valid syntax
+- [ ] No placeholder values that look real (e.g., fake API keys, fake URLs)
+- [ ] Prerequisites for running code are stated (language version, dependencies, installed tools)
+
+### Section 5: Structure and Readability
+
+- [ ] Exactly one H1 (the title)
+- [ ] H2 sections follow a logical progression (problem, solution, examples, conclusion)
+- [ ] No H2 section exceeds 800 words without H3 sub-sections
+- [ ] No paragraph exceeds 5 sentences
+- [ ] Sentence length varies (mix of short punchy and longer explanatory)
+- [ ] No wall of text: visual break (heading, code block, list, or table) every 300 words max
+- [ ] Opening section (first 150 words) clearly states what the reader will get and why it matters
+- [ ] Guide answers the search query implied by its title within the first 500 words
+- [ ] Conclusion has specific takeaways (not just "now you know X")
+- [ ] No section repeats a point already made in another section
+
+### Section 6: SEO and Metadata Optimisation
+
+**Title optimisation:**
+- [ ] Title under 60 characters (Google truncation threshold)
+- [ ] Title contains the primary keyword naturally (not stuffed)
+- [ ] Title is action-oriented or specific ("Build X", "How to X", "X vs Y"), not generic ("A Guide to X")
+- [ ] Title accurately represents the content (no clickbait, no overpromise)
+
+**Description optimisation:**
+- [ ] Description is 130-160 characters (sweet spot for SERP display)
+- [ ] Description starts with a verb or action ("Learn", "Build", "Configure", "Compare")
+- [ ] Description includes primary keyword in first 100 characters
+- [ ] Description tells the reader what they will be able to DO, not what the article covers
+- [ ] Description is unique (not duplicated from another guide)
+
+**Keywords optimisation:**
+- [ ] Primary keyword from SEO strategy matches frontmatter keywords field
+- [ ] Keywords field contains 5-10 distinct phrases (not just variations of one term)
+- [ ] Long-tail keywords from SEO strategy are included
+- [ ] Keywords include both British and American spelling variants where search volume warrants it
+- [ ] No keyword in the list is irrelevant to the actual content
+
+**Content keyword placement:**
+- [ ] Primary keyword appears in: title, first paragraph, at least one H2, description, slug
+- [ ] Primary keyword density is natural (max 1x per 200 words, no stuffing)
+- [ ] Long-tail keywords appear naturally in H2/H3 headings or body text
+- [ ] Guide answers "People Also Ask" questions related to its primary keyword
+
+**Slug and URL:**
+- [ ] Slug is 3-6 words, lowercase, hyphenated
+- [ ] Slug contains primary keyword or close variant
+- [ ] Slug has no stop words unless they aid readability
+
+**Cluster alignment:**
+- [ ] Guide is assigned to the correct cluster per SEO strategy
+- [ ] Guide links to its cluster's pillar page
+- [ ] `category` and `tags` accurately reflect the content topic
+
+**Structured data readiness:**
+- [ ] `after_reading_this` outcomes are specific enough for HowTo schema
+- [ ] `links` array contains authoritative external references
+- [ ] `image` path is set and the image file exists
+
+### Section 7: Brand and Voice Compliance
+
+- [ ] No em dashes (use commas, periods, parentheses)
+- [ ] No hashtags
+- [ ] No AI cliches (revolutionize, game-changer, unlock, supercharge, seamlessly, cutting-edge, harness, next-generation, paradigm shift, disrupt, empower, leverage as verb, reimagine)
+- [ ] No fabricated personal stories or "When I was building..." narratives
+- [ ] No generic filler ("Let's dive in", "Without further ado", "In today's fast-paced world")
+- [ ] Uses correct Anthropic terminology (plugins not apps, skills not prompts, agents not bots, MCP servers not APIs)
+- [ ] **Zero occurrences** of `systemprompt`, `systemprompt.io`, or `systempromptio` (case-insensitive) in guide body content. Run `grep -ci 'systemprompt' body_content` to verify. **Exceptions:** founder-narrative guides (`the-growth-chart-nobody-shows-you`, `building-on-quicksand-claude-breaking-changes`), or guides where the product IS the topic.
+- [ ] No product CTAs of any kind in body content
+- [ ] No "we recommend", "our solution", "try our", or first-person product language
+- [ ] Competitive frame is build-vs-buy (not product vs other platforms)
+
+### Section 8: Actionability and Completeness
+
+- [ ] A reader with stated prerequisites can complete the guide's goal without external help
+- [ ] Every "how to" section has exact steps, not vague direction ("configure your settings" without showing how)
+- [ ] Error scenarios and common mistakes are addressed
+- [ ] "After reading this" outcomes are all achievable by following the guide
+- [ ] Guide does not end abruptly (has a conclusion with next steps or related resources)
+- [ ] If the guide recommends a tool or approach, it shows the actual implementation (not just "use X")
+
+### Section 9: External Resources
+
+Every guide must link to authoritative external sources that substantiate its claims and provide further reading. These resources demonstrate that the guide is built on research, not opinion.
+
+- [ ] At least 5 distinct external resource links in the guide body (not counting frontmatter `links` array)
+- [ ] All external links point to primary sources (official documentation, research papers, RFCs, GitHub repositories, specification documents), not blog posts summarising documentation
+- [ ] External links are contextually placed inline where relevant (not dumped in a "resources" or "further reading" section at the end)
+- [ ] External links are to current, live pages (not 404, not deprecated, not archived)
+- [ ] No external links to competitor products presented as recommendations
+- [ ] External resources are recorded in the per-guide report's "External Resources Audit" section
+
+### Section 10: Homemade Visual Assets
+
+Every guide must include original visual assets based on real data. Charts, tables, and graphs make content more useful and harder to replicate. They also signal to readers (and search engines) that the content is original research, not a rewrite.
+
+- [ ] At least 2 homemade visual assets in the guide (SVG charts, data tables with real data, comparison graphs, architecture diagrams)
+- [ ] Each visual asset cites a real data source (pricing page, benchmark results, API documentation, research paper, official statistics)
+- [ ] Visual assets contain real data, not placeholder or illustrative numbers
+- [ ] SVG charts and diagrams are well-formed and render correctly
+- [ ] Data tables have proper markdown formatting (headers, column alignment)
+- [ ] Every visual asset is wrapped with copy and share buttons for external sharing:
+  - [ ] Copy button (using `<sp-copy-button>` web component) copies asset content to clipboard
+  - [ ] Share button copies a permalink URL with backlink to `systemprompt.io/guides/{slug}#{asset-anchor}`
+  - [ ] Source attribution line citing the data source is visible
+- [ ] Visual assets are recorded in the per-guide report's "Homemade Asset Inventory" section with their data sources
+
+### Section 11: FAQ and Long-Tail Keyword Validation
+
+FAQs drive structured data in search results. Every FAQ must be grounded in actual search behaviour, not invented questions.
+
+- [ ] At least 4 FAQ entries in frontmatter
+- [ ] Each FAQ question maps to a documented long-tail keyword (from `keyword-targets.json` or GSC query data)
+- [ ] FAQ-to-keyword mapping is recorded in the per-guide report's "FAQ and Long-Tail Keyword Match" section
+- [ ] FAQ answers are self-contained (useful without reading the full guide)
+- [ ] FAQ answers include specific numbers, steps, or data points (not vague generalities)
+- [ ] No FAQ question is generic or unresearchable (e.g., "What is X?" must have keyword volume backing it)
+
+### Section 12: Topic Research Evidence
+
+Every guide must demonstrate that its topic was researched before writing. This section validates the per-guide report's research sections.
+
+- [ ] Per-guide report exists at `reports/content/guides/{slug}/guide-report.md`
+- [ ] Search Intent Analysis section is complete:
+  - [ ] Intent classification (informational/commercial/navigational/transactional) with evidence
+  - [ ] User profile: who is searching, what role, what problem they have
+  - [ ] What they need: the specific answer or outcome they seek
+  - [ ] Evidence: how we know (GSC queries, keyword intent data, SERP analysis)
+- [ ] Keyword map with primary, secondary, and long-tail keywords, each with volume and source date
+- [ ] Competing content audit with at least 3 competitor URLs analysed (word count, strengths, gaps)
+- [ ] Differentiation statement: what this guide offers that competing content does not
+- [ ] All keyword volumes cite their source (keyword-targets.json pull date or GSC date range)
+
+### Section 13: Metadata Rationale and Action Traceability
+
+The title, description, and keywords of every guide must be backed by data, and every change to them must be traceable. This prevents repeated edits without evidence.
+
+- [ ] Guide report Section 7 (Title, Description and Keywords Rationale) is complete
+- [ ] Title rationale cites keyword volume data with source and date
+- [ ] Description rationale explains which search intent it addresses
+- [ ] Keywords rationale justifies each keyword with volume/difficulty data
+- [ ] Every metadata change in the guide's history has a corresponding Action Log entry
+- [ ] Every Action Log entry that produced an artifact links to it using a relative path
+- [ ] No metadata was changed without GSC data or keyword volume evidence justifying the change
+- [ ] Title/description "Last changed" date is present and accurate
+
+### Section 14: Search Intent Resolution (CRITICAL OVERRIDE)
+
+This is the most important section. **If Section 14 fails, the entire audit result is FAIL regardless of how many other sections pass.** A guide that does not resolve the searcher's intent is not a world-class resource, no matter how well-structured or SEO-optimised it is.
+
+The assessment here is structured but requires judgement. Each check must be supported by specific evidence from the guide and the per-guide report.
+
+- [ ] **Intent match:** The documented search intent (from the guide report) matches what the content actually delivers. If the report says users want "empirical cost reduction strategies," the guide must contain specific, tested strategies with measured outcomes, not general advice.
+- [ ] **Quick resolution:** The guide answers the title's implied question within the first 300 words. A reader who arrived from Google should know within 30 seconds that this page will solve their problem.
+- [ ] **Complete resolution:** A reader searching the primary keyword finds their question fully answered, not just discussed. "How to reduce Claude Code costs" must contain actual cost reduction techniques with expected savings, not just an explanation of how pricing works.
+- [ ] **Actionable value:** The guide provides specific steps, real numbers, working code, or clear recommendations. Every strategy and recommendation must be something the reader can act on immediately.
+- [ ] **Empirical evidence:** Strategies and recommendations are backed by evidence (benchmarks, measurements, documented behaviour, official sources), not presented as unsupported assertions. "This saves 40% on token costs" must cite where that number comes from.
+- [ ] **Competitive superiority:** The guide is demonstrably better than the competing content documented in the guide report. It must go deeper, be more accurate, or provide unique value that competitors miss.
+- [ ] **Trust signals:** The content shows WHY readers can trust it. Methodology is stated. Sources are cited. Real numbers have provenance. The reader understands the basis for every claim.
+- [ ] **Unique perspective:** The guide offers something no other resource does. This is documented in the guide report's differentiation statement and must be visible in the content itself.
 
 ---
 
 ## Phase 2 — Deterministic Rewrite
 
 Seven hard rules. Each is mechanically enforceable.
+
+**Handling guides without GSC data:** When `no_gsc_data: true` (new or unindexed guides), Phase 2 still applies Rules 1, 2, 5, and 7 (brand cleanup, length floor, cliche/voice, external resources). Only Rule 3 (title/meta CTR rewrite), Rule 4 (query alignment), and Rule 6 (FAQ/GSC alignment) are skipped because they need search data. No guide gets a free pass.
 
 ### Rule 1 — Brand-mention discipline
 
@@ -172,10 +381,10 @@ The core ask: guides are littered with brand references that dilute value densit
 **Earn-it test for each remaining mention:** would the paragraph be strictly weaker without it? If removing the mention leaves the paragraph intact, remove it.
 
 **Replacement rules:**
-- "systemprompt.io's governance pipeline evaluates" → "a governance pipeline evaluates"
-- "At systemprompt we believe" → delete entire phrase, keep the underlying claim
-- "systemprompt is the only self-hosted" → "self-hosted deployments that" (reframe as category, not product)
-- First-person marketing ("we built X to solve Y") → stripped entirely
+- "systemprompt.io's governance pipeline evaluates" -> "a governance pipeline evaluates"
+- "At systemprompt we believe" -> delete entire phrase, keep the underlying claim
+- "systemprompt is the only self-hosted" -> "self-hosted deployments that" (reframe as category, not product)
+- First-person marketing ("we built X to solve Y") -> stripped entirely
 
 **Exception:** founder-narrative guides are exempt from Rule 1. Current list:
 - `the-growth-chart-nobody-shows-you`
@@ -246,18 +455,20 @@ If the guide is **already above 5,000 words and dense**, do not expand it furthe
 
 ### Rule 4 — Query-to-content alignment (search intent)
 
+**Skipped when `no_gsc_data: true`.** Without search data, query alignment cannot be grounded.
+
 For each query in `mandatory_queries` (Phase 0, impressions >= 20, 28 days):
 
 1. **Verbatim presence check**: grep the guide body (case-insensitive) for the exact query string. If absent, it must be added naturally — as an H2, an H3, a lead sentence, or an FAQ question. Never keyword-stuff.
 
 2. **Intent classification** (deterministic mapping):
-   - Starts with `how to`, `how do I` → how-to intent → needs numbered steps
-   - Contains `vs`, `versus`, `or`, `difference between` → comparison intent → needs table
-   - Contains `error`, `failed`, `not working`, `broken`, `cannot`, `issue` → troubleshooting intent → needs troubleshooting block
-   - Ends with `?` or starts with `what`, `why`, `when` → question intent → needs FAQ answer
-   - Contains `best`, `top`, `list of` → listicle intent → needs enumerated list
-   - Contains `example`, `tutorial`, `guide`, `setup` → instructional intent → needs step-by-step
-   - Otherwise: informational → needs an H2 or H3 explaining it
+   - Starts with `how to`, `how do I` -> how-to intent -> needs numbered steps
+   - Contains `vs`, `versus`, `or`, `difference between` -> comparison intent -> needs table
+   - Contains `error`, `failed`, `not working`, `broken`, `cannot`, `issue` -> troubleshooting intent -> needs troubleshooting block
+   - Ends with `?` or starts with `what`, `why`, `when` -> question intent -> needs FAQ answer
+   - Contains `best`, `top`, `list of` -> listicle intent -> needs enumerated list
+   - Contains `example`, `tutorial`, `guide`, `setup` -> instructional intent -> needs step-by-step
+   - Otherwise: informational -> needs an H2 or H3 explaining it
 
 3. **Format match check**: does the guide contain the format the intent demands? If the top query is "failed to install anthropic marketplace" (troubleshooting intent), the guide must contain a clearly labelled troubleshooting section. If not, add one.
 
@@ -282,13 +493,15 @@ Strip:
 
 **Filler transitions:** `Let's dive in`, `Without further ado`, `In today's fast-paced world`, `In this guide, we will`, `This article will cover`, `By the end of this guide`, `As we've seen`, `It goes without saying`, `At the end of the day`
 
-**Punctuation:** em dashes `—` → replace with commas, periods, or parentheses (brand-voice rule)
+**Punctuation:** em dashes `—` -> replace with commas, periods, or parentheses (brand-voice rule)
 
 **Other:** hashtags, fabricated "when I was building this" stories (unless founder-narrative exception), vague "teams say" / "companies report" / "studies show" without a source
 
 Run a final pass against `brand-voice` skill's full cliche list and Anthropic terminology rules (plugins not apps, skills not prompts, agents not bots, MCP servers not APIs).
 
 ### Rule 6 — FAQ and GSC long-tail alignment
+
+**Skipped when `no_gsc_data: true`.** Without search data, FAQ alignment cannot be grounded.
 
 After Phase 0 produces the GSC query data:
 
@@ -322,6 +535,8 @@ After Phase 0 produces the GSC query data:
 
 Every guide gets a **100-point score** across eleven dimensions. Compute both pre- and post-rewrite. The delta is the proof of work.
 
+**Handling guides without GSC data:** When `no_gsc_data: true`, GSC-dependent dimensions (Search traffic, CTR performance) score `N/A` and the max drops to 75. Query coverage gets a neutral score of 8 (cannot be penalised without signal). All other dimensions score normally.
+
 ### Rubric
 
 | Dimension | Max | Data source |
@@ -344,17 +559,17 @@ Every guide gets a **100-point score** across eleven dimensions. Compute both pr
 ```
 score = min(15, round(3 * log10(max(impressions_28d, 1))))
 ```
-1 imp → 0, 100 → 6, 1k → 9, 10k → 12, 100k → 15.
+1 imp -> 0, 100 -> 6, 1k -> 9, 10k -> 12, 100k -> 15.
 
 **CTR performance (10 max):**
 ```
 ctr_curve = {1:0.25, 2:0.15, 3:0.11, 4:0.08, 5:0.06, 6:0.045,
              7:0.03, 8:0.023, 9:0.018, 10:0.015}
-# positions 11-20 → 0.01
+# positions 11-20 -> 0.01
 expected = ctr_curve[round(position)]
 score = min(10, round(10 * (actual_ctr / expected)))
 ```
-A guide hitting 50% of expected CTR scores 5. No GSC data → `N/A`, max drops to 90.
+A guide hitting 50% of expected CTR scores 5. No GSC data -> `N/A`, max drops to 75.
 
 **Query coverage (15 max):**
 ```
@@ -416,14 +631,14 @@ score = min(5, round(5 * (count / 2)))
 ### Commit message format
 
 ```
-optimise {slug}: {pre_score} → {post_score}
+optimise {slug}: {pre_score} -> {post_score}
 
-- brand mentions: {before} → {after} (budget {budget})
-- word count: {before} → {after} (floor {floor})
-- query coverage: {before}/{total} → {after}/{total}
+- brand mentions: {before} -> {after} (budget {budget})
+- word count: {before} -> {after} (floor {floor})
+- query coverage: {before}/{total} -> {after}/{total}
 - FAQ keyword match: {matched}/{total}
 - external resources: {count}/5
-- title: "{before}" → "{after}"
+- title: "{before}" -> "{after}"
 - meta: rewritten for {reason}
 - gsc baseline: {impressions_28d} imp, {ctr}% CTR, position {position}
 ```
@@ -436,7 +651,7 @@ After rewriting:
 
 1. **Word count** — must be >= floor. If not, report as `needs_content_investment` and abort commit.
 2. **Brand-mention count** — must be within budget. Re-grep to verify.
-3. **Re-run the guide-revision audit.** Sections 1, 6, 7 must all pass. Other sections must be no worse than the baseline from Phase 1.
+3. **Re-run the 14-section audit.** Sections 1, 6, 7 must all pass. Other sections must be no worse than the baseline from Phase 1.
 4. **Title and meta lengths** — validate hard caps.
 5. **Meta description uniqueness** — grep all other guides' descriptions, confirm no collision.
 6. **Diff the guide file.** If diff is empty or trivially whitespace-only, abort with `no_material_change`. Never commit a no-op.
@@ -444,26 +659,128 @@ After rewriting:
 8. **Commit** with the message format above.
 9. **Write the structured per-guide artifact report** to `reports/content/artifacts/optimiser/YYYY-MM-DD/{slug}.md`.
 10. **Update the canonical guide report** at `reports/content/guides/{slug}/guide-report.md`:
-    - Append Action Log entry: date, "Optimised", "guide-optimiser", "Score {pre} → {post}", link to artifact report, hypothesis ID (if title/meta changed), commit SHA
+    - Append Action Log entry: date, "Optimised", "guide-optimiser", "Score {pre} -> {post}", link to artifact report, hypothesis ID (if title/meta changed), commit SHA
     - Update "Current Scores > Optimiser Score" with the new score breakdown table
+    - Update "Current Scores > Revision Audit" with the Phase 1 section results
     - Update "FAQ and Long-Tail Keyword Match" table with any new mappings from Rule 6
     - Update "External Resources Audit" with current resource inventory
     - Update "Homemade Asset Inventory" with current asset inventory
     - Update Section 7 (metadata rationale) if title/description/keywords were changed (with new rationale, previous values, S-### hypothesis ID)
     - Append a GSC performance snapshot row to Section 8 with today's data
 
-## Audit-only mode
+---
 
-If the caller passes `audit_only: true`, run Phases 0, 1, and 2.5 only. Produce the scorecard and report. Do not rewrite, do not commit. Used for corpus re-baselining and drift tracking.
+## Per-Guide Report Template
 
-Still update the guide report:
-- Append Action Log entry: date, "Audited", "guide-optimiser", "Score {N}/100 (audit only)", no artifact link, no hypothesis, no commit
-- Update "Current Scores > Optimiser Score" with the score breakdown
-- Append GSC performance snapshot row
+When a guide report does not exist, create it at `reports/content/guides/{slug}/guide-report.md` using the following template. Populate what you can from keyword-targets.json and the guide's current content:
+
+```markdown
+# Guide Report: {title}
+
+**Slug:** {slug}
+**Path:** services/content/guides/{slug}/index.md
+**Created:** {YYYY-MM-DD}
+**Last updated:** {YYYY-MM-DD}
+**Primary keyword:** {keyword} (volume: {N}, difficulty: {N}, intent: {type})
+**Status:** draft | published | needs-revision | optimised
+
+## 1. Search Intent Analysis
+
+### Who is searching and why?
+- **Primary intent:** {informational|commercial|navigational|transactional}
+- **User profile:** {who is this person, what role, what problem}
+- **What they need:** {the specific answer or outcome they are seeking}
+- **Evidence:** {how we know: GSC queries, keyword intent data, SERP analysis}
+
+### How have we addressed their intent?
+- **Core value delivered:** {what the guide gives them that resolves their search}
+- **Unique perspective:** {what we offer that no other resource does}
+- **Evidence quality:** {are strategies empirical? are claims backed by data?}
+- **Trust signals:** {methodology stated, sources cited, real numbers with provenance}
+- **Intent resolution verdict:** RESOLVED | PARTIALLY RESOLVED | NOT RESOLVED
+
+### Keyword Map
+| Keyword | Volume | Difficulty | Classification | Source | Status |
+|---------|-------:|----------:|---------------|--------|--------|
+
+### Competing Content Audit
+| URL | Word count | Strengths | Gaps we exploit |
+|-----|----------:|-----------|----------------|
+
+### Our Differentiation
+{What this guide offers that nothing else does, with evidence}
+
+## 2. FAQ and Long-Tail Keyword Match
+
+| FAQ Question | Matched Keyword | Volume | Source | Validated? |
+|-------------|----------------|-------:|--------|:----------:|
+
+Rule: every FAQ must map to a researched keyword. No guessing.
+
+## 3. External Resources Audit
+
+| # | URL | Type | Relevance | In Guide? |
+|---|-----|------|-----------|:---------:|
+
+Minimum: 5 primary-source external resources.
+
+## 4. Homemade Asset Inventory
+
+| # | Type | Description | Data Source | Location |
+|---|------|------------|------------|---------|
+
+Minimum: 2 visual assets (SVG chart, data table, graph) with cited real data sources.
+
+## 5. Action Log
+
+Every action on this guide is recorded here. Every entry links to the artifact report and hypothesis ID where applicable. This is the audit trail. It must be complete.
+
+| Date | Action | Skill | Details | Artifact Report | Hypothesis | Commit |
+|------|--------|-------|---------|----------------|------------|--------|
+
+Rules:
+- Every skill run on this guide MUST append a row here
+- Artifact reports are linked using relative paths
+- Hypothesis IDs (S-###) cross-reference the SEO hypothesis ledger
+- Commit SHAs link to the actual code change
+- This log is append-only. Rows are never edited or removed.
+
+## 6. Current Scores
+
+### Optimiser Score: pending/100
+
+### Revision Audit: pending/14 sections passing
+
+## 7. Title, Description and Keywords Rationale
+
+### Current Title
+- **Value:** "{title}"
+- **Primary keyword:** {keyword} (volume: {N}, source: keyword-targets.json, date: {YYYY-MM-DD})
+- **Rationale:** {why this title was chosen, linked to keyword data or CTR evidence}
+- **Last changed:** {YYYY-MM-DD} by {skill} (action: {S-### hypothesis ID or "initial"})
+- **CTR at time of change:** {N}% (position {N})
+
+### Current Description
+- **Value:** "{description}"
+- **Rationale:** {why this description, what search intent it addresses}
+- **Last changed:** {YYYY-MM-DD} by {skill} (action: {S-### or "initial"})
+
+### Current Keywords
+- **Value:** "{keywords}"
+- **Rationale:** {each keyword justified by volume/difficulty data from keyword-targets.json}
+- **Last changed:** {YYYY-MM-DD} by {skill}
+
+Rule: title, description, and keywords must NOT be changed without GSC or keyword data justifying the change. Every change must reference an S-### hypothesis ID or cite specific volume/CTR evidence. This prevents repeated edits without data backing.
+
+## 8. GSC Performance History
+
+| Date | 28d Impressions | 28d Clicks | CTR | Avg Position |
+|------|----------------:|-----------:|----:|-------------:|
+```
 
 ## Output Format
 
-Per-guide report template:
+Per-guide artifact report template:
 
 ```markdown
 # Guide Optimiser Report: {title}
@@ -471,8 +788,8 @@ Per-guide report template:
 **Guide:** `{path}`
 **Slug:** `{slug}`
 **Audited:** {YYYY-MM-DD}
-**Mode:** optimise | audit_only
-**Commit:** {sha or "audit only"}
+**Mode:** optimise
+**Commit:** {sha}
 
 ## Score: {post}/100 (was {pre}/100, {delta:+d})
 
@@ -514,7 +831,7 @@ Per-guide report template:
 - After: {n}
 - Budget: {n}
 - Removed instances:
-  1. Line {N}: "{excerpt}" → removed
+  1. Line {N}: "{excerpt}" -> removed
   2. ...
 
 ## External Resources
@@ -530,7 +847,7 @@ Per-guide report template:
 
 ## Content Changes
 
-- Word count: {before} → {after} (floor {floor})
+- Word count: {before} -> {after} (floor {floor})
 - Sections added: {list}
 - Sections rewritten: {list}
 
@@ -539,14 +856,14 @@ Per-guide report template:
 **Title:**
 - Before: "{}"
 - After: "{}"
-- Length: {N} → {N} chars
+- Length: {N} -> {N} chars
 - Rationale: {GSC data justification}
 - Hypothesis: {S-### or "no change"}
 
 **Meta description:**
 - Before: "{}"
 - After: "{}"
-- Length: {N} → {N} chars
+- Length: {N} -> {N} chars
 
 ## Audit Results (Phase 1)
 
@@ -560,7 +877,7 @@ Per-guide report template:
 - Meta length: PASS | FAIL
 - Meta uniqueness: PASS | FAIL
 - Score improved: PASS | FAIL
-- Guide revision sections 1/6/7: PASS | FAIL
+- Audit sections 1/6/7: PASS | FAIL
 - Guide report updated: PASS | FAIL
 ```
 
@@ -574,7 +891,5 @@ Per-guide report template:
 
 ## When NOT to use this skill
 
-- Guides that are founder narratives — use sparingly, Rule 1 exempts them but the other rules still apply.
 - Guides with `public: false` — internal-only, no public SEO value.
-- Guides under 7 days old — too new for meaningful GSC data.
 - Pages outside `/guides/` — this skill is guide-specific. For feature pages use `feature-copywriter`.

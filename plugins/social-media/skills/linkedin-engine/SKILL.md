@@ -2,8 +2,8 @@
 name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
-  version: "1.0.0"
-  git_hash: "5079c7a"
+  version: "1.1.0"
+  git_hash: "0000000"
 ---
 
 # LinkedIn Engine
@@ -14,9 +14,10 @@ Designed for daily execution via `/loop 1d marketing:linkedin-engine`.
 
 ## Dependencies (load in order)
 
-1. `marketing:marketing-identity` — ICP, hook, channel rules
-2. `commons:brand-voice` — LinkedIn-specific voice, algorithm context, post structure
-3. `commons:identity` — product positioning for content pillars
+1. `social-media:social-identity` — platform voice, engagement rules, banned patterns
+2. `marketing:marketing-identity` — ICP, hook, channel rules
+3. `commons:brand-voice` — LinkedIn-specific voice, algorithm context, post structure
+4. `commons:identity` — product positioning for content pillars
 
 Also read on first run:
 - `/var/www/html/systemprompt-web/reports/marketing/drafts/enterprise-value-prop.md` — enterprise positioning and proof points

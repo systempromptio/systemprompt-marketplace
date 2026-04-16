@@ -2,8 +2,8 @@
 name: guide-writer
 description: "Write deep, researched long-form technical guides. Data-driven topic research, evidence-backed strategies, long-tail FAQ mapping, 5+ external resources, 2+ homemade visual assets, and per-guide report state management. No brand references in body content."
 metadata:
-  version: "3.0.0"
-  git_hash: "c24c577"
+  version: "3.0.1"
+  git_hash: "8e40a90"
 ---
 
 # Guide Writer
@@ -54,7 +54,7 @@ If no keyword-targets.json entry exists for this guide's topic, check the latest
 
 ### Step 1.6: Document Topic Research Evidence
 
-Create the per-guide report at `reports/content/guides/{slug}/guide-report.md` using the template from the `guide-revision` skill. Fill in:
+Create the per-guide report at `reports/content/guides/{slug}/guide-report.md` using the template from the `guide-optimiser` skill. Fill in:
 
 1. **Search Intent Analysis:**
    - **Primary intent:** classify as informational, commercial, navigational, or transactional based on the keyword intent field in keyword-targets.json

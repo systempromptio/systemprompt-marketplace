@@ -2,8 +2,8 @@
 name: marketing-guide
 description: "Entry point for marketing — routes to outreach, social monitoring, lead gen, and strategy"
 metadata:
-  version: "1.0.0"
-  git_hash: "5079c7a"
+  version: "1.1.0"
+  git_hash: "0000000"
 ---
 
 # Marketing Guide
@@ -30,11 +30,10 @@ Load `commons:identity` and `commons:brand-voice` before using marketing skills.
 
 | Task | Skill | Frequency |
 |------|-------|-----------|
-| LinkedIn feed, DMs, engagement | `linkedin-engine` | Daily /loop |
 | GitHub contribution opportunities | `github-monitor` | Daily /loop |
-| Reddit/social engagement scanner | `reddit-monitor` | Daily /loop |
-| Follow-up on Reddit posts | `reddit-reply` | Daily /loop |
 | AI agent answer-engine visibility | `ai-agent-discovery` | Weekly |
+
+> **Note:** LinkedIn, Reddit, and X/Twitter skills have moved to the `social-media` plugin. See `social-media:social-media-guide` for the full social skill listing.
 
 ## Report Directory
 

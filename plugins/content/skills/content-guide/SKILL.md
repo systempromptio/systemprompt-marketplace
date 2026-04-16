@@ -2,8 +2,8 @@
 name: content-guide
 description: "Entry point for content — routes to guide writing, blog posts, copywriting, and publishing"
 metadata:
-  version: "2.0.0"
-  git_hash: "5079c7a"
+  version: "2.0.1"
+  git_hash: "8e40a90"
 ---
 
 # Content Guide
@@ -19,8 +19,7 @@ Load `commons:identity` and `commons:brand-voice` before using content skills.
 | Task | Skill | When to Use |
 |------|-------|-------------|
 | Write a technical guide | `guide-writer` | Data-driven long-form guides (4,000-11,000 words) |
-| Audit a guide for quality | `guide-revision` | 14-section deterministic checklist |
-| Optimise a published guide | `guide-optimiser` | Data-driven rewrite using GSC data, 11-dimension scoring |
+| Audit and optimise a published guide | `guide-optimiser` | 14-section audit + data-driven rewrite using GSC data, 11-dimension scoring |
 | Write a blog post | `blog-writing` | Long-form posts with Edward's voice (3,500-5,000 words) |
 | Generate a featured image | `blog-image-generation` | Create blog images via Gemini API |
 | Draft marketing content | `content-drafting` | LinkedIn, Reddit, blog, email content |
@@ -42,9 +41,8 @@ Load `commons:identity` and `commons:brand-voice` before using content skills.
 
 1. Load `commons:identity` for positioning and audience
 2. Load `guide-writer` — follow research-first workflow (Steps 1-1.9 create the guide report, Steps 2-4 write the guide)
-3. Load `guide-revision` to audit against 14-section checklist
-4. Fix any failing sections
-5. Load `content-publish` to sync and deploy
+3. Load `guide-optimiser` to audit, fix, score, and commit
+4. Load `content-publish` to sync and deploy
 
 ### Optimise an Existing Guide
 

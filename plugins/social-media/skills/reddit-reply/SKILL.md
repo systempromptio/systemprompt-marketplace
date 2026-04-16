@@ -2,8 +2,8 @@
 name: reddit-reply
 description: "Daily follow-up on Reddit engagement. Reads recent reddit-monitor reports, checks each URL for replies to our comments, and drafts follow-up responses. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
-  version: "1.0.1"
-  git_hash: "bc2a4a3"
+  version: "1.1.0"
+  git_hash: "0000000"
 ---
 
 # Reddit Reply
@@ -12,7 +12,7 @@ Daily follow-up skill that monitors replies to our previous Reddit comments. Rea
 
 ## Dependencies
 
-**Load `identity` and `brand-voice` before this skill.** Identity defines what we say and to whom. Brand voice defines how we sound. This skill handles ongoing conversation, not initial outreach.
+**Load `social-media:social-identity`, then `identity` and `brand-voice` before this skill.** Social-identity defines platform-specific voice and engagement rules. Identity defines what we say and to whom. Brand voice defines how we sound. This skill handles ongoing conversation, not initial outreach.
 
 ## Overview
 

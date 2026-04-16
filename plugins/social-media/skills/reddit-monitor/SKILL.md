@@ -2,8 +2,8 @@
 name: reddit-monitor
 description: "Daily multi-channel social-engagement briefing for AI governance positioning. Scans Reddit (daily) plus X/Twitter and forums (weekly), filters for AI governance / compliance / shadow-AI conversations aligned with the systemprompt ICP, and outputs a prioritised action list. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
-  version: "1.1.0"
-  git_hash: "5079c7a"
+  version: "1.2.0"
+  git_hash: "0000000"
 ---
 
 # Social Monitor (reddit-monitor)
@@ -14,7 +14,7 @@ The skill name is kept as `reddit-monitor` for compatibility with existing `/loo
 
 ## Dependencies
 
-**Load `identity` and `brand-voice` before this skill.** Identity defines what we say and to whom (AI governance infrastructure for CTOs at 20-500 person orgs). Brand voice defines how we sound. This skill handles channel discovery, scoring, and reply drafting.
+**Load `social-media:social-identity`, then `identity` and `brand-voice` before this skill.** Social-identity defines platform-specific voice and engagement rules. Identity defines what we say and to whom (AI governance infrastructure for CTOs at 20-500 person orgs). Brand voice defines how we sound. This skill handles channel discovery, scoring, and reply drafting.
 
 ## Channels and Cadence
 
