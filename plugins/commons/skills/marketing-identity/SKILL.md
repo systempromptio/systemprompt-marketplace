@@ -3,7 +3,7 @@ name: marketing-identity
 description: "Lead-generation positioning for systemprompt.io. Defines the ICP for the template-based funnel, where they live online, the template hook, and the rules every outreach draft must follow. Load FIRST before any marketing skill."
 metadata:
   version: "0.2.0"
-  git_hash: "pending"
+  git_hash: "a8d5b1e"
 ---
 
 # Marketing Identity — Lead-Gen Layer

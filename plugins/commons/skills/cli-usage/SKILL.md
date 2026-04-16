@@ -2,7 +2,7 @@
 name: cli-usage
 description: "Complete reference for the systemprompt CLI - 8 domains, 64+ subcommands for managing AI infrastructure, services, agents, cloud deployments, and analytics"
 version: "1.0.0"
-git_hash: "0000000"
+git_hash: "a8d5b1e"
 ---
 
 # systemprompt CLI Usage

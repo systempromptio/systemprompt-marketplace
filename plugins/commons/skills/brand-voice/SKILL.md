@@ -3,7 +3,7 @@ name: brand-voice
 description: "Apply and enforce the systemprompt.io brand voice, style guide, and messaging pillars across all content. Always load identity first. Use when reviewing content for brand consistency, drafting content, or checking terminology compliance."
 metadata:
   version: "2.0.0"
-  git_hash: "pending"
+  git_hash: "a8d5b1e"
 ---
 
 # systemprompt Brand Voice
