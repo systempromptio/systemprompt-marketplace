@@ -2,7 +2,7 @@
 name: seo-monitor
 description: "Daily SEO performance review. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports. Designed for daily /loop. Load identity first."
 metadata:
-  version: "1.0.2"
+  version: "2.0.0"
   git_hash: "bc2a4a3"
 ---
 
@@ -16,39 +16,68 @@ Daily performance review of all published content. Pulls internal analytics and 
 
 ## Source of Truth
 
-**Read the SEO Content Strategy Master Plan before running this skill:**
+**Read the SEO Strategy Master before running this skill:**
 
 ```
-/var/www/html/systemprompt-web/services/content/guides/seo-content-strategy-master/index.md
+/var/www/html/systemprompt-web/reports/seo/seo-strategy-master.md
 ```
 
-This document (also available at `/guides/seo-content-strategy-master/` on the site) is the single source of truth for:
-- Complete guide inventory with primary keywords, long-tail keywords, and search intent
-- Keyword cluster map (which guides belong to which clusters and their pillar pages)
-- Content gap analysis (high-priority topics not yet covered)
-- Internal linking strategy (which guides should link to which)
-- SEO metadata standards (title length, description format, slug conventions)
-- Performance tracking benchmarks (100+ organic sessions/month within 90 days, page 1 within 90 days)
-- Content refresh triggers (ranking drop, traffic decline, product updates)
-- Suggested future publishing schedule with target dates and priorities
-- Competitive benchmarking targets
+This living document is the single source of truth for:
+- Current performance snapshot (updated by this skill on each run)
+- 30/60/90 objectives for organic sessions, GSC clicks, CTR, indexing
+- Active SEO hypotheses (rendered from the hypothesis ledger)
+- Pillar health assessments
+- Technical SEO issues
+- Content pipeline and gap analysis
 
-Use this document to evaluate whether each guide is hitting its keyword targets, whether clusters are strengthening, and whether gap-filling content is being published on schedule.
+**Hypothesis ledger:**
+
+```
+/var/www/html/systemprompt-web/reports/seo/data/hypothesis-ledger.md
+```
+
+The SEO hypothesis ledger tracks testable SEO actions with S-### IDs. On each run, this skill:
+1. Checks for hypotheses with `window_end <= today` and scores them
+2. Logs new hypotheses discovered during analysis
+3. Updates the strategy master's section 3 (Active Hypotheses) rendering
+
+**Keyword targets** (machine-readable, read by content skills):
+
+```
+/var/www/html/systemprompt-web/reports/seo/data/keyword-targets.json
+```
+
+On each daily run, cross-reference this file with GSC query data to produce the Keyword Movements section. No DataForSEO API calls needed daily. See `seo-keyword-tracker` skill for the monthly full refresh that updates this file.
+
+**Satellite documents** (all in `reports/seo/`):
+- `keyword-research.md` -- DataForSEO keyword data (updated monthly by seo-keyword-tracker)
+- `data/keyword-targets.json` -- Canonical keyword registry (updated monthly)
+- `data/keyword-snapshots.jsonl` -- Append-only keyword history (updated monthly)
+- `guide-inventory.md` -- All guides with metadata
+- `metadata-audit.md` -- Title and description audits
+- `interlinking-strategy.md` -- Internal link map
+- `backlink-strategy.md` -- External link opportunities
+- `traffic-analytics.md` -- Traffic source history
+
+**Daily metrics** are appended to `reports/seo/data/seo-metrics.jsonl` after each run.
 
 ## Overview
 
-This skill runs six steps:
+This skill runs eight steps:
 
-1. Read the SEO strategy and inventory all published guides
+1. Read the SEO strategy master and inventory all published guides
 2. Pull internal analytics (systemprompt CLI)
 3. Pull Google Search Console data (if configured)
-4. Cross-reference GitHub engagement data (from latest github-monitor report)
-5. Analyse performance against strategy targets
-6. Generate and save a structured report
+4. Cross-reference keyword targets with GSC queries (daily keyword intelligence, zero API cost)
+5. Cross-reference GitHub engagement data (from latest github-monitor report)
+6. Score maturing hypotheses from the SEO hypothesis ledger
+7. Analyse performance against strategy targets
+8. Generate and save a structured report (including Keyword Movements section)
+9. Append daily metrics to seo-metrics.jsonl and update the strategy master
 
 ## Step 1: Read Strategy and Inventory Content
 
-First, read the SEO Content Strategy Master Plan at `/var/www/html/systemprompt-web/services/content/guides/seo-content-strategy-master/index.md`. Extract:
+First, read the SEO Strategy Master at `/var/www/html/systemprompt-web/reports/seo/seo-strategy-master.md`. Extract:
 - The complete guide inventory tables (slugs, primary keywords, long-tail keywords, search intent, status)
 - Keyword cluster map (pillar pages, sub-topics, cluster strength assessments)
 - Content gap analysis (high-priority topics not yet covered)
@@ -264,9 +293,35 @@ curl -s -X POST \
 | High-impression low-CTR pages | Quick wins for title/meta improvements |
 | Position 5-20 queries | Near page-1 ranking opportunities |
 
-## Step 4: Analyse Performance
+## Step 4: Cross-Reference Keyword Targets with GSC Queries
 
-Cross-reference all three data sources (inventory, internal analytics, GSC) to build a complete picture.
+Read `reports/seo/data/keyword-targets.json`. For each tracked keyword:
+
+1. **Match against GSC query data** (fuzzy match: the GSC query contains the tracked keyword string)
+2. **Record position, impressions, clicks, CTR** for each matched keyword
+3. **Compare to target_position** from keyword-targets.json
+4. **Flag movements:** if position changed >2 spots WoW, note as movement
+
+Generate three tables for the report:
+
+**Tracked Keywords in GSC:**
+Keywords from keyword-targets.json that appear in today's GSC data, with their actual vs target position.
+
+**Tracked Keywords Missing from GSC:**
+Keywords we target but that have zero GSC impressions (guide not indexed, or not ranking for this keyword).
+
+**Untracked Queries with Impressions:**
+GSC queries with >30 impressions that don't match any tracked keyword. These are keyword discovery opportunities. For each, recommend: "Add '{query}' to keyword-targets.json" with an action to either assign an existing guide or flag as a content gap.
+
+**Daily keyword actions (1-3 per day):**
+- Tracked keyword dropped >2 positions: "Investigate ranking drop for '{keyword}' on {guide}"
+- Tracked keyword with >500 impressions and <1% CTR: "Rewrite title/meta for {guide} to better match '{keyword}'"
+- Untracked query with >50 impressions: "Add '{query}' to keyword tracking and assign to {guide_or_gap}"
+- `status: "gap"` keyword with volume >200 and difficulty <30: "Create content for '{keyword}' ({volume}/mo)"
+
+## Step 5: Analyse Performance
+
+Cross-reference all four data sources (inventory, internal analytics, GSC, keyword targets) to build a complete picture.
 
 ### Analysis Framework
 
@@ -314,7 +369,20 @@ Cross-reference all three data sources (inventory, internal analytics, GSC) to b
 - No em dashes. Use commas, periods, or parentheses.
 - No AI cliches (revolutionize, game-changer, unlock, supercharge, seamlessly, cutting-edge)
 
-## Step 5: Generate and Save Report
+## Step 5: Score Maturing Hypotheses
+
+Read the SEO hypothesis ledger at `reports/seo/data/hypothesis-ledger.md`.
+
+For each row where `status = IN-FLIGHT` and `window_end <= today`:
+1. Look up the current value of `metric` from today's analytics/GSC data
+2. Compare to `baseline` and the hypothesis target
+3. Append a new row with the result and status (PASS/FAIL/INCONCLUSIVE)
+4. If PASS, note the winning tactic for the strategy master section 4
+5. If FAIL, note the dead hypothesis for section 5
+
+For new insights discovered during analysis (e.g., a new high-impression low-CTR page), consider logging a new hypothesis with the next available S-### ID.
+
+## Step 6: Generate and Save Report
 
 Save the report to:
 
@@ -506,6 +574,28 @@ List the top 3 opportunities from the latest github-monitor report that have not
 4. [ ] {Content to create}
 5. [ ] {Content to update}
 ```
+
+## Step 7: Append Daily Metrics and Update Strategy Master
+
+### Append to seo-metrics.jsonl
+
+After generating the report, append a single JSON line to `reports/seo/data/seo-metrics.jsonl`:
+
+```json
+{"date":"YYYY-MM-DD","sessions_7d":N,"unique_users_7d":N,"organic_sessions_7d":N,"organic_share_pct":N,"gsc_impressions_7d":N,"gsc_clicks_7d":N,"gsc_avg_ctr_pct":N,"gsc_avg_position":N,"guides_published":N,"guides_indexed":N}
+```
+
+This creates an append-only time series for trend analysis across runs.
+
+### Update Strategy Master
+
+Apply targeted diffs to `reports/seo/seo-strategy-master.md`:
+1. Update section 1 (Current Performance Snapshot) with this week's numbers
+2. Re-render section 3 (Active Hypotheses) from the hypothesis ledger
+3. Move any scored hypotheses to section 4 (Winning Tactics) or section 5 (Dead Hypotheses)
+4. Append a changelog entry to section 9
+
+**Never rewrite the strategy master wholesale.** Only apply diffs, and always append to the changelog.
 
 ## Quality Checklist
 

@@ -20,10 +20,12 @@ This skill reuses the 8-section audit checklist from `guide-revision` verbatim d
 
 ## Source of Truth
 
-Read both before starting:
+Read these before starting:
 
-- `/var/www/html/systemprompt-web/services/content/guides/seo-content-strategy-master/index.md` — pillar map, cluster assignments, interlinking strategy, keyword targets
+- `/var/www/html/systemprompt-web/reports/seo/seo-strategy-master.md` — pillar health, objectives, active hypotheses
+- `/var/www/html/systemprompt-web/reports/seo/data/keyword-targets.json` — canonical keyword registry with assigned guides, volumes, difficulty, target positions. Find the entry where `assigned_guide` matches this guide's slug to identify the primary keyword and its current metrics.
 - The latest `reports/seo/YYYY-MM-DD/seo-monitor.md` — per-guide CTR, impressions, position, quick-wins list
+- `/var/www/html/systemprompt-web/reports/seo/data/hypothesis-ledger.md` — check if an S-### hypothesis exists for this guide's title/meta rewrite. If yes, note the hypothesis ID in your output so we can score it later.
 
 ## Inputs
 
@@ -175,7 +177,7 @@ These can reference the brand freely because the guide *is* the founder's story.
 - **Non-pillar guides:** minimum 3,500 words body
 - **Pillar guides:** minimum 5,000 words body
 
-**Pillar list** (from `seo-content-strategy-master/index.md`):
+**Pillar list** (from `seo-strategy-master.md`):
 - `claude-code-vs-cursor`
 - `self-hosted-ai-governance`
 - `getting-started-anthropic-marketplace`

@@ -19,7 +19,7 @@ Daily scan of the Claude Code / MCP / Agent SDK ecosystem on GitHub to find acti
 **Read the SEO Content Strategy Master Plan before running:**
 
 ```
-/var/www/html/systemprompt-web/services/content/guides/seo-content-strategy-master/index.md
+/var/www/html/systemprompt-web/reports/seo/seo-strategy-master.md
 ```
 
 Focus on the **External Authority and Backlink Strategy** section.
