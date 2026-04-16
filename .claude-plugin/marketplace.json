@@ -5,9 +5,9 @@
     "email": "hello@systemprompt.io"
   },
   "metadata": {
-    "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, marketing, and CRM",
-    "version": "2.1.0",
-    "git_hash": "8e40a90",
+    "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, marketing, social media, and CRM",
+    "version": "3.0.0",
+    "git_hash": "3a55706",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -58,7 +58,18 @@
     {
       "name": "marketing",
       "source": "./plugins/marketing",
-      "description": "Lead generation and distribution: daily marketing briefs, hypothesis-driven action tracking (H-### ledger), funnel measurement, LinkedIn outreach, GitHub developer marketing, Reddit social engagement, AI agent answer-engine optimisation, and living strategy document",
+      "description": "Lead generation and distribution: daily marketing briefs, hypothesis-driven action tracking (H-### ledger), funnel measurement, GitHub developer marketing, AI agent answer-engine optimisation, and living strategy document",
+      "version": "2.0.0",
+      "category": "marketing",
+      "author": {
+        "name": "systemprompt.io",
+        "email": "hello@systemprompt.io"
+      }
+    },
+    {
+      "name": "social-media",
+      "source": "./plugins/social-media",
+      "description": "Social media engagement: LinkedIn posting and DM outreach, Reddit monitoring and engagement, X/Twitter threads and engagement, cross-platform coordination, and daily social brief",
       "version": "1.0.0",
       "category": "marketing",
       "author": {

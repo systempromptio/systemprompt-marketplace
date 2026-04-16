@@ -2,7 +2,8 @@
 name: daily-marketing-brief
 description: "The morning /loop skill. Orchestrates lead-tracker + hypothesis-ledger + marketing-strategy-master into a single actionable brief: funnel deltas (1d/7d/31d), hypotheses maturing today, and 3–5 copy-paste-ready actions for Ed — each tagged with a new [H-###] hypothesis. Load marketing-identity first."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
+  git_hash: "0000000"
 ---
 
 # Daily Marketing Brief
@@ -16,6 +17,12 @@ The only skill Ed reads every morning. Everything else in this plugin feeds it. 
 3. `hypothesis-ledger` — in-flight hypotheses and next `H-###` allocation
 4. `lead-tracker` — funnel data (this skill triggers a fresh run, unless one already exists for today)
 5. `marketing-strategy-master` — current weekly theme, channel priorities, objectives
+
+Also read:
+- `/var/www/html/systemprompt-web/reports/sales-marketing-strategy.md` — master strategy doc (domain weights, daily schedule, decision framework)
+- `social-media:daily-social-brief` output (if available) — social media actions for cross-referencing
+
+> **Note:** LinkedIn, Reddit, and X/Twitter skills have moved to the `social-media` plugin. When generating social media actions, reference `social-media:social-identity` for platform-specific rules.
 
 ## CRITICAL: Profile must be `systemprompt-prod`
 

@@ -3,7 +3,7 @@ name: guide-optimiser
 description: "Deterministically audit and optimise a published guide. Runs a 14-section quality audit, applies 7 rewrite rules for value density, brand discipline, search-intent alignment, and CTR. Reads 28-day GSC query data per URL, produces a 100-point score delta across 11 dimensions, commits changes, and updates the per-guide report. Handles guides without GSC data. Load identity and brand-voice first."
 metadata:
   version: "3.0.0"
-  git_hash: "8e40a90"
+  git_hash: "3a55706"
 ---
 
 # Guide Optimiser
