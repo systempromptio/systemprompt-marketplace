@@ -387,7 +387,7 @@ For new insights discovered during analysis (e.g., a new high-impression low-CTR
 Save the report to:
 
 ```
-reports/seo/YYYY-MM-DD/seo-monitor.md
+reports/seo/daily/YYYY-MM-DD/seo-monitor.md
 ```
 
 Use today's date in the filename.
@@ -527,7 +527,7 @@ Use today's date in the filename.
 Cross-reference with the latest github-monitor report. Read the most recent report from:
 
 ```bash
-ls -t reports/github/*/github-monitor.md 2>/dev/null | head -1
+ls -t reports/github/daily/*/github-monitor.md 2>/dev/null | head -1
 ```
 
 If a github-monitor report exists, include this section. If not, note "GitHub monitor: Not yet configured. Run `github-monitor` skill to start tracking."

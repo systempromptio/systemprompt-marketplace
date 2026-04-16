@@ -24,7 +24,7 @@ Read these before starting:
 
 - `/var/www/html/systemprompt-web/reports/seo/seo-strategy-master.md` — pillar health, objectives, active hypotheses
 - `/var/www/html/systemprompt-web/reports/seo/data/keyword-targets.json` — canonical keyword registry with assigned guides, volumes, difficulty, target positions. Find the entry where `assigned_guide` matches this guide's slug to identify the primary keyword and its current metrics.
-- The latest `reports/seo/YYYY-MM-DD/seo-monitor.md` — per-guide CTR, impressions, position, quick-wins list
+- The latest `reports/seo/daily/YYYY-MM-DD/seo-monitor.md` — per-guide CTR, impressions, position, quick-wins list
 - `/var/www/html/systemprompt-web/reports/seo/data/hypothesis-ledger.md` — check if an S-### hypothesis exists for this guide's title/meta rewrite. If yes, note the hypothesis ID in your output so we can score it later.
 
 ## Inputs
@@ -358,7 +358,7 @@ After rewriting:
 6. **Diff the guide file.** If diff is empty or trivially whitespace-only, abort with `no_material_change`. Never commit a no-op.
 7. **Recompute the score.** If `post_score < pre_score`, abort and roll back — this is a bug in the rules, not an improvement. Report the regression.
 8. **Commit** with the message format above.
-9. **Write the structured per-guide report** to `reports/guide-optimiser/YYYY-MM-DD/{slug}.md` (not committed — `reports/` is gitignored). Include:
+9. **Write the structured per-guide report** to `reports/content/artifacts/optimiser/YYYY-MM-DD/{slug}.md`. Include:
    - Audit results (Phase 1)
    - Query coverage matrix (Rule 4)
    - Brand-mention before/after and list of removed instances

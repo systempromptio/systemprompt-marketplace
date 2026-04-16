@@ -25,7 +25,7 @@ Read the SEO Strategy Master at `/var/www/html/systemprompt-web/reports/seo/seo-
 3. Read the SEO Content Strategy Master Plan for cluster and interlinking context
 4. Run each of the 8 audit sections below
 5. Generate the structured report
-6. Save to `reports/guide-revision/YYYY-MM-DD/guide-revision-{slug}.md`
+6. Save to `reports/content/artifacts/revision/YYYY-MM-DD/guide-revision-{slug}.md`
 
 ## Audit Sections
 
@@ -190,6 +190,6 @@ Top 3 critical issues to fix first:
 ... (repeat for all 8 sections)
 ```
 
-Save the report to `reports/guide-revision/YYYY-MM-DD/guide-revision-{slug}.md`.
+Save the report to `reports/content/artifacts/revision/YYYY-MM-DD/guide-revision-{slug}.md`.
 
 A section passes only if ALL checks within it pass.

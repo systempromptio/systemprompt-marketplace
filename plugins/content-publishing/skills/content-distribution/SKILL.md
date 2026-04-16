@@ -67,7 +67,7 @@ Execute these steps in order. Do not skip any step.
 
 Read these files to understand current state:
 
-1. **Distribution log**: `reports/seo/blog/distribution-log.md` — what has already been distributed
+1. **Distribution log**: `reports/content/distribution-log.md` — what has already been distributed
 2. **SEO master strategy**: `reports/seo/seo-strategy-master.md` — keyword gaps and content opportunities
 3. **Guide inventory**: List all directories in `services/content/guides/` and read frontmatter of each guide's `index.md`
 
@@ -431,7 +431,7 @@ Full writeup if you want the details: [guide link]
 
 ### Step 8: Save Output
 
-Create a date-stamped directory: `reports/seo/blog/YYYY-MM-DD/`
+Create a date-stamped directory: `reports/content/artifacts/distribution/YYYY-MM-DD/`
 
 **Report file (`index.md`):**
 
@@ -483,7 +483,7 @@ Every report must include a cover image saved in the report directory. One image
 
 ### Step 9: Update Distribution Log
 
-Append to `reports/seo/blog/distribution-log.md`:
+Append to `reports/content/distribution-log.md`:
 
 ```markdown
 | YYYY-MM-DD | [slug] | [Platform] | [Value angle in 5 words] | GENERATED |

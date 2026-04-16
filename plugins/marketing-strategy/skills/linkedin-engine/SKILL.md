@@ -19,7 +19,7 @@ Designed for daily execution via `/loop 1d marketing-strategy:linkedin-engine`.
 3. `content-publishing:identity` — product positioning for content pillars
 
 Also read on first run:
-- `/var/www/html/systemprompt-web/reports/ENTERPRISE_VALUE_PROP.md` — enterprise positioning and proof points
+- `/var/www/html/systemprompt-web/reports/marketing/drafts/enterprise-value-prop.md` — enterprise positioning and proof points
 - `/var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md` — current phase, weekly theme, channel priorities
 
 ## Data Locations

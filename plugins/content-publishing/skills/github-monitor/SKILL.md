@@ -44,7 +44,7 @@ Each item in the report must include: URL, what to do, copy-pasteable draft cont
 Read the previous report and the SEO strategy's External Authority section:
 
 ```bash
-ls -t reports/github/*/github-monitor.md 2>/dev/null | head -1
+ls -t reports/github/daily/*/github-monitor.md 2>/dev/null | head -1
 ```
 
 Check what was already actioned, what submissions are pending, and weekly comment budgets.
@@ -216,9 +216,9 @@ Max 2-3 issue comment drafts per report (not 5).
 
 ## Step 7: Generate Report
 
-Save to `reports/github/YYYY-MM-DD/github-monitor.md`.
+Save to `reports/github/daily/YYYY-MM-DD/github-monitor.md`.
 
-Also save copy-pasteable responses to `reports/github/YYYY-MM-DD/responses.md` with no extra formatting (directly pasteable into GitHub).
+Also save copy-pasteable responses to `reports/github/daily/YYYY-MM-DD/responses.md` with no extra formatting (directly pasteable into GitHub).
 
 ### Report Structure
 

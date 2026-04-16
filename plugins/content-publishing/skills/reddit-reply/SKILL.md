@@ -27,7 +27,7 @@ Daily follow-up skill that monitors replies to our previous Reddit comments. Rea
 Read the reddit-monitor reports from the `reports/` directory:
 
 ```
-reports/reddit/YYYY-MM-DD/reddit-monitor.md
+reports/reddit/daily/YYYY-MM-DD/reddit-monitor.md
 ```
 
 Check for today's report and yesterday's report. If neither exists, check the last 3 days. Extract all post URLs from the `## Reply Targets` section (lines matching `- **URL:**`).
@@ -35,7 +35,7 @@ Check for today's report and yesterday's report. If neither exists, check the la
 Also read any previous reddit-reply reports from the last 7 days to avoid re-drafting responses to threads already handled:
 
 ```
-reports/reddit/YYYY-MM-DD/reddit-reply.md
+reports/reddit/daily/YYYY-MM-DD/reddit-reply.md
 ```
 
 Build a list of:
@@ -109,7 +109,7 @@ For each actionable reply, draft a follow-up. These are second or third messages
 Save the report to:
 
 ```
-reports/reddit/YYYY-MM-DD/reddit-reply.md
+reports/reddit/daily/YYYY-MM-DD/reddit-reply.md
 ```
 
 ### Report Structure
@@ -118,7 +118,7 @@ reports/reddit/YYYY-MM-DD/reddit-reply.md
 # Reddit Reply Report
 
 **Date:** {YYYY-MM-DD}
-**Reports scanned:** reports/reddit/{date1}/reddit-monitor.md, reports/reddit/{date2}/reddit-monitor.md
+**Reports scanned:** reports/reddit/daily/{date1}/reddit-monitor.md, reports/reddit/daily/{date2}/reddit-monitor.md
 **Posts checked:** {N}
 **Posts with our comments found:** {N}
 **Replies to our comments:** {N}

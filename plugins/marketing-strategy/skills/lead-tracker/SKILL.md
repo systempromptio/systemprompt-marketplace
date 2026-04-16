@@ -243,10 +243,10 @@ No API access yet. Report section prompts Ed to paste impressions counts from th
 ## Output 1 — The Dated Report
 
 ```
-/var/www/html/systemprompt-web/reports/marketing/YYYY-MM-DD/lead-tracker.md
+/var/www/html/systemprompt-web/reports/marketing/daily/YYYY-MM-DD/lead-tracker.md
 ```
 
-Reports live in the **web repo**, not the marketplace. The convention matches how `content-publishing:seo-monitor` writes to `web/reports/seo/YYYY-MM-DD/seo-monitor.md` and `github-monitor` to `web/reports/github/YYYY-MM-DD/github-monitor.md`. The `web/reports/` tree is gitignored by default — that is the existing convention for all daily monitoring output, and this skill follows it.
+Reports live in the **web repo**, not the marketplace. The convention matches how `content-publishing:seo-monitor` writes to `web/reports/seo/daily/YYYY-MM-DD/seo-monitor.md` and `github-monitor` to `web/reports/github/daily/YYYY-MM-DD/github-monitor.md`. All daily output goes in `reports/{domain}/daily/YYYY-MM-DD/`.
 
 Structure:
 

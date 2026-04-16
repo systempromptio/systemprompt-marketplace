@@ -216,13 +216,13 @@ Write two files per run:
 
 1. **Reddit section** (for `reddit-reply` compatibility):
    ```
-   reports/reddit/YYYY-MM-DD/reddit-monitor.md
+   reports/reddit/daily/YYYY-MM-DD/reddit-monitor.md
    ```
    Contains the Reddit scan summary, categorised posts, and drafted Reddit replies in the legacy format.
 
 2. **Combined action list** (new):
    ```
-   reports/social/YYYY-MM-DD/action-list.md
+   reports/social/daily/YYYY-MM-DD/action-list.md
    ```
    Contains the Part 4 action list at the top, followed by the X and forum sections (if weekly cadence triggered), followed by a short Observations block.
 
@@ -265,7 +265,7 @@ Use today's date in both filenames.
 
 ---
 
-See `reports/reddit/{YYYY-MM-DD}/reddit-monitor.md` for the full Reddit scan and drafted replies.
+See `reports/reddit/daily/{YYYY-MM-DD}/reddit-monitor.md` for the full Reddit scan and drafted replies.
 ```
 
 ## Quality Checklist

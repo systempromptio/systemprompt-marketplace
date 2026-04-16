@@ -1,0 +1,9 @@
+{
+  "name": "crm",
+  "description": "CRM and sales pipeline management for systemprompt.io. Tracks leads from first touch through conversion, manages deals and pipeline stages, drafts and sends emails via Resend API (human-approved, never automatic), produces daily sales strategy briefs, and logs every action as a falsifiable hypothesis. Complements marketing-strategy (which handles top-of-funnel) with mid-funnel pipeline management and direct customer engagement.",
+  "version": "0.1.0",
+  "author": {
+    "name": "systemprompt.io",
+    "email": "hello@systemprompt.io"
+  }
+}
