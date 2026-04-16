@@ -892,4 +892,4 @@ Per-guide artifact report template:
 ## When NOT to use this skill
 
 - Guides with `public: false` — internal-only, no public SEO value.
-- Pages outside `/guides/` — this skill is guide-specific. For feature pages use `feature-copywriter`.
+- Pages outside `/guides/` — this skill is guide-specific. For feature pages use `feature-optimiser`. For documentation use `documentation-optimiser`.

@@ -54,7 +54,7 @@ after_reading_this:
 ---
 ```
 
-Use the `blog-writing` skill to generate the content body.
+Use the `guide-writer` skill (with `kind: blog` for blog posts) to generate the content body.
 
 ### Step 2: Generate the Featured Image
 

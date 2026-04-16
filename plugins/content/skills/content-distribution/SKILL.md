@@ -1,9 +1,9 @@
 ---
 name: content-distribution
-description: "Generate value-first platform content sharing expert Claude Code marketplace knowledge: plugins, hooks, CLAUDE.md, MCP servers, and advanced features."
+description: "Generate and distribute value-first content across all channels: Dev.to, Hashnode, Medium, Hackernoon, Substack, Hacker News, Claude Discord, LinkedIn, Reddit, email, and landing pages. Shares expert Claude Code marketplace knowledge. Includes channel-specific templates, day-of-week rotation, and identity-aligned quality gates."
 metadata:
-  version: "2.1.0"
-  git_hash: "8ca1074"
+  version: "3.0.0"
+  git_hash: "0000000"
 ---
 
 # Content Distribution Loop
@@ -130,15 +130,15 @@ Before writing anything, answer these four questions. Write them into the report
 
 Use day-of-week rotation:
 
-| Day | Platform 1 | Platform 2 |
-|-----|-----------|-----------|
-| Monday | Dev.to | Claude Discord |
-| Tuesday | Hashnode | Claude Discord |
-| Wednesday | Medium | Hackernoon |
-| Thursday | Substack | Hacker News (only if deeply technical, otherwise Claude Discord) |
-| Friday | Dev.to | Claude Discord |
-| Saturday | Skip | Skip |
-| Sunday | Skip | Skip |
+| Day | Platform 1 | Platform 2 | Platform 3 |
+|-----|-----------|-----------|-----------|
+| Monday | Dev.to | LinkedIn | Claude Discord |
+| Tuesday | Hashnode | Reddit | Claude Discord |
+| Wednesday | Medium | Hackernoon | LinkedIn |
+| Thursday | Substack | Hacker News (only if deeply technical, otherwise Claude Discord) | Reddit |
+| Friday | Dev.to | LinkedIn | Claude Discord |
+| Saturday | Skip | Skip | Skip |
+| Sunday | Skip | Skip | Skip |
 
 If today is a weekend, state "Weekend — no distribution today" and stop.
 
@@ -150,6 +150,9 @@ If today is a weekend, state "Weekend — no distribution today" and stop.
 - Substack: Original newsletter-style deep dives, opinionated takes, building-in-public narratives
 - Hacker News: ONLY for deeply technical content (MCP protocol, Rust builds, novel architecture)
 - Claude Discord: Quick tips, useful configurations, community Q&A
+- LinkedIn: AI governance thought leadership, build-vs-buy insights, CTO-targeted observations
+- Reddit: Genuine practitioner experiences, subreddit-specific value, community contribution
+- Email: Direct outreach, product updates, onboarding sequences, partner nurture
 
 ---
 
@@ -383,6 +386,98 @@ Full writeup if you want the details: [guide link]
 [Genuine question: "Anyone else doing X?" or "Curious how others handle Y"]
 ```
 
+##### LinkedIn
+
+```markdown
+[Hook line — contrarian take, surprising observation, or bold claim about AI governance. Must earn the "see more" click from a CTO. Never open with a fabricated personal story.]
+
+[Body — 3 to 5 short paragraphs. One idea per paragraph. Mobile-formatted: short sentences, whitespace between paragraphs. Share a specific insight from the source guide.]
+
+[Closing — strong final statement or specific insight. NEVER a generic engagement question like "What do you think?" or "Have you experienced this?"]
+```
+
+**LinkedIn rules:**
+- Under 1,300 characters total
+- No hashtags (ever)
+- No em dashes
+- No external links in post body (put link in first comment)
+- Mobile-formatted: short paragraphs with whitespace
+- Follow 70/20/10 funnel: 70% thought leadership (no product mention), 20% positioning with light context, 10% direct product
+- Hook must earn the "see more" click
+- NEVER end with generic engagement questions
+- 1-2 backlinks in first comment only
+
+##### Reddit
+
+```markdown
+**Title:** [Clear, specific question or observation about AI governance / Claude Code]
+
+[Body — conversational, detailed, shows real experience. Lead with value, never pitch. Match subreddit tone exactly. Share a genuine technique or insight from building AI governance infrastructure.]
+
+[Mention systemprompt only if directly relevant and genuinely helpful to the discussion.]
+```
+
+**Reddit rules:**
+- Lead with value, never pitch
+- Match subreddit tone exactly
+- Share genuine experiences building AI governance infrastructure
+- Mention systemprompt only if directly relevant and helpful
+- Target subreddits: r/ClaudeAI, r/artificial, r/SaaS, r/CTO
+- Always contribute to the discussion, never just promote
+- 1 backlink maximum, only if genuinely relevant to the answer
+
+##### Email
+
+```markdown
+Subject: [Under 50 characters — specific, not salesy]
+
+[Short, conversational body from Edward personally. One clear action per email. Plain text with minimal formatting.]
+
+[Specific CTA — one action only]
+```
+
+**Email rules:**
+- From Edward personally — peer-to-peer tone, not vendor-to-prospect
+- Short and conversational
+- One clear action per email
+- Subject lines under 50 characters
+- Plain text with minimal formatting
+
+**Email types:**
+- **Enterprise outreach:** Introduce systemprompt to CTOs, focus on governance pain, lead with their specific problem
+- **Product updates:** What is new, why it matters for governance, one specific capability
+- **Onboarding:** Welcome, first steps, quick wins, link to getting-started guide
+- **Partner nurture:** White-label opportunity education, specific deployment scenarios
+
+##### Landing Page
+
+```markdown
+## Hero
+**Headline:** [Primary governance benefit in 6-10 words]
+**Subheadline:** [15-25 words — elaborates with audience-specific context]
+**CTA:** [Single action, friction-appropriate]
+**Social proof:** [Real credibility marker only — never fabricated]
+
+## Value Props
+[3-4 governance-focused benefit sections. Lead with pain, then solution.]
+
+## FAQ
+[Address real objections: build-vs-buy, security, deployment]
+
+## Final CTA
+[Repeat primary action]
+```
+
+**Landing page rules:**
+- Headline: primary governance benefit in under 10 words
+- Subheadline: elaborates with specificity, 15-25 words
+- Hero: headline + subheadline + primary CTA + visual
+- Value props: 3-4 governance-focused, each answers one objection
+- Social proof: real testimonials and logos only (NEVER fabricated)
+- FAQ: address real objections (build-vs-buy, security, deployment)
+- CTA best practices: action verbs ("Schedule a demo", "Start free"), reduce friction ("No credit card", "15-minute setup call")
+- Enterprise CTAs lead to conversation, not self-serve signup
+
 ---
 
 ### Step 6: Apply Edward Burton's Voice
@@ -411,6 +506,9 @@ Full writeup if you want the details: [guide link]
 - Hackernoon: Technical practitioner voice, original angle on the topic
 - Substack: Newsletter voice, opinionated, building-in-public energy
 - Hacker News: Extremely concise, technical precision above all
+- LinkedIn: Authoritative CTO-peer voice, governance-first framing, no hashtags, mobile-formatted
+- Reddit: Conversational, genuine, matches subreddit tone, never promotional
+- Email: Personal, peer-to-peer, conversational, one clear action
 
 ---
 
@@ -471,6 +569,10 @@ For each platform, generate BOTH a markdown (.md) and HTML (.html) version. Some
 - `substack-{slug}.md` + `substack-{slug}.html`
 - `hn-{slug}.md` — title, URL, and comment (markdown only)
 - `discord-{slug}.md` — message (markdown only)
+- `linkedin-{slug}.md` — post text + first comment with link (markdown only)
+- `reddit-{slug}.md` — title + body (markdown only)
+- `email-{slug}.md` — subject + body (markdown only, specify email type)
+- `landing-{slug}.md` — hero + value props + FAQ + CTA (markdown only)
 
 **Cover image:**
 Every report must include a cover image saved in the report directory. One image is shared across all platform posts for that day.
@@ -520,11 +622,22 @@ Before saving any output, verify in this order:
    - [ ] File is ready to open, review, copy-paste, and publish directly
    - [ ] No placeholder text remaining
 
-4. **Distribution mechanics:**
+4. **Identity and brand alignment:**
+   - [ ] Aligns with `identity` skill positioning (governance infrastructure, not consumer product)
+   - [ ] Speaks to primary ICP (CTOs at SMEs) or explicitly targets secondary audience
+   - [ ] No fabricated evidence, stats, quotes, anecdotes, or personal stories
+   - [ ] Uses Anthropic terminology correctly (plugins not apps, skills not prompts, agents not bots)
+   - [ ] Leads with governance and control, not memory or persistence
+   - [ ] Competitive frame is build vs. buy (not systemprompt vs. other platforms)
+
+5. **Distribution mechanics:**
    - [ ] Canonical URL is correct for Dev.to/Hashnode/Medium
    - [ ] Guide was published 5+ days ago
-   - [ ] 3-5 backlinks woven naturally
+   - [ ] 3-5 backlinks woven naturally (1-2 for LinkedIn/Reddit/Discord)
    - [ ] Distribution log is updated
+   - [ ] LinkedIn: under 1,300 chars, no hashtags, no engagement questions, link in first comment
+   - [ ] Reddit: matches subreddit tone, leads with value, max 1 backlink
+   - [ ] Email: under 50-char subject, one clear action, from Edward personally
 
 **If the value gate fails, do not publish. Go back to Step 2.**
 

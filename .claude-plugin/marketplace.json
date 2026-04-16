@@ -36,8 +36,8 @@
     {
       "name": "content",
       "source": "./plugins/content",
-      "description": "Content creation and publishing: daily content brief, content hypothesis ledger (CT-###), content strategy master, data-driven guide writing with per-guide state management, 14-section audit and 11-dimension guide optimisation, blog writing, image generation, GitHub developer marketing scanner, documentation, website and feature copywriting, content drafting, distribution, and end-to-end publishing via CLI",
-      "version": "2.2.0",
+      "description": "Content creation and publishing: three writer+optimiser pairs (guides, features, documentation) with research-first workflows, per-content reports, and deterministic audit scoring. Daily content brief, content hypothesis ledger (CT-###), content strategy master, image generation, GitHub developer marketing scanner, multi-channel distribution (Dev.to, Medium, LinkedIn, Reddit, email), and end-to-end publishing via CLI",
+      "version": "3.0.0",
       "category": "content",
       "author": {
         "name": "systemprompt.io",

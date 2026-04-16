@@ -2,8 +2,8 @@
 name: guide-writer
 description: "Write deep, researched long-form technical guides. Data-driven topic research, evidence-backed strategies, long-tail FAQ mapping, 5+ external resources, 2+ homemade visual assets, and per-guide report state management. No brand references in body content."
 metadata:
-  version: "3.0.2"
-  git_hash: "dc0c940"
+  version: "3.1.0"
+  git_hash: "0000000"
 ---
 
 # Guide Writer
@@ -331,6 +331,90 @@ Before publishing, the guide must pass all of these:
 **State management:**
 - [ ] Action logged in per-guide report with date, word count, and commit SHA
 - [ ] Guide and guide report committed together
+
+## Blog Mode
+
+When the caller specifies `kind: blog` or the content-guide router dispatches with blog intent, Blog Mode activates. Blog Mode overrides specific defaults while keeping the research-first workflow, quality gate, and per-guide report intact.
+
+### When to Use Blog Mode
+
+Use Blog Mode for personal narrative posts by Edward Burton. These are opinion-driven, experience-backed pieces that blend insight with technical depth. They are NOT guides (which are research-first reference material). Blog posts tell a story.
+
+### Blog Mode Overrides
+
+The following defaults change when `kind: blog` is set. Everything else from the standard guide-writer workflow applies unchanged (research phase, per-guide report, quality gate, citation standards, code standards, no brand mentions in body).
+
+**Structure template** (replaces Quick Answer / Deep Sections / Conclusion):
+
+```
+# [Punchy Title - max 8 words]
+
+## Prelude
+[Hook - bold claim, observation, or question. Never a fabricated personal story.]
+
+## The Problem
+[What needed solving, why it matters]
+
+## The Journey
+[What was tried, what failed, what worked - with code/data]
+
+## The Lesson
+[What this reveals - connect to bigger themes]
+
+## Conclusion
+[Return to opening, practical takeaway]
+```
+
+**Title rules** (override standard title rules):
+- Maximum 8 words
+- No colons, no em dashes
+- Personal and specific: "I Cut AI Costs 95%", "Why I Quit LangChain"
+- Bad: "AI Development: Best Practices for 2025"
+- Good: "The LangChain Mistake Everyone Makes"
+
+**Voice register** (overlay on standard writing quality):
+- 60% insight, 40% technical
+- Short sentences for impact. Then longer ones for explanation.
+- Honest about failures, not just wins
+- Use generic examples and clearly hypothetical scenarios, never fabricated personal stories
+- British English (realise, optimise)
+
+**Word target**: 3,500-5,000 words (replaces the standard 4,000-11,000 range).
+
+**Category**: Always `"blog"` in frontmatter.
+
+**Frontmatter additions** (merge with standard guide frontmatter):
+```yaml
+kind: "guide"
+category: "blog"
+tags: ["tag1", "tag2", "tag3"]
+```
+
+### Alternative Input Format
+
+Blog Mode accepts `<research>`, `<sources>`, and `<brief>` XML sections as an alternative entry point to the full Step 1-1.9 research workflow:
+
+- `<research>` — Summary of research findings (replaces Step 1)
+- `<sources>` — Verified URLs that MUST be cited inline as `[Title](URL)` (replaces Step 1.8 external resources)
+- `<brief>` — Topic focus and angle (replaces the outline step)
+
+When these sections are provided, skip Steps 1-1.5 and proceed to Step 1.6 (document topic research evidence) using the provided data. Steps 1.7-1.9 (FAQ mapping, asset planning, metadata rationale) still apply.
+
+The full research-first workflow is still recommended for blog posts that target specific keywords. The alternative format is for posts where the research has already been done externally.
+
+### Blog Mode Don'ts
+
+These are enforced in addition to the standard quality gate:
+
+- NO fabricated personal stories, analogies presented as real experiences, or made-up metrics
+- NO "I discovered that...", "Fascinatingly...", "It became clear..."
+- NO first-person narratives unless Edward provides the actual story
+- NO content under 3,500 words
+- NO fake engagement questions ("What do you think?")
+
+### Blog Mode Citation Rules
+
+Citations follow the standard guide-writer citation standards with one addition: every major claim needs a citation from the sources. Use inline markdown links with the FULL URL, not just the domain name. Distribute citations naturally throughout paragraphs. Do NOT dump sources in a list at the end (they render separately via frontmatter `links` array).
 
 ## Post-Write: Update Guide Report
 

@@ -59,7 +59,7 @@ Skills for creating and managing all content types.
 - `technical-writing` - Technical documentation
 - `technical-content-writing` - Technical blog content
 - `narrative-writing` - Narrative-driven content
-- `blog-writing` - Long-form blog posts
+- `guide-writer` - Long-form guides and blog posts (blog mode)
 - `blog-image-generation` - Featured image generation
 - `guide-writing` - Guides and tutorials
 - `announcement-writing` - Announcements
