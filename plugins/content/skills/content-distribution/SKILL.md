@@ -3,7 +3,7 @@ name: content-distribution
 description: "Generate and distribute value-first content across all channels: Dev.to, Hashnode, Medium, Hackernoon, Substack, Hacker News, Claude Discord, LinkedIn, Reddit, email, and landing pages. Shares expert Claude Code marketplace knowledge. Includes channel-specific templates, day-of-week rotation, and identity-aligned quality gates."
 metadata:
   version: "3.0.0"
-  git_hash: "0000000"
+  git_hash: "7f3e532"
 ---
 
 # Content Distribution Loop

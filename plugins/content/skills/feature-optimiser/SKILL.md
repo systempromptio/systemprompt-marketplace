@@ -3,7 +3,7 @@ name: feature-optimiser
 description: "Deterministically audit and optimise a published feature page. Runs a 10-section quality audit, applies 5 rewrite rules for claim verification, conversion clarity, and brand discipline. Reads website analytics and GSC data per feature URL, produces a 75-point score delta (100 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "7f3e532"
 ---
 
 # Feature Optimiser

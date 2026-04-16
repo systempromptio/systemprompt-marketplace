@@ -3,7 +3,7 @@ name: documentation-writer
 description: "Write and review systemprompt.io documentation to the highest standard. Research-first workflow with per-doc reports, consistent structure enforcement, terminology compliance, code example validation, and quality gate aligned with documentation-optimiser audit. Load identity and brand-voice first."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "7f3e532"
 ---
 
 # Documentation Writer

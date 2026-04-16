@@ -3,7 +3,7 @@ name: documentation-optimiser
 description: "Deterministically audit and optimise a published documentation page. Runs a 10-section quality audit, applies 5 rewrite rules for structure, terminology, link health, and completeness. Reads website analytics and GSC data per doc URL, produces a 75-point score delta (100 with analytics), commits changes, and updates the per-doc report. Load identity and brand-voice first."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "7f3e532"
 ---
 
 # Documentation Optimiser

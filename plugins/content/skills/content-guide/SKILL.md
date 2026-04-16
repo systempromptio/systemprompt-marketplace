@@ -3,7 +3,7 @@ name: content-guide
 description: "Entry point for content — routes to guide, feature, and documentation writer+optimiser pairs, distribution, and publishing"
 metadata:
   version: "3.0.0"
-  git_hash: "0000000"
+  git_hash: "7f3e532"
 ---
 
 # Content Guide
