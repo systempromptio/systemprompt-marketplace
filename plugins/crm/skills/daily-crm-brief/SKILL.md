@@ -12,7 +12,7 @@ The only CRM skill Ed reads every morning. Everything else in this plugin feeds 
 ## Dependencies (load in order)
 
 1. `crm-identity` — pipeline stages, scoring rubric, email rules, hypothesis format
-2. `content-publishing:brand-voice` — every draft passes through this
+2. `commons:brand-voice` — every draft passes through this
 3. `crm-hypothesis-ledger` — in-flight hypotheses and next `C-###` allocation
 4. `pipeline-tracker` — pipeline data (this skill triggers a fresh run unless one already exists for today)
 5. `crm-strategy-master.md` — current objectives, active hypotheses, strategy context
@@ -181,7 +181,7 @@ Update the pipeline snapshot table in Section 1 if numbers changed significantly
 
 ## Integration with Marketing Brief
 
-This brief is complementary to `marketing-strategy:daily-marketing-brief`. The marketing brief handles top-of-funnel (awareness, impressions, cloners). This brief handles mid-funnel (leads through conversion). Ed should read both each morning.
+This brief is complementary to `marketing:daily-marketing-brief`. The marketing brief handles top-of-funnel (awareness, impressions, cloners). This brief handles mid-funnel (leads through conversion). Ed should read both each morning.
 
 If the pipeline is empty, reference the marketing brief for sourcing actions rather than generating CRM-specific actions about leads that don't exist yet.
 

@@ -1,4 +1,0 @@
-# Ignore generated reports (daily outputs, not source)
-*.md
-!.gitkeep
-!.gitignore

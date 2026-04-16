@@ -15,13 +15,13 @@ The measurable truth for the CRM. Runs daily. Pulls every signal we have into a 
 2. **Pipeline staleness detection** requires daily snapshots to flag leads/deals with no activity.
 3. **Hypothesis maturation** depends on daily metric snapshots for scoring.
 
-Production cadence is daily via `/loop`, ideally after `marketing-strategy:lead-tracker` completes (so we can read its output).
+Production cadence is daily via `/loop`, ideally after `marketing:lead-tracker` completes (so we can read its output).
 
 ## Dependencies
 
 Load `crm-identity` first (for pipeline stage definitions, scoring rubric, and exclusion list).
 
-The `marketing-strategy:lead-tracker` report for today should exist before this skill runs. Check `/var/www/html/systemprompt-web/reports/marketing/daily/{today}/lead-tracker.md`. If missing, tell Ed to run `lead-tracker` first — do not run it yourself (it has its own profile requirements).
+The `marketing:lead-tracker` report for today should exist before this skill runs. Check `/var/www/html/systemprompt-web/reports/marketing/daily/{today}/lead-tracker.md`. If missing, tell Ed to run `lead-tracker` first — do not run it yourself (it has its own profile requirements).
 
 ## CRITICAL: Profile must be `systemprompt-prod` for analytics reads
 

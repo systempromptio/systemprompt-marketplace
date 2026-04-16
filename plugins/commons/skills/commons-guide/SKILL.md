@@ -1,0 +1,35 @@
+---
+name: commons-guide
+description: "Entry point for commons — routes to shared infrastructure skills for identity, brand, patterns, and CLI"
+metadata:
+  version: "1.0.0"
+  git_hash: "pending"
+---
+
+# Commons Guide
+
+Shared infrastructure skills used across all domains. Load these before domain-specific skills.
+
+## Skills
+
+| Task | Skill | Load when |
+|------|-------|-----------|
+| Understand product identity, ICP, positioning | `identity` | Before any content, marketing, or CRM skill |
+| Apply brand voice, style, terminology | `brand-voice` | Before drafting any content |
+| Pre-publish quality gate | `brand-review` | Before publishing any content |
+| systemprompt CLI reference | `cli-usage` | When running CLI commands |
+| Build a hypothesis ledger | `hypothesis-ledger-pattern` | When setting up action tracking for a new domain |
+| Build a strategy master doc | `strategy-master-pattern` | When setting up a living strategy document |
+| Build a daily brief | `daily-brief-pattern` | When building an orchestrated daily briefing |
+
+## Dependency Model
+
+```
+commons (no external dependencies)
+  |
+  +-- content (loads: identity, brand-voice, brand-review)
+  +-- seo (loads: identity, brand-voice, hypothesis-ledger-pattern, strategy-master-pattern)
+  +-- marketing (loads: identity, brand-voice, hypothesis-ledger-pattern, strategy-master-pattern, daily-brief-pattern)
+  +-- crm (loads: identity, brand-voice, hypothesis-ledger-pattern, daily-brief-pattern)
+  +-- development (loads: identity for product context)
+```

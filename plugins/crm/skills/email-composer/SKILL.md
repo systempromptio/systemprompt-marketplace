@@ -24,7 +24,7 @@ This is non-negotiable. There is no batch-send, no auto-send, no scheduled send.
 
 Load in order:
 1. `crm-identity` — email rules, pipeline stages, forbidden patterns
-2. `content-publishing:brand-voice` — tone and style enforcement
+2. `commons:brand-voice` — tone and style enforcement
 
 ## Email Infrastructure
 
@@ -117,7 +117,7 @@ The skill expects one of:
    - `{guide_url}` / `{guide_title}` — select a relevant guide based on their interests
    - `{last_interaction}` — date and type of last contact
    - Any other template-specific variables
-7. **Apply brand voice** — ensure the email follows `content-publishing:brand-voice` guidelines
+7. **Apply brand voice** — ensure the email follows `commons:brand-voice` guidelines
 8. **Present draft to Ed for approval** — see format below
 
 ### Draft Review Format (MANDATORY — always show this)

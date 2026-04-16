@@ -1,27 +1,27 @@
 ---
 name: crm-identity
-description: "CRM identity and definitions for systemprompt.io. Defines pipeline stages, lead scoring rubric, email rules, and integration with marketing-strategy. Load FIRST before any other crm skill."
+description: "CRM identity and definitions for systemprompt.io. Defines pipeline stages, lead scoring rubric, email rules, and integration with marketing. Load FIRST before any other crm skill."
 metadata:
   version: "0.1.0"
 ---
 
 # CRM Identity
 
-Single source of truth for **pipeline definitions, lead scoring, and engagement rules**. Every skill in the `crm` plugin loads this first. This skill complements `marketing-strategy:marketing-identity` (distribution and lead-gen) with the mid-funnel pipeline management layer.
+Single source of truth for **pipeline definitions, lead scoring, and engagement rules**. Every skill in the `crm` plugin loads this first. This skill complements `marketing:marketing-identity` (distribution and lead-gen) with the mid-funnel pipeline management layer.
 
 ## Upstream Sources of Truth (read before any CRM work)
 
 Load these once per session in order:
 
-1. `marketing-strategy:marketing-identity` — ICP, template hook, hypothesis format
-2. `content-publishing:identity` — brand positioning, voice, banned words
-3. `content-publishing:brand-voice` — tone and style for all written communication
+1. `marketing:marketing-identity` — ICP, template hook, hypothesis format
+2. `commons:identity` — brand positioning, voice, banned words
+3. `commons:brand-voice` — tone and style for all written communication
 4. `/var/www/html/systemprompt-web/reports/crm/crm-strategy-master.md` — current CRM strategy state (read-only here)
 5. `/var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md` — marketing funnel context (read-only)
 
 If any file is missing, stop and tell Ed.
 
-## The Lead Definition (inherited from marketing-strategy)
+## The Lead Definition (inherited from marketing)
 
 A **lead** = someone who clones `systempromptio/systemprompt-template`, runs it, and gives feedback (any channel: GitHub issue labelled `feedback`, email to `hello@systemprompt.io`, DM reply, form submission).
 
@@ -85,7 +85,7 @@ Scores are additive. A lead's total score = sum of all matching signals.
 1. **Max frequency:** 1 email per lead per 3 days (unless they reply — then respond immediately)
 2. **Follow-up limit:** Max 1 follow-up after initial outreach. If no reply, move to nurture sequence.
 3. **Nurture frequency:** Max 1 email per 2 weeks per lead
-4. **Tone:** Technical peer, not salesperson. Reference their specific use case. Use `content-publishing:brand-voice`.
+4. **Tone:** Technical peer, not salesperson. Reference their specific use case. Use `commons:brand-voice`.
 5. **Mandatory CTA:** Every email must have exactly one clear next step
 6. **Forbidden patterns:**
    - Never say "just checking in" or "bumping this"
