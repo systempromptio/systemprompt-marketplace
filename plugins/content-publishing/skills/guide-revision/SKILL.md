@@ -16,7 +16,7 @@ Run a deterministic quality audit on a published guide. Every check is binary (p
 
 ## Source of Truth
 
-Read the SEO Content Strategy Master Plan at `/var/www/html/systemprompt-web/services/content/guides/seo-content-strategy-master/index.md` for keyword targets, cluster map, and interlinking strategy. Reference this document when checking SEO alignment and interlinking requirements.
+Read the SEO Strategy Master at `/var/www/html/systemprompt-web/reports/seo/seo-strategy-master.md` and keyword targets at `/var/www/html/systemprompt-web/reports/seo/data/keyword-targets.json` for keyword assignments, cluster map, and interlinking strategy.
 
 ## How to Use
 

@@ -490,7 +490,7 @@ Use today's date in the filename.
 
 ## Strategy Compliance
 
-**Source:** [SEO Content Strategy Master Plan](/guides/seo-content-strategy-master/)
+**Source:** reports/seo/seo-strategy-master.md
 
 ### Publishing Schedule
 

@@ -68,7 +68,7 @@ Execute these steps in order. Do not skip any step.
 Read these files to understand current state:
 
 1. **Distribution log**: `reports/seo/blog/distribution-log.md` — what has already been distributed
-2. **SEO master strategy**: `services/content/guides/seo-content-strategy-master/index.md` — keyword gaps and content opportunities
+2. **SEO master strategy**: `reports/seo/seo-strategy-master.md` — keyword gaps and content opportunities
 3. **Guide inventory**: List all directories in `services/content/guides/` and read frontmatter of each guide's `index.md`
 
 ---
