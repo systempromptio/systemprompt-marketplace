@@ -69,8 +69,8 @@
     {
       "name": "crm",
       "source": "./plugins/crm",
-      "description": "Pipeline management: daily CRM briefs, CRM strategy document, hypothesis-driven action tracking (C-### ledger), pipeline state tracking, lead-tracker funnel measurement, lead enrichment from GitHub and web data, and email outreach via Resend API",
-      "version": "1.2.0",
+      "description": "Pipeline management: daily CRM briefs, CRM strategy document, hypothesis-driven action tracking (C-### ledger), pipeline state tracking, lead-tracker funnel measurement, world-class lead enrichment (7 data sources: Gmail, GitHub, WebSearch, company website, email domain, internal cross-ref, analytics), and email outreach via Resend API",
+      "version": "1.3.0",
       "category": "operations",
       "author": {
         "name": "systemprompt.io",
