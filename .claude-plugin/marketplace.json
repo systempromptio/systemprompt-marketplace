@@ -6,16 +6,16 @@
   },
   "metadata": {
     "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, social media, and CRM",
-    "version": "3.1.0",
-    "git_hash": "a8d5b1e",
+    "version": "3.2.0",
+    "git_hash": "0000000",
     "pluginRoot": "./plugins"
   },
   "plugins": [
     {
       "name": "commons",
       "source": "./plugins/commons",
-      "description": "Shared infrastructure: product identity, brand voice, brand review, marketing identity, marketing strategy, marketing briefs, hypothesis ledgers (H-###), CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
-      "version": "2.0.0",
+      "description": "Shared infrastructure: daily master brief (single entry point), product identity, brand voice, brand review, marketing identity, marketing strategy, marketing briefs, hypothesis ledgers (H-###), CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
+      "version": "2.1.0",
       "category": "platform",
       "author": {
         "name": "systemprompt.io",
@@ -36,8 +36,8 @@
     {
       "name": "content",
       "source": "./plugins/content",
-      "description": "Content creation and publishing: data-driven guide writing with per-guide state management, 14-section audit and 11-dimension guide optimisation, blog writing, image generation, GitHub developer marketing scanner, documentation, website and feature copywriting, content drafting, distribution, and end-to-end publishing via CLI",
-      "version": "2.1.0",
+      "description": "Content creation and publishing: daily content brief, content hypothesis ledger (CT-###), content strategy master, data-driven guide writing with per-guide state management, 14-section audit and 11-dimension guide optimisation, blog writing, image generation, GitHub developer marketing scanner, documentation, website and feature copywriting, content drafting, distribution, and end-to-end publishing via CLI",
+      "version": "2.2.0",
       "category": "content",
       "author": {
         "name": "systemprompt.io",
@@ -47,8 +47,8 @@
     {
       "name": "seo",
       "source": "./plugins/seo",
-      "description": "Search engine optimisation: daily GSC performance monitoring, DataForSEO keyword tracking, hypothesis-driven SEO testing (S-### ledger), AI agent answer-engine optimisation (AEO), and living strategy document maintenance",
-      "version": "1.1.0",
+      "description": "Search engine optimisation: daily SEO brief (renamed from seo-monitor), DataForSEO keyword tracking, hypothesis-driven SEO testing (S-### ledger), AI agent answer-engine optimisation (AEO), and living strategy document maintenance",
+      "version": "1.2.0",
       "category": "marketing",
       "author": {
         "name": "systemprompt.io",

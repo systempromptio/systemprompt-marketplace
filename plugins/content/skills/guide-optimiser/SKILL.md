@@ -2,8 +2,8 @@
 name: guide-optimiser
 description: "Deterministically audit and optimise a published guide. Runs a 14-section quality audit, applies 7 rewrite rules for value density, brand discipline, search-intent alignment, and CTR. Reads 28-day GSC query data per URL, produces a 100-point score delta across 11 dimensions, commits changes, and updates the per-guide report. Handles guides without GSC data. Load identity and brand-voice first."
 metadata:
-  version: "3.0.0"
-  git_hash: "3a55706"
+  version: "3.0.1"
+  git_hash: "0000000"
 ---
 
 # Guide Optimiser
@@ -25,7 +25,7 @@ Read these before starting:
 
 - `/var/www/html/systemprompt-web/reports/seo/seo-strategy-master.md` — pillar health, objectives, active hypotheses
 - `/var/www/html/systemprompt-web/reports/seo/data/keyword-targets.json` — canonical keyword registry with assigned guides, volumes, difficulty, target positions. Find the entry where `assigned_guide` matches this guide's slug to identify the primary keyword and its current metrics.
-- The latest `reports/seo/daily/YYYY-MM-DD/seo-monitor.md` — per-guide CTR, impressions, position, quick-wins list
+- The latest `reports/seo/daily/YYYY-MM-DD/daily-seo-brief.md` — per-guide CTR, impressions, position, quick-wins list
 - `/var/www/html/systemprompt-web/reports/seo/data/hypothesis-ledger.md` — check if an S-### hypothesis exists for this guide's title/meta rewrite. If yes, note the hypothesis ID in your output so we can score it later.
 - `/var/www/html/systemprompt-web/reports/content/guides/{slug}/guide-report.md` — the per-guide report (search intent analysis, FAQ mappings, external resources, asset inventory, action log, metadata rationale). If this file does not exist, create it from the template in the "Per-Guide Report Template" section below before proceeding. Populate with available data from keyword-targets.json and any GSC data pulled in Phase 0.
 

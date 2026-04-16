@@ -2,8 +2,8 @@
 name: seo-guide
 description: "Entry point for SEO — routes to monitoring, keyword tracking, hypothesis testing, and strategy"
 metadata:
-  version: "1.1.0"
-  git_hash: "3a55706"
+  version: "1.2.0"
+  git_hash: "0000000"
 ---
 
 # SEO Guide
@@ -19,13 +19,13 @@ Load `commons:identity` before using any SEO skill.
 This plugin implements three `commons` patterns:
 - `commons:hypothesis-ledger-pattern` → `seo-hypothesis-ledger` (S-### prefix, 14-day window)
 - `commons:strategy-master-pattern` → `seo-strategy-master` (pillar health, organic sessions north star)
-- `commons:daily-brief-pattern` → `seo-monitor` (8-step orchestration, daily performance review)
+- `commons:daily-brief-pattern` → `daily-seo-brief` (8-step orchestration, daily performance review)
 
 ## Skills
 
 | Task | Skill | Frequency |
 |------|-------|-----------|
-| Daily SEO performance review | `seo-monitor` | Daily /loop |
+| Daily SEO performance review | `daily-seo-brief` | Daily /loop |
 | Keyword data pulls and cross-referencing | `seo-keyword-tracker` | Monthly full + daily cross-ref |
 | Track SEO actions as hypotheses (S-###) | `seo-hypothesis-ledger` | On every SEO action |
 | Maintain the living SEO strategy doc | `seo-strategy-master` | On phase changes or reviews |
@@ -36,7 +36,7 @@ This plugin implements three `commons` patterns:
 ```
 DataForSEO → seo-keyword-tracker → keyword-targets.json
                                           ↓
-GSC API → seo-monitor → daily report → seo-hypothesis-ledger (score maturing)
+GSC API → daily-seo-brief → daily report → seo-hypothesis-ledger (score maturing)
                     ↓                         ↓
               seo-strategy-master ← hypothesis results (winning/dead)
 ```

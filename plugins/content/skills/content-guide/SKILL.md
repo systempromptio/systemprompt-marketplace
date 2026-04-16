@@ -2,8 +2,8 @@
 name: content-guide
 description: "Entry point for content — routes to guide writing, blog posts, copywriting, and publishing"
 metadata:
-  version: "2.0.1"
-  git_hash: "3a55706"
+  version: "2.1.0"
+  git_hash: "0000000"
 ---
 
 # Content Guide
@@ -13,6 +13,14 @@ Content creation and publishing skills for systemprompt.io. Guides, blog posts, 
 ## Dependencies
 
 Load `commons:identity` and `commons:brand-voice` before using content skills.
+
+## Daily Operations
+
+| Task | Skill | When to Use |
+|------|-------|-------------|
+| Morning content brief | `daily-content-brief` | Daily orchestration: pipeline status, guide performance, 3-5 actions |
+| Content hypothesis ledger (CT-###) | `content-hypothesis-ledger` | Log/score content actions as falsifiable hypotheses |
+| Content strategy document | `content-strategy-master` | Read/update the living content strategy |
 
 ## Content Creation Skills
 

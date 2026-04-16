@@ -1,9 +1,9 @@
 ---
 name: hypothesis-ledger-pattern
-description: "Shared append-only hypothesis ledger pattern. Defines schema, operations, and rules for S-###/H-###/C-### ledgers across SEO, marketing, and CRM domains."
+description: "Shared append-only hypothesis ledger pattern. Defines schema, operations, and rules for S-###/H-###/C-###/CT-### ledgers across SEO, marketing, CRM, and content domains."
 metadata:
-  version: "1.0.0"
-  git_hash: "5079c7a"
+  version: "1.1.0"
+  git_hash: "0000000"
 ---
 
 # Hypothesis Ledger Pattern
@@ -104,14 +104,16 @@ Every domain ledger implements these 6 operations:
 
 ## Domain Configuration
 
-| Config | SEO | Marketing | CRM |
-|--------|-----|-----------|-----|
-| Prefix | S-### | H-### | C-### |
-| Default window | 14 days | 7 days | 14 days |
-| Storage path | reports/seo/data/ | reports/marketing/data/ | reports/crm/data/ |
-| Actions path | reports/seo/data/actions/ | reports/marketing/data/actions/ | reports/crm/data/actions/ |
-| Metric source | GSC + DataForSEO + seo-monitor | lead-tracker + analytics | pipeline-tracker + lead-enrichment |
-| Strategy master | seo-strategy-master | marketing-strategy-master | (pending) |
-| Channels | seo, content, technical, linking, indexing, ctr | github, reddit, linkedin, x, hn, crates, website, email, seo, ai-agent | pipeline, email, enrichment, outreach |
+| Config | SEO | Marketing | CRM | Content |
+|--------|-----|-----------|-----|---------|
+| Prefix | S-### | H-### | C-### | CT-### |
+| Default window | 14 days | 7 days | 14 days | 14 days |
+| Storage path | reports/seo/data/ | reports/marketing/data/ | reports/crm/data/ | reports/content/data/ |
+| Actions path | reports/seo/data/actions/ | reports/marketing/data/actions/ | reports/crm/data/actions/ | reports/content/data/actions/ |
+| Metric source | GSC + DataForSEO + daily-seo-brief | lead-tracker + analytics | pipeline-tracker + lead-enrichment | daily-seo-brief + github-monitor |
+| Strategy master | seo-strategy-master | marketing-strategy-master | crm-strategy-master | content-strategy-master |
+| Channels | seo, content, technical, linking, indexing, ctr | github, reddit, linkedin, x, hn, crates, website, email, seo, ai-agent | pipeline, email, enrichment, outreach | optimisation, new-guide, revision, github-contribution, distribution, technical |
 
-Domain ledger skills (seo:seo-hypothesis-ledger, commons:marketing-hypothesis-ledger, crm:crm-hypothesis-ledger) reference this pattern and add their specific metric whitelist and channel enum.
+Note: Social media uses the marketing ledger (H-### prefix). Social hypotheses are a subset of marketing hypotheses, not a separate ledger.
+
+Domain ledger skills (seo:seo-hypothesis-ledger, commons:marketing-hypothesis-ledger, crm:crm-hypothesis-ledger, content:content-hypothesis-ledger) reference this pattern and add their specific metric whitelist and channel enum.

@@ -2,7 +2,8 @@
 name: lead-tracker
 description: "Daily CRM and funnel measurement. Pulls GitHub Traffic API for systemprompt-core and systemprompt-template (14d retention, MUST run daily), website analytics via systemprompt CLI, and external feedback signals. Emits 1d/7d/31d funnel deltas and a dated report. Source of truth for every hypothesis metric."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
+  git_hash: "0000000"
 ---
 
 # Lead Tracker
@@ -190,14 +191,14 @@ Confirmed shapes (2026-04-15, 7d window):
 
 Service account key lives at **`/var/www/html/systemprompt-web/gsc.json`** (NOT in the marketplace repo). Confirmed working 2026-04-15 with service account `gsc-559@gen-lang-client-0891438583.iam.gserviceaccount.com` against site `sc-domain:systemprompt.io`.
 
-Follow the exact GSC bash pattern from `seo:seo-monitor` SKILL.md (JWT → access token → POST to Search Analytics), but with the correct key path.
+Follow the exact GSC bash pattern from `seo:daily-seo-brief` SKILL.md (JWT → access token → POST to Search Analytics), but with the correct key path.
 
 **What to pull every run** (7-day window, compared against prior 7d):
 
 ```bash
 GSC_KEY_FILE="/var/www/html/systemprompt-web/gsc.json"
 
-# Get access token (full bash block is in seo:seo-monitor SKILL.md — copy from there)
+# Get access token (full bash block is in seo:daily-seo-brief SKILL.md — copy from there)
 
 # Top queries (dimension: query)
 curl -s -X POST "https://www.googleapis.com/webmasters/v3/sites/sc-domain%3Asystemprompt.io/searchAnalytics/query" \
@@ -246,7 +247,7 @@ No API access yet. Report section prompts Ed to paste impressions counts from th
 /var/www/html/systemprompt-web/reports/marketing/daily/YYYY-MM-DD/lead-tracker.md
 ```
 
-Reports live in the **web repo**, not the marketplace. The convention matches how `seo:seo-monitor` writes to `web/reports/seo/daily/YYYY-MM-DD/seo-monitor.md` and `github-monitor` to `web/reports/github/daily/YYYY-MM-DD/github-monitor.md`. All daily output goes in `reports/{domain}/daily/YYYY-MM-DD/`.
+Reports live in the **web repo**, not the marketplace. The convention matches how `seo:daily-seo-brief` writes to `web/reports/seo/daily/YYYY-MM-DD/daily-seo-brief.md` and `github-monitor` to `web/reports/github/daily/YYYY-MM-DD/github-monitor.md`. All daily output goes in `reports/{domain}/daily/YYYY-MM-DD/`.
 
 Structure:
 

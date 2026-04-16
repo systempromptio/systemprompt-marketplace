@@ -1,16 +1,16 @@
 ---
 name: seo-hypothesis-ledger
-description: "Append-only log of every SEO action taken and whether its hypothesis passed. Provides S-### ID allocation, in-flight queries for seo-monitor, and maturation scoring. The spine of the hypothesis-driven SEO loop."
+description: "Append-only log of every SEO action taken and whether its hypothesis passed. Provides S-### ID allocation, in-flight queries for daily-seo-brief, and maturation scoring (S-### prefix, 14-day window). The spine of the hypothesis-driven SEO loop."
 metadata:
-  version: "1.1.0"
-  git_hash: "3a55706"
+  version: "1.2.0"
+  git_hash: "0000000"
 ---
 
 # SEO Hypothesis Ledger
 
 > **Implements:** `commons:hypothesis-ledger-pattern` — shared append-only ledger schema, status lifecycle, and scoring operations. This skill configures the pattern for the SEO domain (S-### prefix, 14-day default window, SEO metric whitelist).
 
-Append-only ledger of every SEO action. The single source of truth for what we tested, what we predicted, and what actually happened. The `seo-monitor` skill writes to it on each run.
+Append-only ledger of every SEO action. The single source of truth for what we tested, what we predicted, and what actually happened. The `daily-seo-brief` skill writes to it on each run.
 
 ## Storage
 
@@ -34,7 +34,7 @@ Fields:
 - **action**: one-line past-tense description. Full draft goes in `data/actions/S-###.md`.
 - **hypothesis**: the "If ... then ... within ..." statement, trimmed to one line.
 - **metric**: exact field name from the metric whitelist (validated on append).
-- **baseline**: numeric value of `metric` at the moment of logging (from latest seo-monitor data).
+- **baseline**: numeric value of `metric` at the moment of logging (from latest daily-seo-brief data).
 - **window_end**: YYYY-MM-DD when the hypothesis matures. Default = logged + 14d for SEO (longer than marketing due to crawl/index latency).
 - **result**: numeric value of `metric` at window_end. Empty while in-flight.
 - **status**: `IN-FLIGHT` | `SEEDED` | `PASS` | `FAIL` | `INCONCLUSIVE` | `ABORTED`.
@@ -65,7 +65,7 @@ seo-hypothesis-ledger stats             # Pass/fail tally by channel
 
 Steps:
 1. Allocate next `S-###`.
-2. Pull current value of `metric` from latest seo-monitor report or GSC data.
+2. Pull current value of `metric` from latest daily-seo-brief report or GSC data.
 3. Validate `metric` is in the whitelist (see below). Reject if not.
 4. Append row to ledger with `status=IN-FLIGHT` or `status=SEEDED`.
 5. Write `actions/S-###.md` with context.
@@ -81,7 +81,7 @@ Steps:
 
 ## Metric Whitelist
 
-Only these metric names are valid (they come from seo-monitor output and GSC data):
+Only these metric names are valid (they come from daily-seo-brief output and GSC data):
 
 ```
 gsc_impressions_7d              gsc_clicks_7d              gsc_avg_ctr_7d

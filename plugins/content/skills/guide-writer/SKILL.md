@@ -2,8 +2,8 @@
 name: guide-writer
 description: "Write deep, researched long-form technical guides. Data-driven topic research, evidence-backed strategies, long-tail FAQ mapping, 5+ external resources, 2+ homemade visual assets, and per-guide report state management. No brand references in body content."
 metadata:
-  version: "3.0.1"
-  git_hash: "3a55706"
+  version: "3.0.2"
+  git_hash: "0000000"
 ---
 
 # Guide Writer
@@ -75,7 +75,7 @@ Create the per-guide report at `reports/content/guides/{slug}/guide-report.md` u
 Before outlining, build the FAQ plan:
 
 1. Pull all keywords from `keyword-targets.json` where `cluster` matches this guide's cluster and `classification` is `"secondary"`, or where the keyword contains question words (`how`, `what`, `why`, `when`, `can`, `does`, `is`).
-2. Pull any GSC query data from related guides in the same cluster (check the latest `reports/seo/daily/YYYY-MM-DD/seo-monitor.md` for query data on cluster siblings).
+2. Pull any GSC query data from related guides in the same cluster (check the latest `reports/seo/daily/YYYY-MM-DD/daily-seo-brief.md` for query data on cluster siblings).
 3. Build the FAQ-to-keyword mapping table in the guide report's Section 2. Every planned FAQ question must match a researched long-tail keyword.
 4. **Minimum 4 FAQs, each mapped to a keyword with documented volume.** If volume data is missing for a keyword, flag with `status: "needs-data"` but proceed.
 5. Record the mapping in the guide report.

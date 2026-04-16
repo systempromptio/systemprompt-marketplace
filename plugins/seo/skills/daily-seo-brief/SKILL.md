@@ -1,14 +1,16 @@
 ---
-name: seo-monitor
-description: "Daily SEO performance review. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports. Designed for daily /loop. Load identity first."
+name: daily-seo-brief
+description: "Daily SEO briefing. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports with S-### hypotheses. Designed for daily /loop. Load identity first."
 metadata:
-  version: "2.1.0"
-  git_hash: "3a55706"
+  version: "3.0.0"
+  git_hash: "0000000"
 ---
 
-# SEO Monitor
+# Daily SEO Brief
 
 > **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence (adapted for SEO: performance review + hypothesis scoring + action generation). Also writes to Section 1 of `seo-strategy-master` per `commons:strategy-master-pattern`.
+
+> **Renamed from `seo-monitor` to `daily-seo-brief`** for naming consistency across all domains. All domain daily briefs follow the `daily-{domain}-brief` convention.
 
 Daily performance review of all published content. Pulls internal analytics and Google Search Console data, cross-references with the content inventory, and generates an actionable report. Designed for `/loop 1d`.
 
@@ -389,7 +391,7 @@ For new insights discovered during analysis (e.g., a new high-impression low-CTR
 Save the report to:
 
 ```
-reports/seo/daily/YYYY-MM-DD/seo-monitor.md
+reports/seo/daily/YYYY-MM-DD/daily-seo-brief.md
 ```
 
 Use today's date in the filename.

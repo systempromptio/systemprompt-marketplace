@@ -2,15 +2,15 @@
 name: seo-strategy-master
 description: "Maintains the living SEO strategy doc at reports/seo/seo-strategy-master.md. Never rewrites wholesale, only diffs. Contains objectives, pillar health, hypotheses, technical SEO issues, and content pipeline. Load identity first."
 metadata:
-  version: "1.1.0"
-  git_hash: "3a55706"
+  version: "1.2.0"
+  git_hash: "0000000"
 ---
 
 # SEO Strategy Master
 
 > **Implements:** `commons:strategy-master-pattern` — 9-section living document structure, diff-only write rules, append-only changelog. This skill configures the pattern for the SEO domain (S-### hypotheses, pillar-by-pillar health, organic sessions north star).
 
-Owner of the single living SEO strategy doc. Every other SEO skill **reads** this doc for current priorities; only this skill and `seo-monitor` **write** to it.
+Owner of the single living SEO strategy doc. Every other SEO skill **reads** this doc for current priorities; only this skill and `daily-seo-brief` **write** to it.
 
 ## Dependencies
 
@@ -36,7 +36,7 @@ Structure (enforced on every write):
 **North Star:** Organic sessions/week + GSC clicks/week
 
 ## 1. Current Performance Snapshot
-(tables updated by seo-monitor; this skill only reads, never overwrites)
+(tables updated by daily-seo-brief; this skill only reads, never overwrites)
 
 ## 2. Objectives -- 30 / 60 / 90
 | Horizon | Organic sessions/wk | GSC clicks/wk | GSC CTR | Guides indexed | Published guides |
@@ -73,13 +73,13 @@ Permitted operations:
 |-----------|------|-------------|
 | Seed (first run only) | Doc doesn't exist | This skill, one time |
 | Update objectives (section 2) | Monthly review or explicit Ed instruction | This skill |
-| Move hypothesis to section 4 | A hypothesis passed in ledger | seo-monitor |
-| Retire hypothesis to section 5 | A hypothesis failed in ledger | seo-monitor |
-| Update pillar health (section 6) | After seo-monitor run | seo-monitor |
+| Move hypothesis to section 4 | A hypothesis passed in ledger | daily-seo-brief |
+| Retire hypothesis to section 5 | A hypothesis failed in ledger | daily-seo-brief |
+| Update pillar health (section 6) | After daily-seo-brief run | daily-seo-brief |
 | Flag technical issue (section 7) | Any skill detects an issue | Any |
 | Update content pipeline (section 8) | New guide published or planned | This skill |
 
-Sections 1 (performance snapshot) and 3 (active hypotheses) are **rendered**. The actual source is `seo-monitor` output and `data/hypothesis-ledger.md`. This skill only re-renders them, never stores derived data.
+Sections 1 (performance snapshot) and 3 (active hypotheses) are **rendered**. The actual source is `daily-seo-brief` output and `data/hypothesis-ledger.md`. This skill only re-renders them, never stores derived data.
 
 ## Satellite Documents
 

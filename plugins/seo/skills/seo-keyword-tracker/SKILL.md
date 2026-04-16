@@ -1,8 +1,9 @@
 ---
 name: seo-keyword-tracker
-description: "Pulls DataForSEO keyword data, updates keyword-targets.json, refreshes keyword-research.md, discovers new keywords, and seeds hypotheses. Monthly full refresh + daily lightweight cross-reference in seo-monitor. Load identity first."
+description: "Pulls DataForSEO keyword data, updates keyword-targets.json, refreshes keyword-research.md, discovers new keywords, and seeds hypotheses. Monthly full refresh + daily lightweight cross-reference in daily-seo-brief. Load identity first."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
+  git_hash: "0000000"
 ---
 
 # SEO Keyword Tracker
@@ -19,7 +20,7 @@ Load `identity` first. It defines ICP, positioning, and which keyword clusters m
 
 Pulls fresh DataForSEO data for all tracked keywords, discovers new keywords, updates all data files, and generates a full keyword report. Cost: ~$0.60.
 
-### Daily Cross-Reference (called by `seo-monitor`)
+### Daily Cross-Reference (called by `daily-seo-brief`)
 
 No API calls. Reads `keyword-targets.json` and cross-references with today's GSC data to surface keyword movements, new ranking queries, and content gaps. Zero cost.
 
@@ -223,7 +224,7 @@ Apply diffs to `reports/seo/seo-strategy-master.md`:
 
 ## Daily Cross-Reference (no API calls)
 
-Called by `seo-monitor` during each daily run. This is how keyword data drives daily actions.
+Called by `daily-seo-brief` during each daily run. This is how keyword data drives daily actions.
 
 ### Procedure
 
@@ -298,7 +299,7 @@ The hypothesis ledger + keyword targets together determine what to write next:
 
 ## How This Drives Daily Analysis
 
-The seo-monitor daily run includes these keyword-driven sections:
+The daily-seo-brief daily run includes these keyword-driven sections:
 
 1. **Keyword Health Dashboard**: For each cluster, how many tracked keywords are ranking page 1, page 2, or not at all
 2. **Keyword Movements**: Position changes WoW for tracked keywords (from GSC data, not DataForSEO)
@@ -309,7 +310,7 @@ The seo-monitor daily run includes these keyword-driven sections:
 
 ## How This Tracks Progress
 
-### Weekly (in seo-monitor report)
+### Weekly (in daily-seo-brief report)
 
 - Count of tracked keywords ranking page 1 vs total tracked
 - Average position across all tracked keywords with GSC data
@@ -343,7 +344,7 @@ Every output follows the same pattern:
 4. **Metric** (how to measure success)
 5. **Window** (when to check back)
 
-No run of this skill or seo-monitor should produce a report without at least one action item tied to a hypothesis.
+No run of this skill or daily-seo-brief should produce a report without at least one action item tied to a hypothesis.
 
 ---
 

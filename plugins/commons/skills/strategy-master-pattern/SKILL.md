@@ -2,8 +2,8 @@
 name: strategy-master-pattern
 description: "Shared living strategy document pattern. Defines 9-section structure, diff-only write rules, and changelog requirements for domain strategy docs."
 metadata:
-  version: "1.0.0"
-  git_hash: "5079c7a"
+  version: "1.1.0"
+  git_hash: "0000000"
 ---
 
 # Strategy Master Pattern
@@ -85,15 +85,15 @@ Append-only. Every diff is attributed to an actor (skill name) and date. Format:
 
 ## Domain Configuration
 
-| Config | SEO | Marketing | CRM |
-|--------|-----|-----------|-----|
-| Path | reports/seo/seo-strategy-master.md | reports/marketing/marketing-strategy-master.md | reports/crm/crm-strategy-master.md |
-| North star | Organic sessions/week + GSC clicks/week | Qualified leads/week | Deal velocity (days prospect → converted) |
-| Phase labels | 1: Baseline, 2: Content Expansion, 3: Scale | 1: Instrumentation, 2: Channel Testing, 3: Scale | 1: Pipeline Setup, 2: Active Outreach, 3: Conversion Optimisation, 4: Scale |
-| Section 6 content | Pillar-by-pillar cluster health | Channel-by-channel performance | Pipeline stage-by-stage health |
-| Monitor skill | seo-monitor | daily-marketing-brief via lead-tracker | pipeline-tracker |
-| Brief skill | seo-monitor | daily-marketing-brief | daily-crm-brief |
-| Hypothesis prefix | S-### | H-### | C-### |
-| Default window | 14 days | 7 days | 14 days |
+| Config | SEO | Marketing | CRM | Content |
+|--------|-----|-----------|-----|---------|
+| Path | reports/seo/seo-strategy-master.md | reports/marketing/marketing-strategy-master.md | reports/crm/crm-strategy-master.md | reports/content/content-strategy-master.md |
+| North star | Organic sessions/week + GSC clicks/week | Qualified leads/week | Deal velocity (days prospect to converted) | Guides at 100+ organic sessions/month within 90d |
+| Phase labels | 1: Baseline, 2: Content Expansion, 3: Scale | 1: Instrumentation, 2: Channel Testing, 3: Scale | 1: Pipeline Setup, 2: Active Outreach, 3: Conversion Optimisation, 4: Scale | 1: Foundation, 2: Expansion, 3: Optimisation, 4: Scale |
+| Section 6 content | Pillar-by-pillar cluster health | Channel-by-channel performance | Pipeline stage-by-stage health | Guide-by-guide health |
+| Monitor skill | daily-seo-brief | daily-marketing-brief via lead-tracker | pipeline-tracker | daily-content-brief via daily-seo-brief |
+| Brief skill | daily-seo-brief | daily-marketing-brief | daily-crm-brief | daily-content-brief |
+| Hypothesis prefix | S-### | H-### | C-### | CT-### |
+| Default window | 14 days | 7 days | 14 days | 14 days |
 
 All domains reference the master strategy at `/var/www/html/systemprompt-web/reports/sales-marketing-strategy.md` for cross-domain priorities and funnel alignment.

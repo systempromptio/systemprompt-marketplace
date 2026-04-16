@@ -2,13 +2,19 @@
 name: commons-guide
 description: "Entry point for commons — routes to shared infrastructure skills for identity, brand, patterns, and CLI"
 metadata:
-  version: "1.0.0"
-  git_hash: "5079c7a"
+  version: "1.1.0"
+  git_hash: "0000000"
 ---
 
 # Commons Guide
 
 Shared infrastructure skills used across all domains. Load these before domain-specific skills.
+
+## Master Entry Point
+
+| Task | Skill | Load when |
+|------|-------|-----------|
+| **Morning master brief** | `daily-master-brief` | **Daily: single entry point across all domains. Answers 9 KPIs: strategy effectiveness, pipeline growth, what's working/not, today's priorities, system health** |
 
 ## Skills
 

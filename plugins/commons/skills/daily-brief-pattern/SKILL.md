@@ -1,9 +1,9 @@
 ---
 name: daily-brief-pattern
-description: "Shared daily briefing pattern. Defines the orchestration sequence, action selection, and report format for SEO/marketing/CRM morning briefs."
+description: "Shared daily briefing pattern. Defines the orchestration sequence, action selection, and report format for all domain daily briefs (SEO, marketing, CRM, social, content)."
 metadata:
-  version: "1.0.0"
-  git_hash: "5079c7a"
+  version: "1.1.0"
+  git_hash: "0000000"
 ---
 
 # Daily Brief Pattern
@@ -108,11 +108,12 @@ Write the brief to `reports/{domain}/daily/{YYYY-MM-DD}/{brief-name}.md` and pri
 
 ## Domain Configuration
 
-| Config | SEO | Marketing | CRM |
-|--------|-----|-----------|-----|
-| Brief name | seo-monitor.md | daily-brief.md | daily-crm-brief.md |
-| Report path | reports/seo/daily/ | reports/marketing/daily/ | reports/crm/daily/ |
-| Data source skill | seo-monitor (self) | lead-tracker | pipeline-tracker |
-| Hypothesis prefix | S-### | H-### | C-### |
-| Profile check | GSC service account | systemprompt-prod | systemprompt-prod |
-| Floor rule | — | If leads_new_7d = 0 for 3+ days, force direct outreach | If deals_active = 0, force pipeline action |
+| Config | SEO | Marketing | CRM | Social | Content |
+|--------|-----|-----------|-----|--------|---------|
+| Brief name | daily-seo-brief.md | daily-brief.md | daily-crm-brief.md | daily-social-brief.md | daily-content-brief.md |
+| Report path | reports/seo/daily/ | reports/marketing/daily/ | reports/crm/daily/ | reports/social/daily/ | reports/content/daily/ |
+| Data source skill | daily-seo-brief (self) | lead-tracker | pipeline-tracker | platform APIs | daily-seo-brief (read) |
+| Hypothesis prefix | S-### | H-### | C-### | H-### (shared) | CT-### |
+| Default window | 14 days | 7 days | 14 days | 7 days | 14 days |
+| Profile check | GSC service account | systemprompt-prod | systemprompt-prod | systemprompt-prod | systemprompt-prod |
+| Floor rule | — | If leads_new_7d = 0 for 3+ days, force direct outreach | If deals_active = 0, force pipeline action | — | If no guide published in 30+ days, force publish action |
