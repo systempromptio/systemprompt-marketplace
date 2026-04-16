@@ -3,7 +3,7 @@ name: social-media-guide
 description: "Entry point for social-media — routes to LinkedIn, Reddit, X/Twitter, and the daily social brief"
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "3a55706"
 ---
 
 # Social Media Guide
@@ -12,7 +12,7 @@ Social media engagement skills for systemprompt.io. Consolidated LinkedIn, Reddi
 
 ## Dependencies
 
-Load `social-media:social-identity` before using any social-media skill. It loads `commons:identity` and `marketing:marketing-identity` upstream.
+Load `social-media:social-identity` before using any social-media skill. It loads `commons:identity` and `commons:marketing-identity` upstream.
 
 ## Skills
 

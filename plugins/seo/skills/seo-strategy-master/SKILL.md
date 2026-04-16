@@ -2,16 +2,23 @@
 name: seo-strategy-master
 description: "Maintains the living SEO strategy doc at reports/seo/seo-strategy-master.md. Never rewrites wholesale, only diffs. Contains objectives, pillar health, hypotheses, technical SEO issues, and content pipeline. Load identity first."
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
+  git_hash: "3a55706"
 ---
 
 # SEO Strategy Master
+
+> **Implements:** `commons:strategy-master-pattern` — 9-section living document structure, diff-only write rules, append-only changelog. This skill configures the pattern for the SEO domain (S-### hypotheses, pillar-by-pillar health, organic sessions north star).
 
 Owner of the single living SEO strategy doc. Every other SEO skill **reads** this doc for current priorities; only this skill and `seo-monitor` **write** to it.
 
 ## Dependencies
 
 Load `identity` first. It defines positioning, ICP, and keyword strategy context.
+
+Also reference:
+- `commons:strategy-master-pattern` — shared 9-section structure and write rules
+- `/var/www/html/systemprompt-web/reports/sales-marketing-strategy.md` — master strategy (SEO domain priorities in §4.1)
 
 ## The Strategy Doc
 

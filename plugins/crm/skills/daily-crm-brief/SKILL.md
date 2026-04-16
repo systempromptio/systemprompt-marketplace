@@ -2,10 +2,13 @@
 name: daily-crm-brief
 description: "The morning CRM briefing. Orchestrates pipeline-tracker + hypothesis-ledger into a single actionable brief: pipeline snapshot, hot leads, overdue follow-ups, email drafts to review, and 3-5 copy-paste-ready actions for Ed — each tagged with a new [C-###] hypothesis. Load crm-identity first."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
+  git_hash: "3a55706"
 ---
 
 # Daily CRM Brief
+
+> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, max 5 actions, no action without hypothesis, score maturing before generating new. This skill configures the pattern for the CRM domain (C-### hypotheses, pipeline metric whitelist, 15-minute target).
 
 The only CRM skill Ed reads every morning. Everything else in this plugin feeds it. Target: Ed reads and acts in 15 minutes.
 
@@ -181,7 +184,7 @@ Update the pipeline snapshot table in Section 1 if numbers changed significantly
 
 ## Integration with Marketing Brief
 
-This brief is complementary to `marketing:daily-marketing-brief`. The marketing brief handles top-of-funnel (awareness, impressions, cloners). This brief handles mid-funnel (leads through conversion). Ed should read both each morning.
+This brief is complementary to `commons:daily-marketing-brief`. The marketing brief handles top-of-funnel (awareness, impressions, cloners). This brief handles mid-funnel (leads through conversion). Ed should read both each morning.
 
 If the pipeline is empty, reference the marketing brief for sourcing actions rather than generating CRM-specific actions about leads that don't exist yet.
 

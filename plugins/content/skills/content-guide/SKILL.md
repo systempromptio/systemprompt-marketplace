@@ -27,6 +27,7 @@ Load `commons:identity` and `commons:brand-voice` before using content skills.
 | Write or review documentation | `documentation-copywriter` | Docs structure, terminology, quality |
 | Write or review website copy | `website-copywriter` | Page copy for enterprise credibility |
 | Rewrite feature pages | `feature-copywriter` | Technical copy for feature pages |
+| Scan GitHub for contribution opportunities | `github-monitor` | Daily /loop, 30+ repos in Claude/MCP ecosystem |
 
 ## Publishing
 

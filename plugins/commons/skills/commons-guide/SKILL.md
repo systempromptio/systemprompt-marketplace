@@ -21,6 +21,10 @@ Shared infrastructure skills used across all domains. Load these before domain-s
 | Build a hypothesis ledger | `hypothesis-ledger-pattern` | When setting up action tracking for a new domain |
 | Build a strategy master doc | `strategy-master-pattern` | When setting up a living strategy document |
 | Build a daily brief | `daily-brief-pattern` | When building an orchestrated daily briefing |
+| Marketing lead-gen positioning | `marketing-identity` | Before any marketing, social-media, or CRM skill |
+| Marketing strategy document | `marketing-strategy-master` | To read/update the living marketing strategy |
+| Marketing hypothesis ledger (H-###) | `marketing-hypothesis-ledger` | To log/score marketing actions |
+| Morning marketing brief | `daily-marketing-brief` | Daily orchestration: funnel deltas + 3-5 actions |
 
 ## Dependency Model
 
@@ -29,7 +33,7 @@ commons (no external dependencies)
   |
   +-- content (loads: identity, brand-voice, brand-review)
   +-- seo (loads: identity, brand-voice, hypothesis-ledger-pattern, strategy-master-pattern)
-  +-- marketing (loads: identity, brand-voice, hypothesis-ledger-pattern, strategy-master-pattern, daily-brief-pattern)
-  +-- crm (loads: identity, brand-voice, hypothesis-ledger-pattern, daily-brief-pattern)
+  +-- social-media (loads: identity, marketing-identity)
+  +-- crm (loads: identity, marketing-identity, brand-voice, hypothesis-ledger-pattern, daily-brief-pattern)
   +-- development (loads: identity for product context)
 ```

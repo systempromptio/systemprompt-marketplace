@@ -2,11 +2,13 @@
 name: daily-social-brief
 description: "Morning social media orchestrator. Reads LinkedIn, Reddit, and X metrics, identifies engagement opportunities, generates 3-5 social actions for the day. Cross-references hypothesis ledger. Load social-identity first."
 metadata:
-  version: "1.0.0"
-  git_hash: "0000000"
+  version: "1.1.0"
+  git_hash: "3a55706"
 ---
 
 # Daily Social Brief
+
+> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, max 5 actions, no action without hypothesis, score maturing before generating new. This skill configures the pattern for the social media domain (shares marketing H-### hypotheses, cross-platform metrics, 5-minute target).
 
 Morning social media dashboard for Ed. Reads metrics and engagement signals from LinkedIn, Reddit, and X/Twitter. Identifies today's social opportunities. Generates 3-5 actionable items. Designed to be read in 5 minutes as part of the morning brief sequence.
 
@@ -15,7 +17,7 @@ Designed for daily execution via `/loop 1d social-media:daily-social-brief`.
 ## Dependencies (load in order)
 
 1. `social-media:social-identity` — platform voice, engagement rules, metrics definitions
-2. `marketing:hypothesis-ledger` — in-flight social hypotheses and next H-### allocation
+2. `commons:marketing-hypothesis-ledger` — in-flight social hypotheses and next H-### allocation
 3. `/var/www/html/systemprompt-web/reports/sales-marketing-strategy.md` — current domain weights, weekly schedule, channel priorities
 
 Also reads (if they exist for today):

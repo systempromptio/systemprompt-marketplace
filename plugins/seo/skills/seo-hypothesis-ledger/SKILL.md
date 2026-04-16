@@ -2,10 +2,13 @@
 name: seo-hypothesis-ledger
 description: "Append-only log of every SEO action taken and whether its hypothesis passed. Provides S-### ID allocation, in-flight queries for seo-monitor, and maturation scoring. The spine of the hypothesis-driven SEO loop."
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
+  git_hash: "3a55706"
 ---
 
 # SEO Hypothesis Ledger
+
+> **Implements:** `commons:hypothesis-ledger-pattern` — shared append-only ledger schema, status lifecycle, and scoring operations. This skill configures the pattern for the SEO domain (S-### prefix, 14-day default window, SEO metric whitelist).
 
 Append-only ledger of every SEO action. The single source of truth for what we tested, what we predicted, and what actually happened. The `seo-monitor` skill writes to it on each run.
 

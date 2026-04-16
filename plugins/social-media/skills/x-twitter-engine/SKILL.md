@@ -3,7 +3,7 @@ name: x-twitter-engine
 description: "Daily X/Twitter session: thread creation, engagement, prospect following, and performance tracking. 4-week test protocol with clear pass/fail criteria. Human-in-the-loop. Designed for daily /loop."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "3a55706"
 ---
 
 # X/Twitter Engine
@@ -21,7 +21,7 @@ Designed for daily execution via `/loop 1d social-media:x-twitter-engine`.
 3. `/var/www/html/systemprompt-web/reports/sales-marketing-strategy.md` — current channel priorities and test protocol
 
 Also read on first run:
-- `marketing:marketing-identity` — ICP, template hook, hypothesis format
+- `commons:marketing-identity` — ICP, template hook, hypothesis format
 - `/var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md` — current phase, weekly theme
 
 ## Data Locations

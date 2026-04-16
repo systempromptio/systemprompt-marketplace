@@ -2,20 +2,21 @@
 name: marketing-identity
 description: "Lead-generation positioning for systemprompt.io. Defines the ICP for the template-based funnel, where they live online, the template hook, and the rules every outreach draft must follow. Load FIRST before any marketing skill."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
+  git_hash: "pending"
 ---
 
 # Marketing Identity — Lead-Gen Layer
 
-Single source of truth for **who we're chasing and with what hook**. Every skill in the `marketing` plugin loads this first. This skill complements `commons:identity` (brand-level positioning) with the distribution-and-lead-gen layer it omits.
+Single source of truth for **who we're chasing and with what hook**. Every marketing-related skill loads this first. This skill complements `commons:identity` (brand-level positioning) with the distribution-and-lead-gen layer it omits.
 
 ## Upstream Sources of Truth (read before drafting)
 
 Load these once per session in order:
 
-1. `commons:identity` — brand positioning, voice, banned words
-2. `/var/www/html/systemprompt-web/MIDMARKET_VALUE_PROP.md` — **ICP2, the lead-gen target**
-3. `/var/www/html/systemprompt-web/ENTERPRISE_VALUE_PROP.md` — ICP1 (content audience, **not** outreach target)
+1. `commons:identity` — brand positioning, voice, banned words, 4-segment ICP definitions (ICP 1: Enterprise Security, ICP 2: Mid-Market, ICP 3: White-Label, ICP 4: Individual)
+2. `/var/www/html/systemprompt-web/reports/marketing/drafts/midmarket-value-prop.md` — **ICP 2 detailed value prop, the lead-gen target**
+3. `/var/www/html/systemprompt-web/reports/marketing/drafts/enterprise-value-prop.md` — ICP 1 detailed value prop (content audience, **not** outreach target)
 4. `/var/www/html/systemprompt-web/COMPETITOR_ANALYSIS.md` — positioning wedges (provable governance, single binary, own-it)
 5. `/var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md` — current strategy state (read-only here, written by `marketing-strategy-master` skill)
 

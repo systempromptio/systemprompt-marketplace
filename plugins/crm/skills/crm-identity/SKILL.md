@@ -7,13 +7,13 @@ metadata:
 
 # CRM Identity
 
-Single source of truth for **pipeline definitions, lead scoring, and engagement rules**. Every skill in the `crm` plugin loads this first. This skill complements `marketing:marketing-identity` (distribution and lead-gen) with the mid-funnel pipeline management layer.
+Single source of truth for **pipeline definitions, lead scoring, and engagement rules**. Every skill in the `crm` plugin loads this first. This skill complements `commons:marketing-identity` (distribution and lead-gen) with the mid-funnel pipeline management layer.
 
 ## Upstream Sources of Truth (read before any CRM work)
 
 Load these once per session in order:
 
-1. `marketing:marketing-identity` — ICP, template hook, hypothesis format
+1. `commons:marketing-identity` — ICP, template hook, hypothesis format
 2. `commons:identity` — brand positioning, voice, banned words
 3. `commons:brand-voice` — tone and style for all written communication
 4. `/var/www/html/systemprompt-web/reports/crm/crm-strategy-master.md` — current CRM strategy state (read-only here)

@@ -1,6 +1,9 @@
 ---
 name: brand-review
 description: "Review any content against systemprompt.io's identity, brand voice, and governance infrastructure positioning before publishing. Pre-publish quality gate for blog posts, docs, website copy, and marketing content."
+metadata:
+  version: "1.1.0"
+  git_hash: "pending"
 ---
 
 # systemprompt.io Brand Review
@@ -19,7 +22,7 @@ User asks to review, check, or audit content before publishing.
 
 1. **Content to review** (pasted text, file, or URL)
 2. **Channel** (LinkedIn, Reddit, blog, email outreach, email nurture, documentation, landing page)
-3. **Target audience** (CTOs/enterprise, SaaS partners, individual users)
+3. **Target audience** (CISOs/security leaders, CTOs/mid-market engineering, SaaS partners, individual users)
 
 ## Review Checklist
 

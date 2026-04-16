@@ -2,13 +2,15 @@
 name: daily-marketing-brief
 description: "The morning /loop skill. Orchestrates lead-tracker + hypothesis-ledger + marketing-strategy-master into a single actionable brief: funnel deltas (1d/7d/31d), hypotheses maturing today, and 3–5 copy-paste-ready actions for Ed — each tagged with a new [H-###] hypothesis. Load marketing-identity first."
 metadata:
-  version: "0.2.0"
-  git_hash: "0000000"
+  version: "0.3.0"
+  git_hash: "3a55706"
 ---
 
 # Daily Marketing Brief
 
-The only skill Ed reads every morning. Everything else in this plugin feeds it. Target: Ed reads and executes in 20 minutes over one coffee.
+> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, max 5 actions, no action without hypothesis, score maturing before generating new. This skill configures the pattern for the marketing domain (H-### hypotheses, marketing metric whitelist, 20-minute target).
+
+The only skill Ed reads every morning. All marketing-related skills feed it. Target: Ed reads and executes in 20 minutes over one coffee.
 
 ## Dependencies (load in order)
 

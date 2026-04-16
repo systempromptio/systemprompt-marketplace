@@ -2,16 +2,22 @@
 name: marketing-strategy-master
 description: "Maintains the living marketing strategy doc at /var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md. Never rewrites wholesale — writes diffs. Contains objectives, 30/60/90 targets, channel hypotheses in flight, dead hypotheses, winning tactics, and funnel snapshots. Load marketing-identity first."
 metadata:
-  version: "0.1.0"
+  version: "0.3.0"
+  git_hash: "3a55706"
 ---
 
 # Marketing Strategy Master
 
-Owner of the single living strategy doc. Every other marketing-strategy skill **reads** this doc for current priorities; only this skill **writes** to it. Modelled on `seo:seo-monitor`'s use of `seo-content-strategy-master`.
+> **Implements:** `commons:strategy-master-pattern` — 9-section living document structure, diff-only write rules, append-only changelog. This skill configures the pattern for the marketing domain (H-### hypotheses, channel-by-channel health, qualified leads north star).
+
+Owner of the single living strategy doc. Every other marketing-strategy skill **reads** this doc for current priorities; only this skill **writes** to it.
 
 ## Dependencies
 
 Load `marketing-identity` first. It defines ICP, hook, and hypothesis format.
+
+Also read:
+- `/var/www/html/systemprompt-web/reports/sales-marketing-strategy.md` — master sales & marketing strategy. Channel priorities in this doc's §7 must align with the master strategy's §4 domain weights. When updating channel priorities, cross-reference the master strategy.
 
 ## The Strategy Doc
 

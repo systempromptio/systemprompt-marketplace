@@ -12,7 +12,7 @@ LLM agents are becoming a meaningful discovery channel for B2B dev tools. A user
 ## Dependencies
 
 Load in order:
-1. `marketing-identity` — ICP, hook, banned words
+1. `commons:marketing-identity` — ICP, hook, banned words
 2. `commons:identity` — brand-level truth
 3. `commons:brand-voice` — all drafts pass through this
 4. `/var/www/html/systemprompt-web/COMPETITOR_ANALYSIS.md` — the source of truth for comparison pages

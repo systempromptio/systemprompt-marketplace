@@ -3,17 +3,17 @@ name: social-identity
 description: "Foundation skill for social media. Platform-specific voice rules, cross-posting adaptation, engagement rules, banned patterns, and metrics definitions. Load FIRST before any social-media skill."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "3a55706"
 ---
 
 # Social Media Identity
 
-Single source of truth for how systemprompt.io engages across social platforms. Every skill in the `social-media` plugin loads this first. This skill complements `commons:identity` (brand positioning) and `marketing:marketing-identity` (lead-gen targeting) with the platform-specific voice and engagement layer.
+Single source of truth for how systemprompt.io engages across social platforms. Every skill in the `social-media` plugin loads this first. This skill complements `commons:identity` (brand positioning) and `commons:marketing-identity` (lead-gen targeting) with the platform-specific voice and engagement layer.
 
 ## Upstream Dependencies (load in order)
 
 1. `commons:identity` — product positioning, brand voice, banned words
-2. `marketing:marketing-identity` — ICP, template hook, hypothesis format, channel rules
+2. `commons:marketing-identity` — ICP, template hook, hypothesis format, channel rules
 3. `/var/www/html/systemprompt-web/reports/sales-marketing-strategy.md` — current domain weights and channel priorities
 
 If any file is missing, stop and tell Ed.

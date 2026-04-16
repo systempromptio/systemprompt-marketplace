@@ -5,8 +5,8 @@
     "email": "hello@systemprompt.io"
   },
   "metadata": {
-    "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, marketing, social media, and CRM",
-    "version": "3.0.0",
+    "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, social media, and CRM",
+    "version": "3.1.0",
     "git_hash": "3a55706",
     "pluginRoot": "./plugins"
   },
@@ -14,8 +14,8 @@
     {
       "name": "commons",
       "source": "./plugins/commons",
-      "description": "Shared infrastructure: product identity, brand voice, brand review, CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
-      "version": "1.0.0",
+      "description": "Shared infrastructure: product identity, brand voice, brand review, marketing identity, marketing strategy, marketing briefs, hypothesis ledgers (H-###), CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
+      "version": "2.0.0",
       "category": "platform",
       "author": {
         "name": "systemprompt.io",
@@ -36,7 +36,7 @@
     {
       "name": "content",
       "source": "./plugins/content",
-      "description": "Content creation and publishing: data-driven guide writing with per-guide state management, 14-section audit and 11-dimension guide optimisation, blog writing, image generation, documentation, website and feature copywriting, content drafting, distribution, and end-to-end publishing via CLI",
+      "description": "Content creation and publishing: data-driven guide writing with per-guide state management, 14-section audit and 11-dimension guide optimisation, blog writing, image generation, GitHub developer marketing scanner, documentation, website and feature copywriting, content drafting, distribution, and end-to-end publishing via CLI",
       "version": "2.1.0",
       "category": "content",
       "author": {
@@ -47,30 +47,19 @@
     {
       "name": "seo",
       "source": "./plugins/seo",
-      "description": "Search engine optimisation: daily GSC performance monitoring, DataForSEO keyword tracking, hypothesis-driven SEO testing (S-### ledger), and living strategy document maintenance",
-      "version": "1.0.0",
+      "description": "Search engine optimisation: daily GSC performance monitoring, DataForSEO keyword tracking, hypothesis-driven SEO testing (S-### ledger), AI agent answer-engine optimisation (AEO), and living strategy document maintenance",
+      "version": "1.1.0",
       "category": "marketing",
       "author": {
         "name": "systemprompt.io",
         "email": "hello@systemprompt.io"
       }
     },
-    {
-      "name": "marketing",
-      "source": "./plugins/marketing",
-      "description": "Lead generation and distribution: daily marketing briefs, hypothesis-driven action tracking (H-### ledger), funnel measurement, GitHub developer marketing, AI agent answer-engine optimisation, and living strategy document",
-      "version": "2.0.0",
-      "category": "marketing",
-      "author": {
-        "name": "systemprompt.io",
-        "email": "hello@systemprompt.io"
-      }
-    },
-    {
+{
       "name": "social-media",
       "source": "./plugins/social-media",
       "description": "Social media engagement: LinkedIn posting and DM outreach, Reddit monitoring and engagement, X/Twitter threads and engagement, cross-platform coordination, and daily social brief",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "marketing",
       "author": {
         "name": "systemprompt.io",
@@ -80,8 +69,8 @@
     {
       "name": "crm",
       "source": "./plugins/crm",
-      "description": "Pipeline management: daily CRM briefs, hypothesis-driven action tracking (C-### ledger), pipeline state tracking, lead enrichment from GitHub and web data, and email outreach via Resend API",
-      "version": "1.1.0",
+      "description": "Pipeline management: daily CRM briefs, CRM strategy document, hypothesis-driven action tracking (C-### ledger), pipeline state tracking, lead-tracker funnel measurement, lead enrichment from GitHub and web data, and email outreach via Resend API",
+      "version": "1.2.0",
       "category": "operations",
       "author": {
         "name": "systemprompt.io",

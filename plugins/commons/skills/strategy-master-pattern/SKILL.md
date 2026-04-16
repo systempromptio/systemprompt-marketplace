@@ -85,11 +85,15 @@ Append-only. Every diff is attributed to an actor (skill name) and date. Format:
 
 ## Domain Configuration
 
-| Config | SEO | Marketing |
-|--------|-----|-----------|
-| Path | reports/seo/seo-strategy-master.md | reports/marketing/marketing-strategy-master.md |
-| North star | Organic sessions/week + GSC clicks/week | Qualified leads/week |
-| Phase labels | 1: Baseline, 2: Content Expansion, 3: Scale | 1: Instrumentation, 2: Channel Testing, 3: Scale |
-| Section 6 content | Pillar-by-pillar cluster health | Channel-by-channel performance |
-| Monitor skill | seo-monitor | daily-marketing-brief via lead-tracker |
-| Hypothesis prefix | S-### | H-### |
+| Config | SEO | Marketing | CRM |
+|--------|-----|-----------|-----|
+| Path | reports/seo/seo-strategy-master.md | reports/marketing/marketing-strategy-master.md | reports/crm/crm-strategy-master.md |
+| North star | Organic sessions/week + GSC clicks/week | Qualified leads/week | Deal velocity (days prospect → converted) |
+| Phase labels | 1: Baseline, 2: Content Expansion, 3: Scale | 1: Instrumentation, 2: Channel Testing, 3: Scale | 1: Pipeline Setup, 2: Active Outreach, 3: Conversion Optimisation, 4: Scale |
+| Section 6 content | Pillar-by-pillar cluster health | Channel-by-channel performance | Pipeline stage-by-stage health |
+| Monitor skill | seo-monitor | daily-marketing-brief via lead-tracker | pipeline-tracker |
+| Brief skill | seo-monitor | daily-marketing-brief | daily-crm-brief |
+| Hypothesis prefix | S-### | H-### | C-### |
+| Default window | 14 days | 7 days | 14 days |
+
+All domains reference the master strategy at `/var/www/html/systemprompt-web/reports/sales-marketing-strategy.md` for cross-domain priorities and funnel alignment.

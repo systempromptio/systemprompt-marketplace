@@ -114,4 +114,4 @@ Every domain ledger implements these 6 operations:
 | Strategy master | seo-strategy-master | marketing-strategy-master | (pending) |
 | Channels | seo, content, technical, linking, indexing, ctr | github, reddit, linkedin, x, hn, crates, website, email, seo, ai-agent | pipeline, email, enrichment, outreach |
 
-Domain ledger skills (seo:seo-hypothesis-ledger, marketing:hypothesis-ledger, crm:crm-hypothesis-ledger) reference this pattern and add their specific metric whitelist and channel enum.
+Domain ledger skills (seo:seo-hypothesis-ledger, commons:marketing-hypothesis-ledger, crm:crm-hypothesis-ledger) reference this pattern and add their specific metric whitelist and channel enum.

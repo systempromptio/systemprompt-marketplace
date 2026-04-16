@@ -2,11 +2,13 @@
 name: seo-monitor
 description: "Daily SEO performance review. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports. Designed for daily /loop. Load identity first."
 metadata:
-  version: "2.0.0"
-  git_hash: "bc2a4a3"
+  version: "2.1.0"
+  git_hash: "3a55706"
 ---
 
 # SEO Monitor
+
+> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence (adapted for SEO: performance review + hypothesis scoring + action generation). Also writes to Section 1 of `seo-strategy-master` per `commons:strategy-master-pattern`.
 
 Daily performance review of all published content. Pulls internal analytics and Google Search Console data, cross-references with the content inventory, and generates an actionable report. Designed for `/loop 1d`.
 

@@ -15,7 +15,7 @@ The measurable truth. Runs daily. Pulls every signal we have into a single funne
 
 ## Dependencies
 
-Load `marketing-identity` first (for ICP context on referrer analysis). This skill does not depend on `marketing-strategy-master` — it is upstream of it.
+Load `commons:marketing-identity` first (for ICP context on referrer analysis). This skill does not depend on `commons:marketing-strategy-master` — it is upstream of it.
 
 ## CRITICAL: Profile must be `systemprompt-prod` for analytics reads
 

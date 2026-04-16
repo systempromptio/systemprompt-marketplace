@@ -1,13 +1,16 @@
 ---
-name: hypothesis-ledger
+name: marketing-hypothesis-ledger
 description: "Append-only log of every marketing action taken and whether its hypothesis passed. Provides H-### ID allocation, in-flight queries for daily-marketing-brief, and maturation scoring for weekly-marketing-review. The spine of the hypothesis-driven marketing loop."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
+  git_hash: "3a55706"
 ---
 
 # Hypothesis Ledger
 
-Append-only ledger of every marketing action. The single source of truth for what we tried, what we predicted, and what actually happened. Every other marketing-strategy skill writes to it.
+> **Implements:** `commons:hypothesis-ledger-pattern` — shared append-only ledger schema, status lifecycle, and scoring operations. This skill configures the pattern for the marketing domain (H-### prefix, 7-day default window, marketing metric whitelist).
+
+Append-only ledger of every marketing action. The single source of truth for what we tried, what we predicted, and what actually happened. Marketing-related skills across all plugins write to it.
 
 ## Storage
 

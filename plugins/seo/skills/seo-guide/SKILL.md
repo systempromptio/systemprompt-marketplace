@@ -2,8 +2,8 @@
 name: seo-guide
 description: "Entry point for SEO — routes to monitoring, keyword tracking, hypothesis testing, and strategy"
 metadata:
-  version: "1.0.0"
-  git_hash: "5079c7a"
+  version: "1.1.0"
+  git_hash: "3a55706"
 ---
 
 # SEO Guide
@@ -14,6 +14,13 @@ Search engine optimisation skills for systemprompt.io. Data-driven SEO using Goo
 
 Load `commons:identity` before using any SEO skill.
 
+## Patterns Implemented
+
+This plugin implements three `commons` patterns:
+- `commons:hypothesis-ledger-pattern` → `seo-hypothesis-ledger` (S-### prefix, 14-day window)
+- `commons:strategy-master-pattern` → `seo-strategy-master` (pillar health, organic sessions north star)
+- `commons:daily-brief-pattern` → `seo-monitor` (8-step orchestration, daily performance review)
+
 ## Skills
 
 | Task | Skill | Frequency |
@@ -22,6 +29,7 @@ Load `commons:identity` before using any SEO skill.
 | Keyword data pulls and cross-referencing | `seo-keyword-tracker` | Monthly full + daily cross-ref |
 | Track SEO actions as hypotheses (S-###) | `seo-hypothesis-ledger` | On every SEO action |
 | Maintain the living SEO strategy doc | `seo-strategy-master` | On phase changes or reviews |
+| AI agent answer-engine optimisation | `ai-agent-discovery` | Weekly AEO audit |
 
 ## Data Flow
 

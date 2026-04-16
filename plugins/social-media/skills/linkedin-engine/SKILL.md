@@ -3,19 +3,19 @@ name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
   version: "1.1.0"
-  git_hash: "0000000"
+  git_hash: "3a55706"
 ---
 
 # LinkedIn Engine
 
 Daily interactive LinkedIn session for Ed. This is not an automation skill. It is a structured conversation that runs every day, covering content, outreach, engagement, and measurement. Ed executes every action manually. The skill provides drafts, tracks performance, manages the pipeline, and holds Ed accountable to the strategy.
 
-Designed for daily execution via `/loop 1d marketing:linkedin-engine`.
+Designed for daily execution via `/loop 1d social-media:linkedin-engine`.
 
 ## Dependencies (load in order)
 
 1. `social-media:social-identity` — platform voice, engagement rules, banned patterns
-2. `marketing:marketing-identity` — ICP, hook, channel rules
+2. `commons:marketing-identity` — ICP, hook, channel rules
 3. `commons:brand-voice` — LinkedIn-specific voice, algorithm context, post structure
 4. `commons:identity` — product positioning for content pillars
 

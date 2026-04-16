@@ -2,10 +2,13 @@
 name: crm-hypothesis-ledger
 description: "Append-only log of every CRM/sales action taken and whether its hypothesis passed. Provides C-### ID allocation, in-flight queries for daily-crm-brief, and maturation scoring. The spine of the hypothesis-driven sales loop."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
+  git_hash: "3a55706"
 ---
 
 # CRM Hypothesis Ledger
+
+> **Implements:** `commons:hypothesis-ledger-pattern` — shared append-only ledger schema, status lifecycle, and scoring operations. This skill configures the pattern for the CRM domain (C-### prefix, 14-day default window, CRM metric whitelist).
 
 Append-only ledger of every CRM and sales action. The single source of truth for what we tried with leads, what we predicted, and what actually happened. Every other CRM skill writes to it.
 
