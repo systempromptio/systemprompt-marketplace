@@ -3,7 +3,7 @@ name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
   version: "1.0.0"
-  git_hash: "pending"
+  git_hash: "5079c7a"
 ---
 
 # LinkedIn Engine

@@ -3,7 +3,7 @@ name: crm-guide
 description: "Entry point for CRM — routes to pipeline tracking, lead management, and outreach"
 metadata:
   version: "1.0.0"
-  git_hash: "pending"
+  git_hash: "5079c7a"
 ---
 
 # CRM Guide

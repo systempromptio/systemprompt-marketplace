@@ -3,7 +3,7 @@ name: reddit-monitor
 description: "Daily multi-channel social-engagement briefing for AI governance positioning. Scans Reddit (daily) plus X/Twitter and forums (weekly), filters for AI governance / compliance / shadow-AI conversations aligned with the systemprompt ICP, and outputs a prioritised action list. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
   version: "1.1.0"
-  git_hash: "pending"
+  git_hash: "5079c7a"
 ---
 
 # Social Monitor (reddit-monitor)

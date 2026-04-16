@@ -3,7 +3,7 @@ name: dev-guide
 description: "Entry point for development — routes to Rust, web, frontend, and UX/UI skills"
 metadata:
   version: "1.0.0"
-  git_hash: "pending"
+  git_hash: "5079c7a"
 ---
 
 # Development Guide

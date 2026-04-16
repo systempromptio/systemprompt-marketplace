@@ -3,7 +3,7 @@ name: marketing-guide
 description: "Entry point for marketing — routes to outreach, social monitoring, lead gen, and strategy"
 metadata:
   version: "1.0.0"
-  git_hash: "pending"
+  git_hash: "5079c7a"
 ---
 
 # Marketing Guide

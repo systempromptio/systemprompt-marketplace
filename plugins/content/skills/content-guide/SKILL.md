@@ -3,7 +3,7 @@ name: content-guide
 description: "Entry point for content — routes to guide writing, blog posts, copywriting, and publishing"
 metadata:
   version: "2.0.0"
-  git_hash: "pending"
+  git_hash: "5079c7a"
 ---
 
 # Content Guide
