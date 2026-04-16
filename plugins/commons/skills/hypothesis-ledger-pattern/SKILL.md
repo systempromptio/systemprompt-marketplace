@@ -3,7 +3,7 @@ name: hypothesis-ledger-pattern
 description: "Shared append-only hypothesis ledger pattern. Defines schema, operations, and rules for S-###/H-###/C-###/CT-### ledgers across SEO, marketing, CRM, and content domains."
 metadata:
   version: "1.1.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # Hypothesis Ledger Pattern

@@ -3,7 +3,7 @@ name: content-hypothesis-ledger
 description: "Append-only log of every content action taken and whether its hypothesis passed. Provides CT-### ID allocation, in-flight queries for daily-content-brief, and maturation scoring. The spine of the hypothesis-driven content loop."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # Content Hypothesis Ledger

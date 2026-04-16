@@ -3,7 +3,7 @@ name: content-strategy-master
 description: "Maintains the living content strategy doc at reports/content/content-strategy-master.md. Never rewrites wholesale — writes diffs. Contains objectives, guide health, hypotheses, technical issues, and publishing pipeline. Load identity first."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # Content Strategy Master

@@ -3,7 +3,7 @@ name: seo-strategy-master
 description: "Maintains the living SEO strategy doc at reports/seo/seo-strategy-master.md. Never rewrites wholesale, only diffs. Contains objectives, pillar health, hypotheses, technical SEO issues, and content pipeline. Load identity first."
 metadata:
   version: "1.2.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # SEO Strategy Master

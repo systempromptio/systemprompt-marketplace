@@ -3,7 +3,7 @@ name: seo-keyword-tracker
 description: "Pulls DataForSEO keyword data, updates keyword-targets.json, refreshes keyword-research.md, discovers new keywords, and seeds hypotheses. Monthly full refresh + daily lightweight cross-reference in daily-seo-brief. Load identity first."
 metadata:
   version: "1.0.1"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # SEO Keyword Tracker

@@ -3,7 +3,7 @@ name: guide-writer
 description: "Write deep, researched long-form technical guides. Data-driven topic research, evidence-backed strategies, long-tail FAQ mapping, 5+ external resources, 2+ homemade visual assets, and per-guide report state management. No brand references in body content."
 metadata:
   version: "3.0.2"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # Guide Writer

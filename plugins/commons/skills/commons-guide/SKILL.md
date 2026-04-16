@@ -3,7 +3,7 @@ name: commons-guide
 description: "Entry point for commons — routes to shared infrastructure skills for identity, brand, patterns, and CLI"
 metadata:
   version: "1.1.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # Commons Guide

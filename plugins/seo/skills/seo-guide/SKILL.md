@@ -3,7 +3,7 @@ name: seo-guide
 description: "Entry point for SEO — routes to monitoring, keyword tracking, hypothesis testing, and strategy"
 metadata:
   version: "1.2.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # SEO Guide

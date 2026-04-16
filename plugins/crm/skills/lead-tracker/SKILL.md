@@ -3,7 +3,7 @@ name: lead-tracker
 description: "Daily CRM and funnel measurement. Pulls GitHub Traffic API for systemprompt-core and systemprompt-template (14d retention, MUST run daily), website analytics via systemprompt CLI, and external feedback signals. Emits 1d/7d/31d funnel deltas and a dated report. Source of truth for every hypothesis metric."
 metadata:
   version: "0.1.1"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # Lead Tracker

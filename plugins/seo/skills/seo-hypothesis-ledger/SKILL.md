@@ -3,7 +3,7 @@ name: seo-hypothesis-ledger
 description: "Append-only log of every SEO action taken and whether its hypothesis passed. Provides S-### ID allocation, in-flight queries for daily-seo-brief, and maturation scoring (S-### prefix, 14-day window). The spine of the hypothesis-driven SEO loop."
 metadata:
   version: "1.2.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # SEO Hypothesis Ledger

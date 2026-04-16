@@ -3,7 +3,7 @@ name: daily-content-brief
 description: "Daily content briefing. Orchestrates daily-seo-brief data + github-monitor + content-hypothesis-ledger into a single actionable brief: publishing pipeline, guide performance, and 3-5 actions for Ed — each tagged with a new [CT-###] hypothesis. Load identity first."
 metadata:
   version: "1.0.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # Daily Content Brief

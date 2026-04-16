@@ -3,7 +3,7 @@ name: strategy-master-pattern
 description: "Shared living strategy document pattern. Defines 9-section structure, diff-only write rules, and changelog requirements for domain strategy docs."
 metadata:
   version: "1.1.0"
-  git_hash: "0000000"
+  git_hash: "dc0c940"
 ---
 
 # Strategy Master Pattern
