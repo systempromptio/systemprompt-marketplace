@@ -3,7 +3,7 @@ name: guide-revision
 description: "Deterministic quality audit for published guides. 14-section checklist covering facts, links, code, structure, SEO, brand, external resources, visual assets, FAQ keyword validation, topic research evidence, metadata rationale, and search intent resolution (critical override). Load identity first."
 metadata:
   version: "2.0.0"
-  git_hash: "pending"
+  git_hash: "c24c577"
 ---
 
 # Guide Revision Audit

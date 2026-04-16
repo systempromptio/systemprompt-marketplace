@@ -3,7 +3,7 @@ name: guide-optimiser
 description: "Deterministically optimise a published guide for value density, brand discipline, search-intent alignment, and CTR. Reads 28-day GSC query data per URL, enforces quantitative rules including FAQ keyword alignment, external resource minimums, shareable asset requirements, and metadata rationale tracking. Produces a 100-point score delta across 11 dimensions. Load identity and brand-voice first."
 metadata:
   version: "2.0.0"
-  git_hash: "pending"
+  git_hash: "c24c577"
 ---
 
 # Guide Optimiser
