@@ -2,8 +2,8 @@
 name: lead-tracker
 description: "Daily CRM and funnel measurement. Pulls GitHub Traffic API for systemprompt-core and systemprompt-template (14d retention, MUST run daily), website analytics via systemprompt CLI, and external feedback signals. Emits 1d/7d/31d funnel deltas and a dated report. Source of truth for every hypothesis metric."
 metadata:
-  version: "0.2.0"
-  git_hash: "2da13af"
+  version: "0.3.0"
+  git_hash: "pending"
 ---
 
 # Lead Tracker
@@ -235,37 +235,42 @@ gsc_top_page_{slug}_position_7d
 
 ### 8. crates.io Downloads
 
-Public API, no auth. Crate names live in `reports/summary/crates.json` in the web repo. If that file is missing, default to `["systemprompt-core"]` (the confirmed published crate; crates.io is already a referrer to the repo). Ed edits the config when he publishes additional crates.
+Public API, no auth. **Use the family search endpoint** — the systemprompt product is published as ~30 member crates (`systemprompt`, `systemprompt-models`, `systemprompt-traits`, …). Tracking only the main crate under-counts real usage by ~50x (the main crate had 585 lifetime downloads on 2026-04-17; the family total was 32,512).
 
 ```bash
-CRATES_CONFIG="/var/www/html/systemprompt-web/reports/summary/crates.json"
-if [ -f "$CRATES_CONFIG" ]; then
-  CRATES=$(jq -r '.crates[]' "$CRATES_CONFIG")
-else
-  CRATES="systemprompt-core"
-fi
+curl -s "https://crates.io/api/v1/crates?q=systemprompt&per_page=50" \
+  -H "User-Agent: systempromptio-lead-tracker (ed@tyingshoelaces.com)" \
+  > /tmp/crates-response.json
 
-for crate in $CRATES; do
-  curl -s "https://crates.io/api/v1/crates/${crate}" \
-    -H "User-Agent: systempromptio-lead-tracker (ed@tyingshoelaces.com)"
-done
+# Filter to names starting with "systemprompt" and aggregate
+jq '{
+  count: [.crates[] | select(.name | startswith("systemprompt"))] | length,
+  lifetime: [.crates[] | select(.name | startswith("systemprompt")) | .downloads] | add,
+  recent_90d: [.crates[] | select(.name | startswith("systemprompt")) | .recent_downloads] | add,
+  top_crate: [.crates[] | select(.name | startswith("systemprompt"))] | sort_by(-.downloads) | .[0].name,
+  per_crate: [.crates[] | select(.name | startswith("systemprompt")) | {name, downloads, recent_downloads, max_stable_version}]
+}' /tmp/crates-response.json
 ```
 
-Extract per crate:
-- `crate.downloads` — lifetime total
-- `crate.recent_downloads` — last 90 days
-- `crate.max_stable_version`
-- `crate.updated_at`
+The User-Agent header is required by crates.io policy; without it, requests are rate-limited aggressively. Rate limit is ~1 req/sec; one call per daily run is nowhere near that.
 
-If the crate returns 404, log a warning and continue — don't halt. The User-Agent header is required by crates.io policy; without it, requests are rate-limited aggressively.
+**Family filter is important.** The search will return any crate whose name contains the term, including unrelated crates. Always filter to `name | startswith("systemprompt")` before summing — otherwise a third-party crate named `systemprompt-wrapper-awesome` would inflate the total.
 
-Emit per-crate metrics into the JSON tail (see schema below). Also surface the latest 90-day delta so the master brief can show a 7-day slope (compute by comparing today's `recent_downloads` to the value in yesterday's lead-tracker JSON tail, if available).
+Extract per family (**these are the headline numbers the master brief consumes**):
+- `crates_count_family` — how many systemprompt-* crates are published
+- `crates_total_lifetime` — sum of `downloads` across the family
+- `crates_total_recent_90d` — sum of `recent_downloads` across the family
+- `crates_total_recent_delta_1d` — today's recent_90d minus yesterday's (from the previous JSONL tail)
+- `crates_top_lifetime_crate` — the member crate with the most lifetime downloads (useful for telling whether growth is in one crate or the family)
 
-**Ranking-opportunity detection rule:** flag any query where `position 5-20` with `impressions > 50` as a page-strengthening opportunity (internal links, content depth, keyword placement).
+Extract per crate (optional, but populate `per_crate` array in JSON tail for trend analysis):
+- `name`, `downloads`, `recent_downloads`, `max_stable_version`, `updated_at`
 
-**Error handling:** if the key file is missing or the token exchange fails, set `gsc_available: false` in the report's top frontmatter and emit a loud flag in the anomalies section. Do not silently skip — GSC is the single biggest SEO signal source.
+If the API returns 5xx or the jq parse fails, emit all five family fields as `null` (not 0) and add a "crates.io fetch failed" row to Anomalies / Flags.
 
-### 8. LinkedIn / X / Reddit — manual paste-in
+**Note on windows.** `recent_downloads` is a rolling 90-day count. Until the oldest systemprompt crate passes 90 days old (first pub 2026-01-21 → 90d mark is 2026-04-21), `recent_downloads == downloads` for the whole family. After that date, the two fields diverge and `recent_90d` becomes the meaningful growth signal.
+
+### 9. LinkedIn / X / Reddit — manual paste-in
 
 No API access yet. Report section prompts Ed to paste impressions counts from the three platforms for the last 24 h. Accepts `{platform}: {impressions}` one per line or `"skip"`.
 
@@ -337,12 +342,24 @@ Structure:
 
 ## Crates.io Downloads
 
-| Crate | Lifetime | Recent (90d) | Δ vs yesterday | Latest version |
-|-------|---------:|-------------:|:--------------:|:--------------:|
-| systemprompt-core | {N} | {N} | {±N} | {x.y.z} |
-| {additional crates from config} | ... | ... | ... | ... |
+**Family totals (headline):**
 
-If the crates config file is missing, only `systemprompt-core` is tracked. If any crate returns 404, its row is omitted and a note is added to Anomalies / Flags.
+| Metric | Value |
+|--------|------:|
+| Crates published (family) | {N} |
+| Lifetime downloads (all) | {N} |
+| Recent 90d downloads (all) | {N} |
+| Δ vs yesterday (recent 90d) | {±N} |
+| Top crate by lifetime | {crate_name} ({N} downloads) |
+
+**Per-crate breakdown (top 10 by lifetime):**
+
+| Crate | Lifetime | Recent (90d) | Δ vs yesterday | Version |
+|-------|---------:|-------------:|:--------------:|:--------|
+| {name} | {N} | {N} | {±N} | {x.y.z} |
+| ... | | | | |
+
+If the API call fails, emit `null` for family totals and add a loud row to Anomalies / Flags — never substitute 0.
 
 ## Website Top Content (7d)
 | Slug | Source | Views | Unique | Avg time | Trend |
@@ -378,10 +395,12 @@ List all `IN-FLIGHT` hypotheses with their baseline, metric, current value, and 
     "web_traffic_github_7d": 0,
     "leads_new_7d": 0, "leads_new_31d": 0, "leads_total": 0,
     "qualified_convos_7d": 0, "qualified_convos_31d": 0,
+    "crates_count_family": 0,
     "crates_total_lifetime": 0, "crates_total_recent_90d": 0, "crates_total_recent_delta_1d": 0,
-    "crate_systemprompt-core_lifetime": 0,
-    "crate_systemprompt-core_recent_90d": 0,
-    "crate_systemprompt-core_version": "0.0.0"
+    "crates_top_lifetime_crate": "",
+    "per_crate": [
+      { "name": "systemprompt", "downloads": 0, "recent_downloads": 0, "version": "0.0.0" }
+    ]
   }
 }
 ```
