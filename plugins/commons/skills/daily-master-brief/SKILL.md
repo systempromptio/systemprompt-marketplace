@@ -3,7 +3,7 @@ name: daily-master-brief
 description: "The single morning entry point. Orchestrates all 5 domain briefs (SEO, marketing, CRM, social, content) into one unified report answering: strategy effectiveness, pipeline growth, what's working, what's not, today's priorities, and system health."
 metadata:
   version: "1.3.0"
-  git_hash: "pending"
+  git_hash: "ed659b9"
 ---
 
 # Daily Master Brief
