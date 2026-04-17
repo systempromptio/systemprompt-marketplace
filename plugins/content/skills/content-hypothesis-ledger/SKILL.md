@@ -2,8 +2,8 @@
 name: content-hypothesis-ledger
 description: "Append-only log of every content action taken and whether its hypothesis passed. Provides CT-### ID allocation, in-flight queries for daily-content-brief, and maturation scoring. The spine of the hypothesis-driven content loop."
 metadata:
-  version: "1.1.0"
-  git_hash: "d32d335"
+  version: "1.2.0"
+  git_hash: "c05387b"
 ---
 
 # Content Hypothesis Ledger
@@ -34,7 +34,7 @@ Fields:
 
 - **id**: `CT-###` sequential, zero-padded to 3 digits. Separate namespace from SEO `S-###`, marketing `H-###`, and CRM `C-###`.
 - **logged**: YYYY-MM-DD the action was taken.
-- **channel**: one of `optimisation`, `new-guide`, `revision`, `github-contribution`, `distribution`, `technical`.
+- **channel**: one of `optimisation`, `new-guide`, `revision`, `distribution`, `technical`.
 - **action**: one-line past-tense description. Full context goes in `data/actions/CT-###.md`.
 - **hypothesis**: the "If ... then ... within ..." statement, trimmed to one line.
 - **metric**: exact field name from the metric whitelist (validated on append).
@@ -51,7 +51,6 @@ Fields:
 | `optimisation` | Title/meta rewrites, internal link additions, content restructuring on existing guides |
 | `new-guide` | Publishing a brand-new guide |
 | `revision` | Major content updates to reflect product changes or new data |
-| `github-contribution` | PRs, issues, or discussions on external repos to build backlinks and authority |
 | `distribution` | Syndication of existing content to new platforms (LinkedIn, Reddit, newsletters) |
 | `technical` | Schema markup, sitemap changes, page speed fixes, structured data |
 
@@ -123,7 +122,6 @@ Content hypotheses default to 14-day windows because:
 - New guides take 3-7 days to be indexed by Google
 - Title/meta changes take 5-14 days to affect rankings
 - Distribution effects take 3-7 days to materialise in referral traffic
-- GitHub contributions take 7-14 days to generate backlink value
 
 For new guide publications, use 21-day windows (indexing + ranking stabilisation).
 

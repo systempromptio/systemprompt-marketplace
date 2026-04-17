@@ -3,7 +3,7 @@ name: daily-marketing-brief
 description: "The morning /loop skill. Orchestrates lead-tracker + hypothesis-ledger + marketing-strategy-master into a single actionable brief: funnel deltas (1d/7d/31d), hypotheses maturing today, and all effective copy-paste-ready actions for Ed (minimum 3, no cap) — each tagged with a new [H-###] hypothesis. Load marketing-identity first."
 metadata:
   version: "0.4.0"
-  git_hash: "d32d335"
+  git_hash: "c05387b"
 ---
 
 # Daily Marketing Brief

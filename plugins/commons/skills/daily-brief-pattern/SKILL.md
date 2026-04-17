@@ -3,7 +3,7 @@ name: daily-brief-pattern
 description: "Shared daily briefing pattern. Defines the orchestration sequence, action selection, and report format for all domain daily briefs (SEO, marketing, CRM, social, content)."
 metadata:
   version: "1.2.0"
-  git_hash: "d32d335"
+  git_hash: "c05387b"
 ---
 
 # Daily Brief Pattern

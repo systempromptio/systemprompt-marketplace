@@ -3,7 +3,7 @@ name: daily-crm-brief
 description: "The morning CRM briefing. Orchestrates pipeline-tracker + hypothesis-ledger into a single actionable brief: pipeline snapshot, hot leads, overdue follow-ups, email drafts to review, and all effective copy-paste-ready actions for Ed (minimum 3, no cap) — each tagged with a new [C-###] hypothesis. Load crm-identity first."
 metadata:
   version: "0.3.0"
-  git_hash: "d32d335"
+  git_hash: "c05387b"
 ---
 
 # Daily CRM Brief

@@ -3,7 +3,7 @@ name: daily-seo-brief
 description: "Daily SEO briefing. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports with S-### hypotheses. Designed for daily /loop. Load identity first."
 metadata:
   version: "3.1.0"
-  git_hash: "d32d335"
+  git_hash: "c05387b"
 ---
 
 # Daily SEO Brief

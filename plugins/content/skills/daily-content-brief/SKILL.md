@@ -2,15 +2,15 @@
 name: daily-content-brief
 description: "Daily content briefing. Orchestrates daily-seo-brief data + content-hypothesis-ledger into a single actionable brief: publishing pipeline, guide performance, and all effective actions for Ed (minimum 3, no cap) — each tagged with a new [CT-###] hypothesis. Load identity first."
 metadata:
-  version: "1.2.0"
-  git_hash: "d32d335"
+  version: "1.3.0"
+  git_hash: "c05387b"
 ---
 
 # Daily Content Brief
 
 > **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, unlimited hypothesis- and data-driven actions (minimum 3, no cap), no action without hypothesis, score maturing before generating new. This skill configures the pattern for the content domain (CT-### hypotheses, content metric whitelist, 15-minute target).
 
-The daily content operator's dashboard. Shows publishing pipeline status, guide performance from SEO data, GitHub engagement opportunities, and every hypothesis- and data-driven content task (minimum 3, no cap). Target: Ed reads in 15 minutes.
+The daily content operator's dashboard. Shows publishing pipeline status, guide performance from SEO data, and every hypothesis- and data-driven content task (minimum 3, no cap). Target: Ed reads in 15 minutes.
 
 ## Dependencies (load in order)
 
@@ -38,7 +38,7 @@ This brief is deliberately parasitic on daily-seo-brief data. It does NOT pull a
 
 - If today's daily-seo-brief report exists: use it as the primary data source.
 - If missing: invoke `seo:daily-seo-brief` via the Skill tool. Do not ask Ed before invoking. Wait for completion and continue.
-- If invocation fails: generate pipeline and github actions only (no performance-based actions). Emit a warning in Instrumentation Notes and continue. Do not halt. Do not ask the user.
+- If invocation fails: generate pipeline actions only (no performance-based actions). Emit a warning in Instrumentation Notes and continue. Do not halt. Do not ask the user.
 
 ## Run Sequence
 
@@ -104,7 +104,7 @@ Every action in the brief looks exactly like this:
 **Guide:** {slug or "new: {proposed title}"}
 
 **What to do:**
-{Specific actionable instruction — not a vague suggestion. For optimisations: exact title/meta changes. For new guides: topic + target keyword + outline. For GitHub: exact repo + issue/PR link. For distribution: exact platform + draft.}
+{Specific actionable instruction — not a vague suggestion. For optimisations: exact title/meta changes. For new guides: topic + target keyword + outline. For distribution: exact platform + draft.}
 
 **After completing:** reply `done CT-###` and I'll log it.
 ```
@@ -193,5 +193,5 @@ When Ed says `done CT-###` or `done CT-### {url}`:
 - **No emojis** anywhere in the brief.
 - **No actions without a hypothesis.** If you can't state the hypothesis, cut the action.
 - **No arbitrary cap on actions.** Minimum 3 when data supports them, no maximum. Every action must cite a measurable hypothesis AND a data signal.
-- **Fail loudly, not silently.** If daily-seo-brief is stale or unavailable, say so at the top and limit actions to pipeline/github only.
+- **Fail loudly, not silently.** If daily-seo-brief is stale or unavailable, say so at the top and limit actions to pipeline only.
 - **Name specific guides.** Every performance observation must name the guide slug and the exact numbers.

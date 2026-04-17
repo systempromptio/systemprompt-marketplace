@@ -3,7 +3,7 @@ name: daily-social-brief
 description: "Morning social media orchestrator. Reads LinkedIn, Reddit, and X metrics, identifies engagement opportunities, generates all effective social actions for the day (minimum 3, no cap). Cross-references hypothesis ledger. Load social-identity first."
 metadata:
   version: "1.2.0"
-  git_hash: "d32d335"
+  git_hash: "c05387b"
 ---
 
 # Daily Social Brief
