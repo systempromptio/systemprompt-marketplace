@@ -2,8 +2,8 @@
 name: daily-master-brief
 description: "The single morning entry point. Orchestrates all 5 domain briefs (SEO, marketing, CRM, social, content) into one unified report answering: strategy effectiveness, pipeline growth, what's working, what's not, today's priorities, and system health."
 metadata:
-  version: "1.2.0"
-  git_hash: "2da13af"
+  version: "1.3.0"
+  git_hash: "pending"
 ---
 
 # Daily Master Brief
@@ -190,26 +190,35 @@ For each of the 5 strategy master documents, read:
 - Compute days since last update
 - Flag as STALE if > 7 days since last update
 
-### Step 7: Collect Key Stats
+### Step 7: Collect Key Stats (MANDATORY — never skip)
 
-Assemble the Key Stats block by reading today's `lead-tracker` JSON tail and selected fields from the domain briefs. The block is the Section 1 of the master brief (immediately after the Yesterday Debrief Summary). These are the numbers Ed glances at every morning before reading anything else.
+The Key Stats block is **Section 1** of the master brief, immediately after the Yesterday Debrief Summary. These are the numbers Ed glances at every morning before reading anything else. **If this section is missing, the brief has failed.** Step 11 asserts its presence before the run can complete.
+
+Assemble from today's `lead-tracker` JSON tail + domain brief headlines.
 
 Sources:
 
 | Metric | Source | Path |
 |--------|--------|------|
 | Website visitors (7d, 31d) | lead-tracker JSON tail | `web_sessions_7d`, `web_unique_users_7d`, `web_sessions_31d` |
-| GitHub views (core+template, 14d) | lead-tracker JSON tail | `core_views_14d` + `template_views_14d` (sum) |
-| GitHub unique cloners (core+template, 14d) | lead-tracker JSON tail | `core_cloners_14d` + `template_cloners_14d` (sum) |
-| GitHub stars (excl self-stars) | lead-tracker JSON tail | `core_stars_delta_7d`, `template_stars_delta_7d` (plus current totals) |
-| Crates.io downloads (lifetime) | lead-tracker JSON tail | `crates_total_lifetime` |
-| Crates.io downloads (recent 90d, 1d delta) | lead-tracker JSON tail | `crates_total_recent_90d`, `crates_total_recent_delta_1d` |
+| GitHub views (core+template, 14d) | lead-tracker JSON tail | `core_views_14d_total_deduped` + `template_views_14d_total_deduped` |
+| GitHub unique cloners (core+template, 14d) | lead-tracker JSON tail | `core_cloners_14d_total_deduped` + `template_cloners_14d_total_deduped` |
+| GitHub stars (excl self-stars) | lead-tracker JSON tail | `core_stars`, `template_stars` (totals); `core_stars_delta_7d`, `template_stars_delta_7d` |
+| Crates.io downloads (lifetime) | lead-tracker JSON tail | `crates_total_lifetime` — **often `null` today; see Known-Null Fields below** |
+| Crates.io downloads (recent 90d, 1d delta) | lead-tracker JSON tail | `crates_total_recent_90d`, `crates_total_recent_delta_1d` — often `null` today |
+| Crates.io referrer uniques (14d) | lead-tracker JSON tail | `core_referrer_crates_io_14d_uniques` (fallback signal when download counts are null) |
 | Active leads, deals, pipeline value | CRM brief | headline counts |
 | New leads (7d) | marketing brief | funnel snapshot |
 | Guides published, indexed | content brief | headline |
 | Organic sessions (7d), GSC clicks (7d) | daily-seo-brief | metric snapshot |
 
-Compute per-metric 7d and 31d deltas by comparing to the same fields in `reports/summary/metrics.jsonl` (if it has entries from 7 and 31 days ago). If no history exists yet, emit `—` for the delta and note it's the baseline run.
+**GSC window — source of truth.** Two numbers compete: (a) `gsc_impressions_7d` in `funnel-history.jsonl` (trailing-partial-week, often stale by 1–3 days) and (b) the aligned-window figure in `daily-seo-brief` (last complete 7d, bin-aligned per `feedback_wow_windows`). **Always use (b).** Near spikes, (a) can invert the true trend. If (a) and (b) disagree, explicitly note the reconciliation in a "Sourcing notes" line under the Content & SEO table.
+
+**Known-Null Fields (as of skill v1.3.0).** These metrics are currently not captured by lead-tracker and should be emitted as `null` in `metrics.jsonl` and labelled `not tracked` in the Section 1 tables — never 0, never omitted:
+- `crates_total_lifetime`, `crates_total_recent_90d` (lead-tracker does not hit crates.io download API yet — only referrer uniques)
+- If another domain brief fails, any metric sourced from it is `null`, not 0.
+
+Compute per-metric 7d and 31d deltas by comparing to the same fields in `reports/summary/metrics.jsonl` (if it has entries from 7 and 31 days ago). If no history exists yet, emit `— (baseline)` for the delta.
 
 ### Step 8: Build the Report
 
@@ -219,9 +228,9 @@ Assemble all data into the report structure below, answering each of the 9 KPIs.
 
 Write to `reports/master/daily/{today}/daily-master-brief.md` and print to Ed.
 
-### Step 10: Persist Summary Data
+### Step 10: Persist Summary Data (MANDATORY — never skip)
 
-Write two outputs to `/var/www/html/systemprompt-web/reports/summary/`:
+Write two outputs to `/var/www/html/systemprompt-web/reports/summary/`. **If either output is missing, the run has failed.** Step 11 asserts both files exist before the run can complete.
 
 **1. Dated headline snapshot** — `reports/summary/daily/{YYYY-MM-DD}/headline.md`
 
@@ -265,6 +274,28 @@ If a source is unavailable (e.g., a domain brief failed), emit the field as `nul
 
 The jsonl is the long-term trend store. Other skills can read it for sparkline-style reporting without re-scraping historical briefs.
 
+### Step 11: Verify Completion Contract (MANDATORY — pre-exit checklist)
+
+Before returning control to Ed, the skill must explicitly assert each of the following. Any failure is a bug and must be reported in the brief's Headline (not buried):
+
+**A. The master brief file exists** at `reports/master/daily/{today}/daily-master-brief.md`.
+
+**B. Section 1 "Key Stats" is present and populated.** Grep the file for `## 1. Key Stats`. If absent, the brief has skipped the headline numbers — stop and patch before exit.
+
+**C. Section 6 contains the Per-Domain Contribution table.** Grep for `### Per-Domain Contribution` (or equivalent header). If absent, the aggregation contract has been violated — stop and patch.
+
+**D. Section 6 lists at least as many actions as the sum of all domain brief actions** (after deduplicating cross-referenced IDs). If only the top 5 appear and the domain contribution table sums to 10+, the brief has truncated. Expand with a compact table of actions #6–N before exit.
+
+**E. `reports/summary/daily/{today}/headline.md` exists** and matches the Section 1 numbers.
+
+**F. `reports/summary/metrics.jsonl` has a new row** whose `date` field equals `{today}` and whose `run_at` is within the last hour. Do not overwrite — append only.
+
+**G. All 9 KPIs have a section or an explicit "Cannot answer: {reason}" line.** No KPI may be silently omitted.
+
+**H. GSC window reconciled.** If the brief quotes a GSC 7d number, it must be the aligned-window figure; any divergence from the `funnel-history.jsonl` tail must have a one-line reconciliation note.
+
+If any of A–H fails, do not end the run. Patch the brief, re-run the assertions, and only then exit.
+
 ## Report Structure
 
 ```markdown
@@ -294,12 +325,17 @@ If Ed skipped every prompt: "Debrief skipped by operator — no yesterday reconc
 
 | Metric | Today | 7d Δ | 31d Δ |
 |--------|------:|:----:|:-----:|
-| Website visitors (7d rolling) | {N} | {±%} | {±%} |
-| GitHub views (core+template, 14d) | {N} | {±%} | — |
-| GitHub unique cloners (core+template, 14d) | {N} | {±%} | — |
+| Website sessions (7d rolling) | {N} | {±%} | {±%} |
+| Website sessions (31d) | {N} | — | {±%} |
+| Unique users (7d) | {N} | {±%} | — |
+| Bot share (7d) | {%} | {±pp} | — |
+| AI-agent referral sessions (7d) | {N} | {±} | — |
+| GitHub views (core+template, 14d dedup) | {N} | {±%} | — |
+| GitHub unique cloners (core+template, 14d dedup) | {N} | {±%} | — |
 | GitHub stars total (excl self-stars) | {N} | {±} | {±} |
-| Crates.io downloads (lifetime, all crates) | {N} | {±Δ} | — |
-| Crates.io downloads (recent 90d, all crates) | {N} | {±Δ 1d} | — |
+| Crates.io downloads (lifetime, all crates) | {N or "not tracked"} | {±Δ} | — |
+| Crates.io downloads (recent 90d, all crates) | {N or "not tracked"} | {±Δ 1d} | — |
+| Crates.io referrer uniques (14d) | {N} | {±} | — |
 
 ### Funnel
 
