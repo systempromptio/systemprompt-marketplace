@@ -1,16 +1,16 @@
 ---
 name: daily-social-brief
-description: "Morning social media orchestrator. Reads LinkedIn, Reddit, and X metrics, identifies engagement opportunities, generates 3-5 social actions for the day. Cross-references hypothesis ledger. Load social-identity first."
+description: "Morning social media orchestrator. Reads LinkedIn, Reddit, and X metrics, identifies engagement opportunities, generates all effective social actions for the day (minimum 3, no cap). Cross-references hypothesis ledger. Load social-identity first."
 metadata:
-  version: "1.1.0"
-  git_hash: "3a55706"
+  version: "1.2.0"
+  git_hash: "d32d335"
 ---
 
 # Daily Social Brief
 
-> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, max 5 actions, no action without hypothesis, score maturing before generating new. This skill configures the pattern for the social media domain (shares marketing H-### hypotheses, cross-platform metrics, 5-minute target).
+> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, unlimited hypothesis- and data-driven actions (minimum 3, no cap), no action without hypothesis, score maturing before generating new. This skill configures the pattern for the social media domain (shares marketing H-### hypotheses, cross-platform metrics, 5-minute target).
 
-Morning social media dashboard for Ed. Reads metrics and engagement signals from LinkedIn, Reddit, and X/Twitter. Identifies today's social opportunities. Generates 3-5 actionable items. Designed to be read in 5 minutes as part of the morning brief sequence.
+Morning social media dashboard for Ed. Reads metrics and engagement signals from LinkedIn, Reddit, and X/Twitter. Identifies today's social opportunities. Generates every effective actionable item (minimum 3, no cap). Designed to be read in 5 minutes as part of the morning brief sequence.
 
 Designed for daily execution via `/loop 1d social-media:daily-social-brief`.
 
@@ -32,12 +32,12 @@ Also reads (if they exist for today):
 3. **Read in-flight social hypotheses** from the hypothesis ledger (filter by channel: linkedin, reddit, x-twitter).
 4. **Score any social hypotheses** whose windows close today.
 5. **Read today's reddit-monitor action list** if it exists (reddit-monitor may run separately).
-6. **Generate 3-5 social actions** for today.
+6. **Generate all effective social actions** for today — minimum 3 when any platform has engagement opportunities or maturing hypotheses, no maximum.
 7. **Write the brief** to `reports/social/daily/{today}/daily-social-brief.md`.
 
 ## How Actions Are Chosen
 
-Maximum 5 social actions per day. Priority order:
+No arbitrary maximum — emit every social action that is hypothesis- and data-driven. Minimum 3 when any platform has engagement opportunities, scheduled content, or maturing hypotheses; otherwise at least 1 maintenance action. Priority order:
 
 1. **Engagement follow-ups:** Replies to comments on yesterday's posts, DM responses, thread replies that need follow-up.
 2. **Scheduled content:** Today's LinkedIn post, X thread, or Reddit engagement per the weekly schedule.
@@ -86,7 +86,7 @@ For each social hypothesis with `window_end <= today`:
 
 If none: "No social hypotheses maturing today."
 
-## 3. Today's Social Actions (3-5)
+## 3. Today's Social Actions ({N} — all effective, no cap)
 
 ### Action 1: {Platform} — {Summary}
 

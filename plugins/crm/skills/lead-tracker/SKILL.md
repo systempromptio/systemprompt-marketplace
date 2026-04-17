@@ -2,8 +2,8 @@
 name: lead-tracker
 description: "Daily CRM and funnel measurement. Pulls GitHub Traffic API for systemprompt-core and systemprompt-template (14d retention, MUST run daily), website analytics via systemprompt CLI, and external feedback signals. Emits 1d/7d/31d funnel deltas and a dated report. Source of truth for every hypothesis metric."
 metadata:
-  version: "0.1.1"
-  git_hash: "dc0c940"
+  version: "0.1.2"
+  git_hash: "d32d335"
 ---
 
 # Lead Tracker
@@ -247,7 +247,7 @@ No API access yet. Report section prompts Ed to paste impressions counts from th
 /var/www/html/systemprompt-web/reports/marketing/daily/YYYY-MM-DD/lead-tracker.md
 ```
 
-Reports live in the **web repo**, not the marketplace. The convention matches how `seo:daily-seo-brief` writes to `web/reports/seo/daily/YYYY-MM-DD/daily-seo-brief.md` and `github-monitor` to `web/reports/github/daily/YYYY-MM-DD/github-monitor.md`. All daily output goes in `reports/{domain}/daily/YYYY-MM-DD/`.
+Reports live in the **web repo**, not the marketplace. The convention matches how `seo:daily-seo-brief` writes to `web/reports/seo/daily/YYYY-MM-DD/daily-seo-brief.md`. All daily output goes in `reports/{domain}/daily/YYYY-MM-DD/`.
 
 Structure:
 

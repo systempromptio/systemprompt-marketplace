@@ -2,8 +2,8 @@
 name: daily-brief-pattern
 description: "Shared daily briefing pattern. Defines the orchestration sequence, action selection, and report format for all domain daily briefs (SEO, marketing, CRM, social, content)."
 metadata:
-  version: "1.1.0"
-  git_hash: "dc0c940"
+  version: "1.2.0"
+  git_hash: "d32d335"
 ---
 
 # Daily Brief Pattern
@@ -24,7 +24,9 @@ Confirm the correct production profile/authentication is active. Domain briefs s
 
 ### Step 2: Check Today's Data Report
 
-Check that the domain's data collection report exists for today. Path pattern: `reports/{domain}/daily/{YYYY-MM-DD}/{report-name}.md`. If missing, trigger the data collection skill. If the data collection fails, surface the failure and stop. Never run the brief blind.
+Check that the domain's data collection report exists for today. Path pattern: `reports/{domain}/daily/{YYYY-MM-DD}/{report-name}.md`. If missing, trigger the data collection skill via the Skill tool.
+
+If data collection fails: write a brief that contains the Headline (naming the failure), a System Health row describing the failure, and whichever actions can be generated without the failed data source. Do not halt. Do not ask the user. The master-brief orchestrator depends on every sub-brief returning.
 
 ### Step 3: Read Strategy Document
 
@@ -46,7 +48,7 @@ For each hypothesis where `window_end <= today`:
 
 ### Step 6: Generate Actions
 
-Generate 3-5 actions for today. Selection priority:
+Generate all effective actions for today. **Minimum 3** when the domain has any in-flight hypotheses or fresh data signal. **No maximum.** Each action must be backed by a measurable hypothesis AND a data signal that motivates it (a metric trend, an event, a funnel gap). If the domain is genuinely quiet, one maintenance action is acceptable — but prefer to dig until a real signal is found. Selection priority:
 
 1. **Dues:** actions from previous day's brief that were confirmed but not yet scored.
 2. **Theme-aligned:** 2-3 actions matching the current weekly/phase theme from the strategy master.
@@ -64,11 +66,11 @@ Write the brief to `reports/{domain}/daily/{YYYY-MM-DD}/{brief-name}.md` and pri
 
 ## Drop Rules
 
-- Maximum 5 actions per brief.
+- No arbitrary maximum on action count. Minimum 3 when the domain has any in-flight hypotheses or fresh data; otherwise at least 1 maintenance action. Actions are hypothesis- and data-driven — if 12 effective actions exist, emit 12.
 - No action without a measurable hypothesis.
 - No repeat of an approach that failed in the past 14 days (check Dead Hypotheses).
 - No action targeting a channel where 3+ hypotheses are already in-flight.
-- If the data collection step failed, do not generate actions. Report the failure only.
+- If the data collection step failed, generate only actions that do not depend on the missing data source, and note the degradation in the Headline. Never return zero actions silently — if no action can be generated, emit exactly one maintenance action (e.g., "investigate {data source} failure") and continue.
 
 ## Output Format
 
@@ -103,7 +105,7 @@ Write the brief to `reports/{domain}/daily/{YYYY-MM-DD}/{brief-name}.md` and pri
 {The exact text/command/draft Ed needs to execute}
 
 ### 2. ...
-(repeat for 3-5 actions)
+(repeat for each action — no cap)
 ```
 
 ## Domain Configuration

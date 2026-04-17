@@ -1,14 +1,14 @@
 ---
 name: daily-crm-brief
-description: "The morning CRM briefing. Orchestrates pipeline-tracker + hypothesis-ledger into a single actionable brief: pipeline snapshot, hot leads, overdue follow-ups, email drafts to review, and 3-5 copy-paste-ready actions for Ed — each tagged with a new [C-###] hypothesis. Load crm-identity first."
+description: "The morning CRM briefing. Orchestrates pipeline-tracker + hypothesis-ledger into a single actionable brief: pipeline snapshot, hot leads, overdue follow-ups, email drafts to review, and all effective copy-paste-ready actions for Ed (minimum 3, no cap) — each tagged with a new [C-###] hypothesis. Load crm-identity first."
 metadata:
-  version: "0.2.0"
-  git_hash: "3a55706"
+  version: "0.3.0"
+  git_hash: "d32d335"
 ---
 
 # Daily CRM Brief
 
-> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, max 5 actions, no action without hypothesis, score maturing before generating new. This skill configures the pattern for the CRM domain (C-### hypotheses, pipeline metric whitelist, 15-minute target).
+> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, unlimited hypothesis- and data-driven actions (minimum 3, no cap), no action without hypothesis, score maturing before generating new. This skill configures the pattern for the CRM domain (C-### hypotheses, pipeline metric whitelist, 15-minute target).
 
 The only CRM skill Ed reads every morning. Everything else in this plugin feeds it. Target: Ed reads and acts in 15 minutes.
 
@@ -36,7 +36,7 @@ Every brief written by this skill must carry a `Profile: systemprompt-prod` line
 
 Path: `/var/www/html/systemprompt-web/reports/crm/daily/{today}/pipeline-tracker.md`
 
-If missing, invoke `pipeline-tracker` to generate it. If it failed, surface the failure and stop — do not run the brief blind.
+If missing, invoke `pipeline-tracker` via the Skill tool. If it fails, degrade gracefully: write the brief with what CRM state is available, put the failure in the Headline and System Health, and generate whichever actions don't depend on fresh pipeline data (e.g., follow-ups based on existing leads.json). Do not halt. Do not ask the user — the master-brief orchestrator depends on this skill returning.
 
 ### 2. Read CRM State
 
@@ -78,9 +78,9 @@ From `data/email-log.jsonl`, identify:
 - Emails sent in last 24h (status `sent`)
 - Failed sends (status `failed`)
 
-### 7. Generate 3-5 Actions
+### 7. Generate Actions
 
-Maximum 5 actions. Priority order:
+No arbitrary maximum — emit every action that is hypothesis- and data-driven. Minimum 3 when leads/deals have any signal (overdue follow-ups, hot leads, stale deals, new leads); otherwise at least 1 maintenance or sourcing action. Priority order:
 
 1. **Overdue follow-ups:** Leads awaiting response for 3+ days. Draft a follow-up email using `email-composer` or the appropriate template.
 2. **Hot lead engagement:** Highest-score leads not yet contacted. Draft initial outreach.

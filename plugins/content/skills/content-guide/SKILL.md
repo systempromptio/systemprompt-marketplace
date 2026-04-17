@@ -2,8 +2,8 @@
 name: content-guide
 description: "Entry point for content — routes to guide, feature, and documentation writer+optimiser pairs, distribution, and publishing"
 metadata:
-  version: "3.0.0"
-  git_hash: "7f3e532"
+  version: "3.1.0"
+  git_hash: "d32d335"
 ---
 
 # Content Guide
@@ -45,7 +45,6 @@ Each content type has a matched writer (create/rewrite) and optimiser (audit/sco
 | Audit and optimise documentation | `documentation-optimiser` | 10-section audit + deterministic rewrite, 75-point scoring |
 | Generate a featured image | `blog-image-generation` | Create blog images via Gemini API |
 | Draft and distribute content | `content-distribution` | All channels: Dev.to, Medium, LinkedIn, Reddit, email, landing pages |
-| Scan GitHub for contributions | `github-monitor` | Daily /loop, 30+ repos in Claude/MCP ecosystem |
 
 ## Publishing
 

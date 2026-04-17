@@ -2,8 +2,8 @@
 name: daily-seo-brief
 description: "Daily SEO briefing. Analyses content traffic, engagement, and search performance across published guides using internal analytics and Google Search Console. Generates actionable reports with S-### hypotheses. Designed for daily /loop. Load identity first."
 metadata:
-  version: "3.0.0"
-  git_hash: "dc0c940"
+  version: "3.1.0"
+  git_hash: "d32d335"
 ---
 
 # Daily SEO Brief
@@ -73,11 +73,10 @@ This skill runs eight steps:
 2. Pull internal analytics (systemprompt CLI)
 3. Pull Google Search Console data (if configured)
 4. Cross-reference keyword targets with GSC queries (daily keyword intelligence, zero API cost)
-5. Cross-reference GitHub engagement data (from latest github-monitor report)
-6. Score maturing hypotheses from the SEO hypothesis ledger
-7. Analyse performance against strategy targets
-8. Generate and save a structured report (including Keyword Movements section)
-9. Append daily metrics to seo-metrics.jsonl and update the strategy master
+5. Score maturing hypotheses from the SEO hypothesis ledger
+6. Analyse performance against strategy targets
+7. Generate and save a structured report (including Keyword Movements section)
+8. Append daily metrics to seo-metrics.jsonl and update the strategy master
 
 ## Step 1: Read Strategy and Inventory Content
 
@@ -523,45 +522,6 @@ Use today's date in the filename.
 | Marketplace | getting-started-anthropic-marketplace | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
 | Agent SDK | build-custom-claude-agent | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
 | Enterprise | enterprise-claude-code-managed-settings | {N} | {Strong/Moderate/Weak} | {improved/stable/declined} |
-
----
-
-## GitHub Engagement (External Authority)
-
-Cross-reference with the latest github-monitor report. Read the most recent report from:
-
-```bash
-ls -t reports/github/daily/*/github-monitor.md 2>/dev/null | head -1
-```
-
-If a github-monitor report exists, include this section. If not, note "GitHub monitor: Not yet configured. Run `github-monitor` skill to start tracking."
-
-### GitHub Referral Traffic
-
-| Metric | This Week | Last Week | Change |
-|--------|-----------|-----------|--------|
-| GitHub referral sessions | {N} | {N} | {+/-N%} |
-| GitHub % of total traffic | {N%} | {N%} | {+/-pp} |
-
-(Pull from `analytics traffic sources` data, filter for GitHub referrer)
-
-### Contributions Made
-
-| Date | Repo | Action | Guide Linked | Engagement |
-|------|------|--------|-------------|------------|
-| {date} | {repo} | Issue comment #{N} | {guide} | {upvotes/replies} |
-
-(Pull from the tracking table in the github-monitor report)
-
-### Backlink Status
-
-| Source | Type | URL | Status | Domain Authority |
-|--------|------|-----|--------|-----------------|
-| {awesome-list or repo} | {PR/comment/discussion} | {URL} | {merged/pending/open} | {stars}k stars |
-
-### Pending Opportunities
-
-List the top 3 opportunities from the latest github-monitor report that have not yet been actioned.
 
 ---
 

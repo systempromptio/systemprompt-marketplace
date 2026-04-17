@@ -1,16 +1,16 @@
 ---
 name: daily-content-brief
-description: "Daily content briefing. Orchestrates daily-seo-brief data + github-monitor + content-hypothesis-ledger into a single actionable brief: publishing pipeline, guide performance, and 3-5 actions for Ed — each tagged with a new [CT-###] hypothesis. Load identity first."
+description: "Daily content briefing. Orchestrates daily-seo-brief data + content-hypothesis-ledger into a single actionable brief: publishing pipeline, guide performance, and all effective actions for Ed (minimum 3, no cap) — each tagged with a new [CT-###] hypothesis. Load identity first."
 metadata:
-  version: "1.0.0"
-  git_hash: "dc0c940"
+  version: "1.2.0"
+  git_hash: "d32d335"
 ---
 
 # Daily Content Brief
 
-> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, max 5 actions, no action without hypothesis, score maturing before generating new. This skill configures the pattern for the content domain (CT-### hypotheses, content metric whitelist, 15-minute target).
+> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, unlimited hypothesis- and data-driven actions (minimum 3, no cap), no action without hypothesis, score maturing before generating new. This skill configures the pattern for the content domain (CT-### hypotheses, content metric whitelist, 15-minute target).
 
-The daily content operator's dashboard. Shows publishing pipeline status, guide performance from SEO data, GitHub engagement opportunities, and 3-5 actionable content tasks. Target: Ed reads in 15 minutes.
+The daily content operator's dashboard. Shows publishing pipeline status, guide performance from SEO data, GitHub engagement opportunities, and every hypothesis- and data-driven content task (minimum 3, no cap). Target: Ed reads in 15 minutes.
 
 ## Dependencies (load in order)
 
@@ -21,7 +21,6 @@ The daily content operator's dashboard. Shows publishing pipeline status, guide 
 
 Also read:
 - Today's daily-seo-brief report: `reports/seo/daily/{today}/daily-seo-brief.md` — primary data source for guide performance
-- Latest github-monitor report: most recent `reports/github/daily/*/github-monitor.md`
 - Guide inventory: `/var/www/html/systemprompt-web/services/content/guides/*/index.md` frontmatter
 - Per-guide reports: `reports/content/guides/*/guide-report.md` (from guide-optimiser)
 
@@ -38,8 +37,8 @@ systemprompt admin session switch systemprompt-prod
 This brief is deliberately parasitic on daily-seo-brief data. It does NOT pull analytics or GSC data directly. This avoids duplicate API calls and ensures metric consistency across domains.
 
 - If today's daily-seo-brief report exists: use it as the primary data source.
-- If missing: trigger `seo:daily-seo-brief` first. Wait for completion.
-- If trigger fails: generate pipeline and github actions only (no performance-based actions). Emit a warning in Instrumentation Notes.
+- If missing: invoke `seo:daily-seo-brief` via the Skill tool. Do not ask Ed before invoking. Wait for completion and continue.
+- If invocation fails: generate pipeline and github actions only (no performance-based actions). Emit a warning in Instrumentation Notes and continue. Do not halt. Do not ask the user.
 
 ## Run Sequence
 
@@ -50,7 +49,6 @@ Confirm `systemprompt-prod` profile is active.
 ### Step 2: Check Today's Data Reports
 
 1. Check daily-seo-brief report at `reports/seo/daily/{today}/daily-seo-brief.md`. If missing, trigger `seo:daily-seo-brief`.
-2. Check for a recent github-monitor report (within last 3 days). Path: `reports/github/daily/*/github-monitor.md`. If stale, note in Instrumentation Notes but continue.
 
 ### Step 3: Read Strategy Document
 
@@ -70,16 +68,15 @@ For each CT-### with `window_end <= today`:
 3. Call `content-hypothesis-ledger score {id} {result} {PASS|FAIL|INCONCLUSIVE} {note}`.
 4. Emit the result in the brief.
 
-### Step 6: Generate 3-5 Actions
+### Step 6: Generate Actions
 
-Maximum 5 actions. Selection priority:
+No arbitrary maximum — emit every action that is hypothesis- and data-driven. Minimum 3 when the domain has in-flight hypotheses, underperforming guides, or fresh SEO signal; otherwise at least 1 maintenance action. Selection priority:
 
 1. **Dues**: actions from previous day's brief confirmed but not yet scored.
 2. **Underperformer fixes**: guides flagged by daily-seo-brief as underperforming (high impressions / low CTR, position drops, poor engagement). These are the highest-leverage content actions.
 3. **Pipeline progression**: guides in draft or review that should be moved forward.
 4. **Content gaps**: keywords or topics identified in SEO strategy but not yet covered by a guide.
-5. **GitHub contributions**: actionable opportunities from github-monitor (PRs, issues, discussions).
-6. **Distribution**: high-performing guides that haven't been syndicated to social platforms.
+5. **Distribution**: high-performing guides that haven't been syndicated to social platforms.
 
 Floor rule: if `guides_published_total` has not increased in 30+ days, at least one action must be a new guide or a guide pushed to publish.
 
@@ -96,7 +93,7 @@ Write to `reports/content/daily/{today}/daily-content-brief.md` and print to Ed.
 Every action in the brief looks exactly like this:
 
 ```markdown
-### Action {1-5}: {Channel} — {One-line summary}
+### Action {N}: {Channel} — {One-line summary}
 
 **Hypothesis:** [CT-###] If we {action} on {guide/target},
   then {metric} will {direction} by {amount} within {window} days.
@@ -145,35 +142,30 @@ Every action in the brief looks exactly like this:
 | Guide | Problem | Metric | Suggested Action |
 |-------|---------|--------|-----------------|
 
-## 3. GitHub Engagement
-
-**Last scan:** {date}
-**Actionable opportunities:** {N}
-**Top opportunity:** {one-line from github-monitor}
-
-## 4. Hypotheses Maturing Today
+## 3. Hypotheses Maturing Today
 
 | ID | Action | Metric | Baseline | Result | Verdict | Lesson |
 |----|--------|--------|----------|--------|---------|--------|
 
 If zero: "No content hypotheses maturing today. In-flight: {N} ({list IDs and window_end dates})."
 
-## 5. Today's Actions (3-5)
+## 4. Today's Actions ({N} — all effective, no cap)
 
 {Action 1}
 {Action 2}
-...
+{Action 3}
+... (continue for every hypothesis- and data-driven action)
 
-## 6. What I Noticed
+## 5. What I Noticed
 
 Up to 3 bullets of observation from the data. No speculation. Examples:
 - "guide-optimiser raised claude-code-system-prompt from 62 to 78 points — sessions up 23% in 10 days."
 - "3 guides have zero GSC impressions after 21 days — likely indexing issue."
-- "GitHub contribution to anthropics/claude-code generated 47 referral sessions this week."
+- "Distribution push of claude-code-hooks-guide to Dev.to drove 120 referral sessions this week."
 
-## 7. Instrumentation Notes
+## 6. Instrumentation Notes
 
-Anything the brief could not measure (daily-seo-brief stale, github-monitor not run, GSC unavailable, etc.) — listed so Ed knows the blind spots.
+Anything the brief could not measure (daily-seo-brief stale, GSC unavailable, etc.) — listed so Ed knows the blind spots.
 ```
 
 **Length discipline**: under 600 words of prose, excluding tables and action drafts.
@@ -200,6 +192,6 @@ When Ed says `done CT-###` or `done CT-### {url}`:
 - **No motivational language.** No "great progress," "keep publishing." Ed is a professional.
 - **No emojis** anywhere in the brief.
 - **No actions without a hypothesis.** If you can't state the hypothesis, cut the action.
-- **No more than 5 actions**, ever.
+- **No arbitrary cap on actions.** Minimum 3 when data supports them, no maximum. Every action must cite a measurable hypothesis AND a data signal.
 - **Fail loudly, not silently.** If daily-seo-brief is stale or unavailable, say so at the top and limit actions to pipeline/github only.
 - **Name specific guides.** Every performance observation must name the guide slug and the exact numbers.

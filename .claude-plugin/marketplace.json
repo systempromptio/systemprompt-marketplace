@@ -6,16 +6,16 @@
   },
   "metadata": {
     "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, social media, and CRM",
-    "version": "3.2.0",
-    "git_hash": "7f3e532",
+    "version": "3.4.0",
+    "git_hash": "d32d335",
     "pluginRoot": "./plugins"
   },
   "plugins": [
     {
       "name": "commons",
       "source": "./plugins/commons",
-      "description": "Shared infrastructure: daily master brief (single entry point), product identity, brand voice, brand review, marketing identity, marketing strategy, marketing briefs, hypothesis ledgers (H-###), CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
-      "version": "2.1.0",
+      "description": "Shared infrastructure: daily master brief (single autonomous entry point with Yesterday Debrief gate), product identity, brand voice, brand review, marketing identity, marketing strategy, marketing briefs, hypothesis ledgers (H-###), CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
+      "version": "2.3.0",
       "category": "platform",
       "author": {
         "name": "systemprompt.io",
@@ -36,8 +36,8 @@
     {
       "name": "content",
       "source": "./plugins/content",
-      "description": "Content creation and publishing: three writer+optimiser pairs (guides, features, documentation) with research-first workflows, per-content reports, and deterministic audit scoring. Daily content brief, content hypothesis ledger (CT-###), content strategy master, image generation, GitHub developer marketing scanner, multi-channel distribution (Dev.to, Medium, LinkedIn, Reddit, email), and end-to-end publishing via CLI",
-      "version": "3.0.0",
+      "description": "Content creation and publishing: three writer+optimiser pairs (guides, features, documentation) with research-first workflows, per-content reports, and deterministic audit scoring. Daily content brief, content hypothesis ledger (CT-###), content strategy master, image generation, multi-channel distribution (Dev.to, Medium, LinkedIn, Reddit, email), and end-to-end publishing via CLI",
+      "version": "4.0.0",
       "category": "content",
       "author": {
         "name": "systemprompt.io",
@@ -48,7 +48,7 @@
       "name": "seo",
       "source": "./plugins/seo",
       "description": "Search engine optimisation: daily SEO brief (renamed from seo-monitor), DataForSEO keyword tracking, hypothesis-driven SEO testing (S-### ledger), AI agent answer-engine optimisation (AEO), and living strategy document maintenance",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "category": "marketing",
       "author": {
         "name": "systemprompt.io",
@@ -59,7 +59,7 @@
       "name": "social-media",
       "source": "./plugins/social-media",
       "description": "Social media engagement: LinkedIn posting and DM outreach, Reddit monitoring and engagement, X/Twitter threads and engagement, cross-platform coordination, and daily social brief",
-      "version": "1.1.0",
+      "version": "1.3.0",
       "category": "marketing",
       "author": {
         "name": "systemprompt.io",
@@ -70,7 +70,7 @@
       "name": "crm",
       "source": "./plugins/crm",
       "description": "Pipeline management: daily CRM briefs, CRM strategy document, hypothesis-driven action tracking (C-### ledger), pipeline state tracking, lead-tracker funnel measurement, world-class lead enrichment (7 data sources: Gmail, GitHub, WebSearch, company website, email domain, internal cross-ref, analytics), and email outreach via Resend API",
-      "version": "1.3.0",
+      "version": "1.5.0",
       "category": "operations",
       "author": {
         "name": "systemprompt.io",

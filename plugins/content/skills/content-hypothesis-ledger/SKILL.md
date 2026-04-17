@@ -2,8 +2,8 @@
 name: content-hypothesis-ledger
 description: "Append-only log of every content action taken and whether its hypothesis passed. Provides CT-### ID allocation, in-flight queries for daily-content-brief, and maturation scoring. The spine of the hypothesis-driven content loop."
 metadata:
-  version: "1.0.0"
-  git_hash: "dc0c940"
+  version: "1.1.0"
+  git_hash: "d32d335"
 ---
 
 # Content Hypothesis Ledger
@@ -97,7 +97,7 @@ Steps:
 
 ## Metric Whitelist
 
-Only these metric names are valid (sourced from daily-seo-brief output, GSC data, guide frontmatter, and github-monitor):
+Only these metric names are valid (sourced from daily-seo-brief output, GSC data, and guide frontmatter):
 
 ```
 # Guide-level metrics (from daily-seo-brief / GSC)
@@ -110,10 +110,6 @@ guide_{slug}_engagement_rate
 guides_published_total              guides_indexed
 organic_sessions_7d                 gsc_clicks_7d
 gsc_impressions_7d                  gsc_avg_ctr_7d
-
-# GitHub metrics (from github-monitor)
-github_contributions_7d             github_referral_sessions_7d
-github_backlinks_total
 
 # Distribution metrics (from lead-tracker / analytics)
 web_sessions_7d                     content_referral_sessions_7d

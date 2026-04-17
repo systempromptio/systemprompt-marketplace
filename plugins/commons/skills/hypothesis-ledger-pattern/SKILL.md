@@ -2,8 +2,8 @@
 name: hypothesis-ledger-pattern
 description: "Shared append-only hypothesis ledger pattern. Defines schema, operations, and rules for S-###/H-###/C-###/CT-### ledgers across SEO, marketing, CRM, and content domains."
 metadata:
-  version: "1.1.0"
-  git_hash: "dc0c940"
+  version: "1.2.0"
+  git_hash: "d32d335"
 ---
 
 # Hypothesis Ledger Pattern
@@ -110,7 +110,7 @@ Every domain ledger implements these 6 operations:
 | Default window | 14 days | 7 days | 14 days | 14 days |
 | Storage path | reports/seo/data/ | reports/marketing/data/ | reports/crm/data/ | reports/content/data/ |
 | Actions path | reports/seo/data/actions/ | reports/marketing/data/actions/ | reports/crm/data/actions/ | reports/content/data/actions/ |
-| Metric source | GSC + DataForSEO + daily-seo-brief | lead-tracker + analytics | pipeline-tracker + lead-enrichment | daily-seo-brief + github-monitor |
+| Metric source | GSC + DataForSEO + daily-seo-brief | lead-tracker + analytics | pipeline-tracker + lead-enrichment | daily-seo-brief |
 | Strategy master | seo-strategy-master | marketing-strategy-master | crm-strategy-master | content-strategy-master |
 | Channels | seo, content, technical, linking, indexing, ctr | github, reddit, linkedin, x, hn, crates, website, email, seo, ai-agent | pipeline, email, enrichment, outreach | optimisation, new-guide, revision, github-contribution, distribution, technical |
 

@@ -2,8 +2,8 @@
 name: reddit-monitor
 description: "Daily multi-channel social-engagement briefing for AI governance positioning. Scans Reddit (daily) plus X/Twitter and forums (weekly), filters for AI governance / compliance / shadow-AI conversations aligned with the systemprompt ICP, and outputs a prioritised action list. Designed for daily /loop. Load identity and brand-voice first."
 metadata:
-  version: "1.2.0"
-  git_hash: "3a55706"
+  version: "1.3.0"
+  git_hash: "d32d335"
 ---
 
 # Social Monitor (reddit-monitor)
@@ -157,7 +157,6 @@ Select **3-5 reply-worthy threads** per weekly run. For each, produce the same d
 | LinkedIn | Search "AI governance" + "Claude" from CTO/VP Eng authors | Reply with substance |
 | ISACA public forums | Regulated-industry AI governance threads | Note / reply |
 | CTO Craft | Public newsletter and blog replies | Note / reply |
-| GitHub Discussions | Covered by `github-monitor`; link to it here for completeness | Cross-reference only |
 
 Select **3-5 forum items** per weekly run. Hacker News is the highest-leverage single channel; one thoughtful HN reply on a trending thread beats a week of Reddit. Prioritise HN when a governance or Claude thread is live.
 

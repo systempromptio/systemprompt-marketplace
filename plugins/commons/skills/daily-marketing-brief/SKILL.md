@@ -1,14 +1,14 @@
 ---
 name: daily-marketing-brief
-description: "The morning /loop skill. Orchestrates lead-tracker + hypothesis-ledger + marketing-strategy-master into a single actionable brief: funnel deltas (1d/7d/31d), hypotheses maturing today, and 3–5 copy-paste-ready actions for Ed — each tagged with a new [H-###] hypothesis. Load marketing-identity first."
+description: "The morning /loop skill. Orchestrates lead-tracker + hypothesis-ledger + marketing-strategy-master into a single actionable brief: funnel deltas (1d/7d/31d), hypotheses maturing today, and all effective copy-paste-ready actions for Ed (minimum 3, no cap) — each tagged with a new [H-###] hypothesis. Load marketing-identity first."
 metadata:
-  version: "0.3.0"
-  git_hash: "3a55706"
+  version: "0.4.0"
+  git_hash: "d32d335"
 ---
 
 # Daily Marketing Brief
 
-> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, max 5 actions, no action without hypothesis, score maturing before generating new. This skill configures the pattern for the marketing domain (H-### hypotheses, marketing metric whitelist, 20-minute target).
+> **Implements:** `commons:daily-brief-pattern` — 8-step orchestration sequence, unlimited hypothesis- and data-driven actions (minimum 3, no cap), no action without hypothesis, score maturing before generating new. This skill configures the pattern for the marketing domain (H-### hypotheses, marketing metric whitelist, 20-minute target).
 
 The only skill Ed reads every morning. All marketing-related skills feed it. Target: Ed reads and executes in 20 minutes over one coffee.
 
@@ -38,17 +38,17 @@ The `local` profile reads a frozen dev DB that was last prod-synced at an earlie
 
 ## Run Sequence
 
-1. **Check today's `lead-tracker` report exists.** Path: `/var/www/html/systemprompt-web/reports/marketing/daily/{today}/lead-tracker.md`. If missing, invoke `lead-tracker` to generate it. If it failed, surface failure and stop — we do not run the brief blind.
+1. **Check today's `lead-tracker` report exists.** Path: `/var/www/html/systemprompt-web/reports/marketing/daily/{today}/lead-tracker.md`. If missing, invoke `lead-tracker` via the Skill tool. If it fails, degrade gracefully: write the brief with what's available, put the failure in the Headline and Instrumentation Notes, and generate whichever actions don't depend on lead-tracker data. Do not halt. Do not ask the user — the master-brief orchestrator depends on this skill returning.
 2. **Read strategy doc.** `marketing-strategy-master read` to get current phase, weekly theme, channel priorities.
 3. **Read in-flight and maturing hypotheses.** `hypothesis-ledger in-flight` and `hypothesis-ledger maturing {today}`.
 4. **Score any hypothesis whose `window_end` <= today.** For each, pull `metric` value from `lead-tracker`'s JSON tail, compare to baseline + target, call `hypothesis-ledger score {id} {result} {PASS|FAIL|INCONCLUSIVE} {note}`.
-5. **Generate 3–5 actions for today** (see next section).
+5. **Generate all effective actions for today** — minimum 3 if any in-flight hypotheses or fresh funnel data, no maximum (see next section).
 6. **Log each generated action** via `hypothesis-ledger log` — each action gets a new `H-###` and its full draft written to `data/actions/H-###.md`.
 7. **Write the brief** to `/var/www/html/systemprompt-web/reports/marketing/daily/{today}/daily-brief.md` and print to Ed.
 
 ## How Actions Are Chosen
 
-Maximum 5 actions. Priority order:
+No arbitrary maximum — emit every action that is hypothesis- and data-driven. Minimum 3 when the domain has any in-flight hypotheses or fresh funnel data; otherwise at least 1 maintenance action. Priority order:
 
 1. **Dues**: any action from the previous day's brief that Ed confirmed he'd do but wasn't scored yet (check ledger for `IN-FLIGHT` rows logged yesterday that should have been actioned today).
 2. **Theme-aligned**: 2–3 actions aligned to the current weekly theme from `marketing-strategy-master §6`.
@@ -67,7 +67,7 @@ Drop rules:
 Every action in the brief looks exactly like this — copy-paste ready:
 
 ```markdown
-### Action {1–5}: {Channel} — {One-line summary}
+### Action {N}: {Channel} — {One-line summary}
 
 **Hypothesis:** [H-###] If we {action} on {channel} targeting {ICP-sub},
   then {metric} will {direction} by {Δ} within {window} days.
@@ -125,13 +125,12 @@ For each hypothesis with `window_end <= today`:
 
 If zero: "No hypotheses maturing today. In flight: {list of IDs and their window_end dates}."
 
-## 3. Today's Actions (3–5)
+## 3. Today's Actions ({N} — all effective, no cap)
 
 {Action 1}
 {Action 2}
 {Action 3}
-{Action 4}
-{Action 5}
+... (continue for every hypothesis- and data-driven action)
 
 ## 4. What I Noticed
 
@@ -174,6 +173,6 @@ Which:
 - **No motivational language.** No "great work," "keep it up," "building momentum." Ed is a professional.
 - **No emojis** anywhere in the brief. The brand-voice rules apply.
 - **No actions without a hypothesis.** If you can't state the hypothesis, cut the action.
-- **No more than 5 actions**, ever. If the ledger has 10 maturing today, score them all but still only generate 5 new ones.
-- **Fail loudly, not silently.** If `lead-tracker` is stale or the session is expired, the brief's top line says so and no actions are generated.
+- **No arbitrary cap on actions.** Minimum 3 when data supports them, no maximum. Every action must cite a measurable hypothesis AND a data signal. If the ledger has 10 maturing today, score them all and generate as many new ones as the data supports.
+- **Fail loudly, not silently.** If `lead-tracker` is stale or the session is expired, the brief's top line says so — but still generate whichever actions don't depend on the failed source, and write the brief. Never halt waiting for user input.
 - **The brief is for Ed's eyes only.** It is not a social-media-ready artifact. It is an operator's dashboard.
