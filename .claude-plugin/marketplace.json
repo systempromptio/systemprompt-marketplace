@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, social media, and CRM",
-    "version": "3.4.0",
+    "version": "3.5.0",
     "git_hash": "c05387b",
     "pluginRoot": "./plugins"
   },
@@ -14,8 +14,8 @@
     {
       "name": "commons",
       "source": "./plugins/commons",
-      "description": "Shared infrastructure: daily master brief (single autonomous entry point with Yesterday Debrief gate), product identity, brand voice, brand review, marketing identity, marketing strategy, marketing briefs, hypothesis ledgers (H-###), CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
-      "version": "2.3.0",
+      "description": "Shared infrastructure: daily master brief (single autonomous entry point with Yesterday Debrief gate, Key Stats headline block, and reports/summary/ trend store), product identity, brand voice, brand review, marketing identity, marketing strategy, marketing briefs, hypothesis ledgers (H-###), CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
+      "version": "2.4.0",
       "category": "platform",
       "author": {
         "name": "systemprompt.io",
@@ -69,8 +69,8 @@
     {
       "name": "crm",
       "source": "./plugins/crm",
-      "description": "Pipeline management: daily CRM briefs, CRM strategy document, hypothesis-driven action tracking (C-### ledger), pipeline state tracking, lead-tracker funnel measurement, world-class lead enrichment (7 data sources: Gmail, GitHub, WebSearch, company website, email domain, internal cross-ref, analytics), and email outreach via Resend API",
-      "version": "1.5.0",
+      "description": "Pipeline management: daily CRM briefs, CRM strategy document, hypothesis-driven action tracking (C-### ledger), pipeline state tracking, lead-tracker funnel measurement (now including crates.io download counts), world-class lead enrichment (7 data sources: Gmail, GitHub, WebSearch, company website, email domain, internal cross-ref, analytics), and email outreach via Resend API",
+      "version": "1.6.0",
       "category": "operations",
       "author": {
         "name": "systemprompt.io",

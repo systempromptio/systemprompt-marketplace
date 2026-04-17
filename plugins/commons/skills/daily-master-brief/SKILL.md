@@ -2,7 +2,7 @@
 name: daily-master-brief
 description: "The single morning entry point. Orchestrates all 5 domain briefs (SEO, marketing, CRM, social, content) into one unified report answering: strategy effectiveness, pipeline growth, what's working, what's not, today's priorities, and system health."
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   git_hash: "c05387b"
 ---
 
@@ -25,7 +25,7 @@ Exactly **two** user-facing gates exist in this skill's run:
 
 Everything in between — data collection, hypothesis scoring, action generation, brief writing — is fully autonomous.
 
-The only permitted unscheduled pause is an auth failure on `systemprompt-prod` that persists after one retry. Missing data, stale reports, API errors, empty ledgers, failed sub-briefs — all are handled by degrading gracefully and noting the degradation in Section 6 (System Health).
+The only permitted unscheduled pause is an auth failure on `systemprompt-prod` that persists after one retry. Missing data, stale reports, API errors, empty ledgers, failed sub-briefs — all are handled by degrading gracefully and noting the degradation in Section 7 (System Health).
 
 If every sub-brief fails, still produce the master brief. Never return control to Ed without a written report at `reports/master/daily/{today}/daily-master-brief.md`.
 
@@ -98,7 +98,7 @@ Note: Social media uses the marketing ledger (H-### prefix). Social H-### rows a
 
 ### Step 0: Yesterday Debrief (the only ask gate)
 
-Before any data collection, locate yesterday's master brief at `reports/master/daily/{yesterday}/daily-master-brief.md`. Extract from Section 5 ("Today's Priority Actions") the full list of action IDs with their one-line titles and domains. If yesterday's brief is missing, fall back to the most recent master brief in `reports/master/daily/` and note the gap in the debrief summary.
+Before any data collection, locate yesterday's master brief at `reports/master/daily/{yesterday}/daily-master-brief.md`. Extract from Section 6 ("Today's Priority Actions") the full list of action IDs with their one-line titles and domains. If yesterday's brief is missing, fall back to the most recent master brief in `reports/master/daily/` and note the gap in the debrief summary.
 
 Then ask Ed a single structured batch of prompts. Use one question-tool invocation — do not drip-feed.
 
@@ -147,7 +147,7 @@ For each of the 5 domains, check whether today's brief exists at the expected pa
 5. `crm:daily-crm-brief` — reads marketing context
 
 For each missing brief:
-- Invoke the domain brief via the Skill tool. **Do not ask Ed before invoking.** Proceed to the next domain when it returns, regardless of whether it succeeded. Failures are logged to Section 6 (System Health), never escalated as questions.
+- Invoke the domain brief via the Skill tool. **Do not ask Ed before invoking.** Proceed to the next domain when it returns, regardless of whether it succeeded. Failures are logged to Section 7 (System Health), never escalated as questions.
 - If invocation fails, fall back to the **most recent** report for that domain. Mark as `STALE: last run {date}` in the master brief.
 - Never skip a domain entirely. Always show last known state.
 
@@ -167,10 +167,10 @@ For **each of the 5 domains**, extract:
 - **Today's actions**: list with hypothesis IDs — **every action, not a subset**
 - **Yesterday's execution**: actions assigned vs completed (from previous day's brief)
 
-**Aggregation contract (MUST).** Section 5 of the master brief must contain the *union* of every action from every domain brief that returned. Never show a single-domain subset. Before moving to Step 5, assert:
+**Aggregation contract (MUST).** Section 6 of the master brief must contain the *union* of every action from every domain brief that returned. Never show a single-domain subset. Before moving to Step 5, assert:
 
 1. The master action pool has a contribution from every domain whose brief returned successfully. If a domain returned without actions, that's a finding — add a one-line "Domain {X}: zero actions (reason: {stale data / empty ledger / degrade-mode})" entry to System Health, but the aggregation still counts that domain as represented.
-2. If fewer than 5 domains are represented in the pool (counting degrade-mode), treat it as a system-health alert: Section 6 must call out the missing domains at the top.
+2. If fewer than 5 domains are represented in the pool (counting degrade-mode), treat it as a system-health alert: Section 7 must call out the missing domains at the top.
 3. If the pool contains actions from only one domain after all 5 briefs ran, this is a bug — log a `master-brief-aggregation-failure` warning in the brief's Headline and proceed with what was collected.
 
 ### Step 5: Read Hypothesis Ledgers Directly
@@ -190,13 +190,80 @@ For each of the 5 strategy master documents, read:
 - Compute days since last update
 - Flag as STALE if > 7 days since last update
 
-### Step 7: Build the Report
+### Step 7: Collect Key Stats
+
+Assemble the Key Stats block by reading today's `lead-tracker` JSON tail and selected fields from the domain briefs. The block is the Section 1 of the master brief (immediately after the Yesterday Debrief Summary). These are the numbers Ed glances at every morning before reading anything else.
+
+Sources:
+
+| Metric | Source | Path |
+|--------|--------|------|
+| Website visitors (7d, 31d) | lead-tracker JSON tail | `web_sessions_7d`, `web_unique_users_7d`, `web_sessions_31d` |
+| GitHub views (core+template, 14d) | lead-tracker JSON tail | `core_views_14d` + `template_views_14d` (sum) |
+| GitHub unique cloners (core+template, 14d) | lead-tracker JSON tail | `core_cloners_14d` + `template_cloners_14d` (sum) |
+| GitHub stars (excl self-stars) | lead-tracker JSON tail | `core_stars_delta_7d`, `template_stars_delta_7d` (plus current totals) |
+| Crates.io downloads (lifetime) | lead-tracker JSON tail | `crates_total_lifetime` |
+| Crates.io downloads (recent 90d, 1d delta) | lead-tracker JSON tail | `crates_total_recent_90d`, `crates_total_recent_delta_1d` |
+| Active leads, deals, pipeline value | CRM brief | headline counts |
+| New leads (7d) | marketing brief | funnel snapshot |
+| Guides published, indexed | content brief | headline |
+| Organic sessions (7d), GSC clicks (7d) | daily-seo-brief | metric snapshot |
+
+Compute per-metric 7d and 31d deltas by comparing to the same fields in `reports/summary/metrics.jsonl` (if it has entries from 7 and 31 days ago). If no history exists yet, emit `—` for the delta and note it's the baseline run.
+
+### Step 8: Build the Report
 
 Assemble all data into the report structure below, answering each of the 9 KPIs.
 
-### Step 8: Write the Master Brief
+### Step 9: Write the Master Brief
 
 Write to `reports/master/daily/{today}/daily-master-brief.md` and print to Ed.
+
+### Step 10: Persist Summary Data
+
+Write two outputs to `/var/www/html/systemprompt-web/reports/summary/`:
+
+**1. Dated headline snapshot** — `reports/summary/daily/{YYYY-MM-DD}/headline.md`
+
+Contains the full Key Stats block plus per-domain headline numbers. Human-readable, one file per day, never overwritten (if today's file already exists, append a second `## Run at {HH:MM}` block — don't clobber).
+
+**2. Append-only metrics log** — `reports/summary/metrics.jsonl`
+
+One JSON row per run. Format (schema stable across versions — new fields append, existing fields never rename):
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "run_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "traffic": {
+    "website_visitors_7d": 0, "website_visitors_31d": 0,
+    "github_views_14d": 0, "github_cloners_14d": 0,
+    "github_stars_total": 0, "github_stars_delta_7d": 0,
+    "crates_downloads_lifetime": 0, "crates_downloads_recent_90d": 0
+  },
+  "funnel": {
+    "leads_total": 0, "leads_new_7d": 0,
+    "deals_active": 0, "pipeline_value_usd": 0,
+    "qualified_convos_7d": 0
+  },
+  "content": {
+    "guides_published_total": 0, "guides_indexed": 0,
+    "organic_sessions_7d": 0, "gsc_clicks_7d": 0, "gsc_impressions_7d": 0
+  },
+  "hypotheses": {
+    "in_flight_total": 0,
+    "win_rate_all_time": 0.0, "win_rate_30d": 0.0,
+    "scored_today": 0, "passed_today": 0, "failed_today": 0
+  },
+  "system_health": {
+    "domains_reporting": 0, "domains_stale": 0, "domains_failed": 0
+  }
+}
+```
+
+If a source is unavailable (e.g., a domain brief failed), emit the field as `null` rather than omitting it — `null` means "we tried and couldn't get it today", absent means "this field doesn't exist in this schema version". Both are different from `0`.
+
+The jsonl is the long-term trend store. Other skills can read it for sparkline-style reporting without re-scraping historical briefs.
 
 ## Report Structure
 
@@ -219,7 +286,44 @@ Write to `reports/master/daily/{today}/daily-master-brief.md` and print to Ed.
 
 If Ed skipped every prompt: "Debrief skipped by operator — no yesterday reconciliation performed."
 
-## 1. Strategy Effectiveness
+## 1. Key Stats
+
+> The numbers Ed glances at every morning. Sourced from lead-tracker + domain brief headlines. Deltas computed against `reports/summary/metrics.jsonl`.
+
+### Traffic & Distribution
+
+| Metric | Today | 7d Δ | 31d Δ |
+|--------|------:|:----:|:-----:|
+| Website visitors (7d rolling) | {N} | {±%} | {±%} |
+| GitHub views (core+template, 14d) | {N} | {±%} | — |
+| GitHub unique cloners (core+template, 14d) | {N} | {±%} | — |
+| GitHub stars total (excl self-stars) | {N} | {±} | {±} |
+| Crates.io downloads (lifetime, all crates) | {N} | {±Δ} | — |
+| Crates.io downloads (recent 90d, all crates) | {N} | {±Δ 1d} | — |
+
+### Funnel
+
+| Metric | Today | 7d Δ | 31d Δ |
+|--------|------:|:----:|:-----:|
+| Active leads (total) | {N} | {±} | {±} |
+| New leads (7d) | {N} | {±%} | {±%} |
+| Active deals | {N} | {±} | {±} |
+| Pipeline value | ${N} | ±${N} | ±${N} |
+| Qualified conversations (7d) | {N} | {±} | {±} |
+
+### Content & SEO
+
+| Metric | Today | 7d Δ | 31d Δ |
+|--------|------:|:----:|:-----:|
+| Guides published (total) | {N} | {±} | {±} |
+| Guides indexed | {N} | {±} | {±} |
+| Organic sessions (7d) | {N} | {±%} | {±%} |
+| GSC clicks (7d) | {N} | {±%} | {±%} |
+| GSC impressions (7d) | {N} | {±%} | {±%} |
+
+If any row is sourced from a failed/stale sub-brief, mark the value `stale:{last-date}` and add the same row to Section 7 (System Health).
+
+## 2. Strategy Effectiveness
 
 > KPI: How effective are our strategies? What is working? What is not working?
 
@@ -247,7 +351,7 @@ If zero: "No hypotheses scored today."
 
 If zero: "No failures today."
 
-## 2. Strategy Freshness
+## 3. Strategy Freshness
 
 > KPI: Are our strategies up to date?
 
@@ -263,7 +367,7 @@ Status: OK (updated within 7 days) | STALE (7-14 days) | CRITICAL (14+ days)
 
 {If any STALE or CRITICAL: "Action required: update {document} — last touched {N} days ago by {skill}."}
 
-## 3. Pipeline Growth
+## 4. Pipeline Growth
 
 > KPI: How many people in the pipeline? Where did they come from?
 
@@ -284,7 +388,7 @@ Status: OK (updated within 7 days) | STALE (7-14 days) | CRITICAL (14+ days)
 
 Data from CRM brief's pipeline snapshot. If no new leads: "No new leads entered the pipeline this week."
 
-## 4. Cross-Domain Signals
+## 5. Cross-Domain Signals
 
 > KPI: How can we improve?
 
@@ -297,7 +401,7 @@ Data from CRM brief's pipeline snapshot. If no new leads: "No new leads entered 
 
 If no cross-domain signals: "All domains operating independently. No cross-domain gaps detected."
 
-## 5. Today's Priority Actions
+## 6. Today's Priority Actions
 
 > KPI: What do we need to do today?
 
@@ -314,7 +418,7 @@ If no cross-domain signals: "All domains operating independently. No cross-domai
 | CRM | {N} | {fresh / stale / degrade / failed} |
 | **Total** | **{sum}** | |
 
-If any domain shows 0 actions AND status=fresh, this is anomalous — investigate in Section 6. Single-domain action lists (e.g., all 12 actions from content, zero from the other four) are a bug signature of the aggregation failing; the Headline must flag it.
+If any domain shows 0 actions AND status=fresh, this is anomalous — investigate in Section 7. Single-domain action lists (e.g., all 12 actions from content, zero from the other four) are a bug signature of the aggregation failing; the Headline must flag it.
 
 ### 1. [{PREFIX}-###] {title} PRIORITY
 **Domain:** {domain} | **Channel:** {channel}
@@ -330,7 +434,7 @@ If any domain shows 0 actions AND status=fresh, this is anomalous — investigat
 ...
 
 **PRIORITY ranking criteria** (applies to the top 5 marker, not a cap on total):
-1. Actions that address a cross-domain signal (Section 4) rank highest
+1. Actions that address a cross-domain signal (Section 5) rank highest
 2. Actions aligned with the current phase priorities in sales-marketing-strategy.md
 3. Actions from domains with declining win rates (need course correction)
 4. Dues from yesterday (unfinished business)
@@ -338,7 +442,7 @@ If any domain shows 0 actions AND status=fresh, this is anomalous — investigat
 
 Actions that don't meet a PRIORITY criterion still appear in rank order below the top 5. Never truncate.
 
-## 6. System Health
+## 7. System Health
 
 > KPI: Is everything consistent, standardised and updated?
 

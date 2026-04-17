@@ -2,7 +2,7 @@
 name: lead-tracker
 description: "Daily CRM and funnel measurement. Pulls GitHub Traffic API for systemprompt-core and systemprompt-template (14d retention, MUST run daily), website analytics via systemprompt CLI, and external feedback signals. Emits 1d/7d/31d funnel deltas and a dated report. Source of truth for every hypothesis metric."
 metadata:
-  version: "0.1.2"
+  version: "0.2.0"
   git_hash: "c05387b"
 ---
 
@@ -233,6 +233,34 @@ gsc_top_page_{slug}_position_7d
 
 **Quick-win detection rule:** flag any page with `impressions > 1000 AND ctr < 0.02 AND position < 10` as a title/meta rewrite opportunity. Forward these to `content:guide-optimiser` as hypothesis candidates.
 
+### 8. crates.io Downloads
+
+Public API, no auth. Crate names live in `reports/summary/crates.json` in the web repo. If that file is missing, default to `["systemprompt-core"]` (the confirmed published crate; crates.io is already a referrer to the repo). Ed edits the config when he publishes additional crates.
+
+```bash
+CRATES_CONFIG="/var/www/html/systemprompt-web/reports/summary/crates.json"
+if [ -f "$CRATES_CONFIG" ]; then
+  CRATES=$(jq -r '.crates[]' "$CRATES_CONFIG")
+else
+  CRATES="systemprompt-core"
+fi
+
+for crate in $CRATES; do
+  curl -s "https://crates.io/api/v1/crates/${crate}" \
+    -H "User-Agent: systempromptio-lead-tracker (ed@tyingshoelaces.com)"
+done
+```
+
+Extract per crate:
+- `crate.downloads` — lifetime total
+- `crate.recent_downloads` — last 90 days
+- `crate.max_stable_version`
+- `crate.updated_at`
+
+If the crate returns 404, log a warning and continue — don't halt. The User-Agent header is required by crates.io policy; without it, requests are rate-limited aggressively.
+
+Emit per-crate metrics into the JSON tail (see schema below). Also surface the latest 90-day delta so the master brief can show a 7-day slope (compute by comparing today's `recent_downloads` to the value in yesterday's lead-tracker JSON tail, if available).
+
 **Ranking-opportunity detection rule:** flag any query where `position 5-20` with `impressions > 50` as a page-strengthening opportunity (internal links, content depth, keyword placement).
 
 **Error handling:** if the key file is missing or the token exchange fails, set `gsc_available: false` in the report's top frontmatter and emit a loud flag in the anomalies section. Do not silently skip — GSC is the single biggest SEO signal source.
@@ -307,6 +335,15 @@ Structure:
 ## Top Repo Paths (14d)
 (both repos, top 5 each — reveals what visitors actually explore)
 
+## Crates.io Downloads
+
+| Crate | Lifetime | Recent (90d) | Δ vs yesterday | Latest version |
+|-------|---------:|-------------:|:--------------:|:--------------:|
+| systemprompt-core | {N} | {N} | {±N} | {x.y.z} |
+| {additional crates from config} | ... | ... | ... | ... |
+
+If the crates config file is missing, only `systemprompt-core` is tracked. If any crate returns 404, its row is omitted and a note is added to Anomalies / Flags.
+
 ## Website Top Content (7d)
 | Slug | Source | Views | Unique | Avg time | Trend |
 |---|---|---|---|---|---|
@@ -340,7 +377,11 @@ List all `IN-FLIGHT` hypotheses with their baseline, metric, current value, and 
     "web_unique_users_7d": 0, "web_unique_users_31d": 0,
     "web_traffic_github_7d": 0,
     "leads_new_7d": 0, "leads_new_31d": 0, "leads_total": 0,
-    "qualified_convos_7d": 0, "qualified_convos_31d": 0
+    "qualified_convos_7d": 0, "qualified_convos_31d": 0,
+    "crates_total_lifetime": 0, "crates_total_recent_90d": 0, "crates_total_recent_delta_1d": 0,
+    "crate_systemprompt-core_lifetime": 0,
+    "crate_systemprompt-core_recent_90d": 0,
+    "crate_systemprompt-core_version": "0.0.0"
   }
 }
 ```
