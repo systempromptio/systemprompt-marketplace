@@ -88,6 +88,27 @@ Every action in the brief looks exactly like this — copy-paste ready:
 
 No placeholders in the body. No `{name}` except in personalised DMs where it's at the very top for Ed to replace.
 
+### Email sends route through `crm:email-composer`
+
+When an H-### is an email-type action (cold outreach, DM-via-email, nurture), the draft lives in this brief but the **send path is always `crm:email-composer`**. That skill:
+
+1. Reads the Resend API key from `/var/www/html/systemprompt-web/.systemprompt/profiles/systemprompt-prod/secrets.json` (`resend_api_key`)
+2. Presents each email individually for Ed's `send` / `edit` / `skip` approval
+3. POSTs to `https://api.resend.com/emails` only on `send`
+4. Logs the Resend `id` to `reports/crm/data/email-log.jsonl` and the interaction to `reports/crm/data/interactions.jsonl`
+
+Do not instruct Ed to send from Gmail or any other client. The Resend log is the only system of record for outbound; anything sent outside that path is invisible to hypothesis scoring.
+
+Sample curl (for reference only — `email-composer` runs this, not this skill):
+
+```bash
+RESEND_API_KEY=$(python3 -c "import json; d=json.load(open('/var/www/html/systemprompt-web/.systemprompt/profiles/systemprompt-prod/secrets.json')); print(d['resend_api_key'])")
+curl -X POST 'https://api.resend.com/emails' \
+  -H "Authorization: Bearer ${RESEND_API_KEY}" \
+  -H 'Content-Type: application/json' \
+  -d '{"from":"systemprompt.io <hello@systemprompt.io>","to":["recipient@example.com"],"subject":"...","text":"..."}'
+```
+
 ## Brief Report Structure
 
 ```markdown

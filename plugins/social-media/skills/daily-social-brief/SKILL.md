@@ -118,7 +118,7 @@ If `performance.jsonl` does not exist or has no entries, note: "LinkedIn metrics
 
 ### Reddit
 
-Read from `reports/reddit/daily/`:
+Read from `reports/social/reddit/daily/`:
 - Latest `reddit-monitor.md` — action list and drafted replies
 - Latest `reddit-reply.md` — follow-up status
 

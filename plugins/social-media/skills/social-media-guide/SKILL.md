@@ -54,7 +54,7 @@ Load `social-media:social-identity` before using any social-media skill. It load
 |----------|------|
 | Social briefs | `reports/social/daily/{YYYY-MM-DD}/` |
 | LinkedIn | `reports/linkedin/` |
-| Reddit | `reports/reddit/daily/{YYYY-MM-DD}/` |
+| Reddit | `reports/social/reddit/daily/{YYYY-MM-DD}/` |
 | X/Twitter | `reports/x-twitter/` |
 
 ## Strategy Reference

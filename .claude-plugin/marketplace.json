@@ -58,8 +58,8 @@
 {
       "name": "social-media",
       "source": "./plugins/social-media",
-      "description": "Social media engagement: LinkedIn posting and DM outreach, Reddit monitoring and engagement, X/Twitter threads and engagement, cross-platform coordination, and daily social brief",
-      "version": "1.3.0",
+      "description": "Social media engagement: LinkedIn posting and DM outreach, three-skill Reddit pipeline (audience-finder for subreddit qualification, monitor for daily opportunity scanning, post-composer for genuine non-marketing posts), X/Twitter threads, cross-platform coordination, and daily social brief",
+      "version": "1.4.0",
       "category": "marketing",
       "author": {
         "name": "systemprompt.io",

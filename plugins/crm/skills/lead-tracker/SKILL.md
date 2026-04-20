@@ -2,8 +2,8 @@
 name: lead-tracker
 description: "Daily CRM and funnel measurement. Pulls GitHub Traffic API for systemprompt-core and systemprompt-template (14d retention, MUST run daily), website analytics via systemprompt CLI, and external feedback signals. Emits 1d/7d/31d funnel deltas and a dated report. Source of truth for every hypothesis metric."
 metadata:
-  version: "0.3.0"
-  git_hash: "ca339aa"
+  version: "0.3.1"
+  git_hash: "pending"
 ---
 
 # Lead Tracker
@@ -235,40 +235,83 @@ gsc_top_page_{slug}_position_7d
 
 ### 8. crates.io Downloads
 
-Public API, no auth. **Use the family search endpoint** — the systemprompt product is published as ~30 member crates (`systemprompt`, `systemprompt-models`, `systemprompt-traits`, …). Tracking only the main crate under-counts real usage by ~50x (the main crate had 585 lifetime downloads on 2026-04-17; the family total was 32,512).
+Public API, no auth. **Signal decomposition is critical here** — raw crates.io download counts are dominated by publish-day automation (docs.rs rebuilds, crates.io mirror bots, cargo-binstall probes). An empirical analysis of the `systemprompt` main crate on 2026-04-17 showed:
+
+- 598 lifetime downloads across 86 days and 42 versions
+- **80% (479) fell on 24 publish days** — automated build/mirror fetches
+- **20% (119) fell on 20 non-publish days** — the only genuine user-cache-miss signal
+
+Tracking only the main crate's *lifetime* count inflates by ~5x. Tracking the *family total* (all 30 systemprompt-* crates) inflates by a further 55x — almost entirely transitive-dep fetches from systemprompt's own CI. **Use non-publish-day baselines as the headline, not lifetime totals.**
+
+#### Fetch: two endpoints, one crate
+
+The main crate is `systemprompt`. Sub-crates are diagnostic only.
 
 ```bash
-curl -s "https://crates.io/api/v1/crates?q=systemprompt&per_page=50" \
-  -H "User-Agent: systempromptio-lead-tracker (ed@tyingshoelaces.com)" \
-  > /tmp/crates-response.json
+UA='User-Agent: systempromptio-lead-tracker (ed@tyingshoelaces.com)'
 
-# Filter to names starting with "systemprompt" and aggregate
-jq '{
-  count: [.crates[] | select(.name | startswith("systemprompt"))] | length,
-  lifetime: [.crates[] | select(.name | startswith("systemprompt")) | .downloads] | add,
-  recent_90d: [.crates[] | select(.name | startswith("systemprompt")) | .recent_downloads] | add,
-  top_crate: [.crates[] | select(.name | startswith("systemprompt"))] | sort_by(-.downloads) | .[0].name,
-  per_crate: [.crates[] | select(.name | startswith("systemprompt")) | {name, downloads, recent_downloads, max_stable_version}]
-}' /tmp/crates-response.json
+# Daily download counts (last 90 days, split by version)
+curl -s -H "$UA" "https://crates.io/api/v1/crates/systemprompt/downloads" > /tmp/crates-dl.json
+
+# Version publish dates (all 42+ versions)
+curl -s -H "$UA" "https://crates.io/api/v1/crates/systemprompt/versions" > /tmp/crates-versions.json
+
+# Family snapshot (diagnostic, not for headlines)
+curl -s -H "$UA" "https://crates.io/api/v1/crates?q=systemprompt&per_page=50" > /tmp/crates-family.json
 ```
 
-The User-Agent header is required by crates.io policy; without it, requests are rate-limited aggressively. Rate limit is ~1 req/sec; one call per daily run is nowhere near that.
+#### Derivation: non-publish baseline
 
-**Family filter is important.** The search will return any crate whose name contains the term, including unrelated crates. Always filter to `name | startswith("systemprompt")` before summing — otherwise a third-party crate named `systemprompt-wrapper-awesome` would inflate the total.
+```python
+# Pseudocode — implement in whichever language the skill runs in
+dl = json.load(open('/tmp/crates-dl.json'))
+per_day = {}
+for row in dl['version_downloads'] + dl.get('meta', {}).get('extra_downloads', []):
+    per_day[row['date']] = per_day.get(row['date'], 0) + row['downloads']
 
-Extract per family (**these are the headline numbers the master brief consumes**):
-- `crates_count_family` — how many systemprompt-* crates are published
-- `crates_total_lifetime` — sum of `downloads` across the family
-- `crates_total_recent_90d` — sum of `recent_downloads` across the family
-- `crates_total_recent_delta_1d` — today's recent_90d minus yesterday's (from the previous JSONL tail)
-- `crates_top_lifetime_crate` — the member crate with the most lifetime downloads (useful for telling whether growth is in one crate or the family)
+versions = json.load(open('/tmp/crates-versions.json'))['versions']
+publish_dates = {v['created_at'][:10] for v in versions}
 
-Extract per crate (optional, but populate `per_crate` array in JSON tail for trend analysis):
-- `name`, `downloads`, `recent_downloads`, `max_stable_version`, `updated_at`
+today = date.today().isoformat()
 
-If the API returns 5xx or the jq parse fails, emit all five family fields as `null` (not 0) and add a "crates.io fetch failed" row to Anomalies / Flags.
+# Headline metrics
+main_crate_lifetime = sum(per_day.values())                                             # vanity only
+main_crate_1d_today = per_day.get(today, 0)
+is_today_publish_day = today in publish_dates
+main_crate_non_publish_7d = sum(c for dt, c in per_day.items()
+                                if dt >= (today - 7d) and dt not in publish_dates)
+main_crate_non_publish_28d = sum(c for dt, c in per_day.items()
+                                 if dt >= (today - 28d) and dt not in publish_dates)
+n_np_days_28d = len([dt for dt in per_day if dt >= (today - 28d) and dt not in publish_dates])
+main_crate_non_publish_28d_mean = main_crate_non_publish_28d / n_np_days_28d
+```
 
-**Note on windows.** `recent_downloads` is a rolling 90-day count. Until the oldest systemprompt crate passes 90 days old (first pub 2026-01-21 → 90d mark is 2026-04-21), `recent_downloads == downloads` for the whole family. After that date, the two fields diverge and `recent_90d` becomes the meaningful growth signal.
+#### Emit to JSON tail
+
+Headline metrics (**promoted — these drive master brief Section 1**):
+
+- `crates_main_non_publish_7d` — clean downloads in the last 7 days, publish-days excluded. Primary velocity signal. May be small (0–5 typical); that's fine.
+- `crates_main_non_publish_28d` — same over 28 days. Reduces noise from the 7d-window problem (publish cadence swallows most 7d windows right now).
+- `crates_main_non_publish_28d_mean` — per-day mean on non-publish days (last 28d). Trend marker; watch for sustained crossings above ~15/day.
+- `crates_main_is_today_publish_day` — boolean. When true, the Section 1 narrative must say "today is a publish day, 1d count is noise" rather than showing the publish spike as velocity.
+- `core_referrer_crates_io_14d_uniques` — **already captured elsewhere**; re-surface it here as the companion metric. This is the highest-quality crates.io signal: humans who clicked from the crate page to github.
+
+Diagnostic metrics (**demoted — footer only, never headline**):
+
+- `crates_main_lifetime` — 598 today. Vanity.
+- `crates_main_1d_today` — raw 1d count including publish automation.
+- `crates_family_count` — 30 today.
+- `crates_family_lifetime` — 32,512 today. **Do not headline.** Explains library surface area, not intent.
+- `crates_family_top_crate` — e.g. systemprompt-identifiers.
+- `per_crate[]` — top-10 by lifetime for drill-down.
+
+#### Anomaly detection
+
+Flag any **non-publish-day** with downloads > `3 * (28d non-publish mean)` as `CRATES_MAIN_NON_PUBLISH_SPIKE` — this represents a possible real-user adoption event (someone setting up fresh CI against a pinned version, or a crawler hit worth investigating). Example: 2026-03-19 had 32 downloads on a non-publish day when the mean was ~6 — real anomaly, worth server-log investigation.
+
+#### Error handling
+
+If the API returns 5xx or the parse fails, emit all `crates_main_*` and `crates_family_*` fields as `null`, not 0, and add a loud row to Anomalies / Flags.
 
 ### 9. LinkedIn / X / Reddit — manual paste-in
 
@@ -342,24 +385,32 @@ Structure:
 
 ## Crates.io Downloads
 
-**Family totals (headline):**
+**Main-crate signal (headline):**
+
+| Metric | Value | Interpretation |
+|--------|------:|:--------------|
+| Non-publish 7d downloads | {N} | Clean velocity over rolling week (0 is possible when publish cadence is high) |
+| Non-publish 28d downloads | {N} | Clean velocity over 28d — less noisy than 7d |
+| Non-publish 28d mean/day | {N.N} | Baseline user pull rate; watch for sustained >15 |
+| Today is a publish day? | {yes/no} | If yes, ignore today's raw 1d count |
+| crates.io → github referrer uniques (14d) | {N} | Highest-quality crate-surface intent signal |
+
+**Diagnostic (not a headline):**
 
 | Metric | Value |
 |--------|------:|
-| Crates published (family) | {N} |
-| Lifetime downloads (all) | {N} |
-| Recent 90d downloads (all) | {N} |
-| Δ vs yesterday (recent 90d) | {±N} |
-| Top crate by lifetime | {crate_name} ({N} downloads) |
+| Main crate lifetime | {N} |
+| Family crates count | {N} |
+| Family lifetime (all transitive) | {N} |
+| Top family member by lifetime | {name} ({N}) |
 
-**Per-crate breakdown (top 10 by lifetime):**
+Per-crate table (top-10 by lifetime, drill-down):
 
-| Crate | Lifetime | Recent (90d) | Δ vs yesterday | Version |
-|-------|---------:|-------------:|:--------------:|:--------|
-| {name} | {N} | {N} | {±N} | {x.y.z} |
-| ... | | | | |
+| Crate | Lifetime | Non-publish recent | Version |
+|-------|---------:|-------------------:|:--------|
+| {name} | {N} | {N} | {x.y.z} |
 
-If the API call fails, emit `null` for family totals and add a loud row to Anomalies / Flags — never substitute 0.
+If the API call fails, emit `null` for all `crates_*` fields and add a loud row to Anomalies / Flags — never substitute 0.
 
 ## Website Top Content (7d)
 | Slug | Source | Views | Unique | Avg time | Trend |
@@ -395,9 +446,15 @@ List all `IN-FLIGHT` hypotheses with their baseline, metric, current value, and 
     "web_traffic_github_7d": 0,
     "leads_new_7d": 0, "leads_new_31d": 0, "leads_total": 0,
     "qualified_convos_7d": 0, "qualified_convos_31d": 0,
-    "crates_count_family": 0,
-    "crates_total_lifetime": 0, "crates_total_recent_90d": 0, "crates_total_recent_delta_1d": 0,
-    "crates_top_lifetime_crate": "",
+    "crates_main_non_publish_7d": 0,
+    "crates_main_non_publish_28d": 0,
+    "crates_main_non_publish_28d_mean": 0.0,
+    "crates_main_is_today_publish_day": false,
+    "crates_main_lifetime": 0,
+    "crates_main_1d_today": 0,
+    "crates_family_count": 0,
+    "crates_family_lifetime": 0,
+    "crates_family_top_crate": "",
     "per_crate": [
       { "name": "systemprompt", "downloads": 0, "recent_downloads": 0, "version": "0.0.0" }
     ]

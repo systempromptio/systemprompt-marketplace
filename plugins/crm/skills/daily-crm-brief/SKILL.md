@@ -88,6 +88,17 @@ No arbitrary maximum — emit every action that is hypothesis- and data-driven. 
 4. **New lead triage:** New leads from today's pipeline-tracker that need enrichment or initial outreach.
 5. **Pipeline progression:** Leads ready to move to next stage (e.g., demo to be scheduled, proposal to be sent).
 
+### How emails actually get sent (non-negotiable)
+
+This brief **drafts** emails. It does not send them. Every send goes through `crm:email-composer`, which:
+
+1. Loads the Resend API key from `/var/www/html/systemprompt-web/.systemprompt/profiles/systemprompt-prod/secrets.json` (`resend_api_key`)
+2. Presents the draft to Ed for explicit approval (Ed replies `send` / `edit: ...` / `skip`)
+3. On `send`, POSTs to `https://api.resend.com/emails` with `Authorization: Bearer $RESEND_API_KEY` and a JSON body containing `from`, `to`, `subject`, `text`
+4. Logs the resulting Resend `id` into `reports/crm/data/email-log.jsonl` AND appends an interaction to `reports/crm/data/interactions.jsonl`
+
+When this brief generates a send-type action, the action body **must** reference `crm:email-composer` as the send path — never invite Ed to send directly from Gmail or paste into a client. The Resend log is the only system of record for outbound; Gmail sends are invisible to the ledger.
+
 **Drop rules:**
 - Never two emails to the same lead on the same day
 - Never draft an email to a lead who was emailed in the last 3 days (unless they replied)
