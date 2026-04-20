@@ -1,9 +1,9 @@
 ---
 name: feature-optimiser
-description: "Deterministically audit and optimise a published feature page. Runs an 11-section quality audit and applies 6 rewrite rules: claim verification, conversion clarity, brand discipline, and Technical-Marketing Synthesis (outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test). Reads website analytics and GSC data per feature URL, produces a 90-point score delta (115 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
+description: "Deterministically audit and optimise a published feature page. Runs an 11-section quality audit and applies 6 rewrite rules: claim verification, conversion clarity, brand discipline, and Technical-Marketing Synthesis (ten sub-checks: outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, coined terminology, dropdown alignment, plain-English narrative, natural flow). Reads website analytics and GSC data per feature URL, produces a 90-point score delta (115 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
 metadata:
-  version: "1.1.0"
-  git_hash: "c804c50"
+  version: "1.2.0"
+  git_hash: "pending"
 ---
 
 # Feature Optimiser
@@ -258,9 +258,11 @@ This is the conversion gate. A feature page that passes every quality check but 
 
 ### Section 11: Technical-Marketing Synthesis (CRITICAL OVERRIDE when 3+ sub-checks fail)
 
-**If three or more of the six sub-checks below fail, the entire audit fails regardless of other scores.**
+**If three or more of the ten sub-checks below fail, the entire audit fails regardless of other scores.**
 
-This is the craft gate. A page can verify every claim, hit every keyword, and ship a perfect CTA, and still read as an API doc stapled to a pitch deck. Section 11 enforces the layer of technical-marketing copy craft that turns a spec dump into a page a CISO, CTO, or staff engineer converts on. The named exemplar is the Secrets Management "Server-Side Credential Injection" section; the feature-writer skill carries it in full.
+This is the craft gate. A page can verify every claim, hit every keyword, and ship a perfect CTA, and still read as an API doc stapled to a pitch deck. Section 11 enforces the layer of technical-marketing copy craft that turns a spec dump into a page a CISO, CTO, or staff engineer converts on. The named exemplar is the Secrets Management "Last Mile Secrets Delivery" section; the feature-writer skill carries it in full.
+
+Six-check Section 11 (6a–6f) addresses copy clarity and outcome-binding. Sub-checks 6g–6j address brand naming, navigation consistency, Rust-plumbing discipline, and prose naturalness — four axes that were surfaced in iterative review of the Secrets Management rewrite and apply equally to every other feature page.
 
 **6a. Outcome Headlines (not mechanism)**
 - [ ] Headline names the stake, not the implementation (or the mechanism *is* the outcome, as in "Secrets never enter the context window")
@@ -298,7 +300,41 @@ This is the craft gate. A page can verify every claim, hit every keyword, and sh
 - [ ] A reader reaching the end of any technical paragraph cannot finish with an unanswered "so what?"
 - Fail markers: paragraph lacks audit cite (log table / signature / query), build-vs-buy delta, or file+line reference
 
-Record a pass/fail for each sub-check. If 3+ fail, Section 11 fails; if Section 11 fails, the audit fails.
+**6g. Coined Terminology**
+- [ ] Every `sections[].title` is a coined 2-4 word named concept, not a descriptive phrase
+- [ ] The flagship concept appears in the `headline_highlight` and in the `highlights[]` list, reinforcing the page's ownable vocabulary
+- [ ] Each coined term reads as engineering-vocabulary-grade (could appear in a HashiCorp, Tailscale, Cloudflare feature doc)
+- [ ] Plain-English unpacking sits beneath each coined title; the descriptor doesn't evaporate, only the title compresses
+- Pass examples (from Secrets Management exemplar): "Last Mile Secrets Delivery", "Stateless Proof of Session", "The Probe Wall", "Transport-Agnostic Bearer", "Blast Radius by Identity"
+- Fail markers: section titles of form `Server-Side X Y`, `X Security`, `X Management`, `X Chain`, `X Detection`, `Per-X Y`, `{Verb}-ing {Noun}`, or any descriptive phrase that reads like a documentation heading rather than a named concept
+
+**6h. Dropdown Alignment**
+- [ ] The feature page `headline` matches the navigation `dropdown-link-label` verbatim (extended minimally with a coined highlight to hit the 6-10 word hero formula is allowed)
+- [ ] The `subtitle` preserves the two or three anchor phrases from the navigation `dropdown-link-desc` (extended with feature-specific detail for the 15-25 word target)
+- [ ] A reader clicking through from the nav sees consistent copy on landing, not a surprise rebrand
+- Source of truth: `/var/www/html/systemprompt-web/services/web/config/navigation.yaml`. Find this feature under `links[].label`/`links[].description`; also check `/var/www/html/systemprompt-web/services/web/config/homepage.yaml` for the homepage card text
+- Fail markers: headline that diverges from the dropdown label (e.g., dropdown "Secrets Management" but page "AI AGENT SECRETS MANAGEMENT"), or subtitle that drops the dropdown's anchor phrases entirely
+- Exception: if the dropdown copy itself fails Rules 2 or 6a-6f, flag it for a separate menu-copy pass rather than aligning to bad copy
+
+**6i. Plain-English Narrative (no Rust internals)**
+- [ ] Rust-specific standard-library types (`std::process::Command`, `HashMap<...>`, `Arc<>`, `Box<>`, `Option<>`, `Result<>`, `Vec<>`, `Mutex<>`) do NOT appear in `sections[].content` paragraphs or `items[].description`
+- [ ] Rust macros (`#[serde(flatten)]`, `#[derive(...)]`, `#[tokio::main]`) do NOT appear in narrative
+- [ ] Function call syntax like `spawn()`, `::new()`, `::standard()`, `::browser_only()` does NOT appear in narrative (those belong in `references[].description`)
+- [ ] Industry terminology (JWT, HS256, OAuth, MCP, RBAC, bearer, audience, issuer, scope) IS permitted in narrative — engineers recognise it regardless of language
+- [ ] Plumbing stays in `references[]`; narrative speaks behaviour
+- Fail markers: any backticked identifier in narrative that is a Rust-specific stdlib type, macro, or method syntax; any `crates/...` module path inline
+- Calibration exemplar: the Secrets Management "Last Mile Secrets Delivery" body paragraphs describe subprocess launch, credential handoff, and audit logging in plain English. The function names (`spawn_server`, `Secrets::get`, `McpToolExecutor::execute`) live only in the references block
+
+**6j. Natural Flow (no formulaic punctuation or mad-libs)**
+- [ ] `sections[].content` paragraphs have zero colons outside reference descriptions (break into separate sentences rather than use colons to front-load)
+- [ ] Content prose has zero semicolons (split into sentences)
+- [ ] Content prose has zero em-dashes (Rule 5 already bans these)
+- [ ] `items[].description` does NOT end with the formulaic "Without this, ___" pattern on every bullet — the stake should fall out of natural sentences for most bullets; use the explicit "without this" phrasing sparingly (zero-to-two per section) where it genuinely lands
+- [ ] `sections[].references[].description` is ≤15 words per entry (longer descriptions break the UI layout)
+- [ ] Varied sentence openings; no mechanical repetition of structure across items
+- Fail markers: >1 colon per content paragraph, any semicolon, any em-dash, >2 "Without this" appendices per section, any reference description over 15 words
+
+Record a pass/fail for each sub-check. If 3+ of the ten fail, Section 11 fails; if Section 11 fails, the audit fails.
 
 ---
 
@@ -401,7 +437,32 @@ For every sub-check that failed Section 11, apply the matching rewrite. Apply in
 - Rewrite: add a sentence pre-answering the matching buyer question. Choose CISO if the paragraph touches security, compliance, audit, or secrets; CTO if it touches control-plane consolidation, single-binary claims, or cost/consolidation; staff engineer if it describes internals.
 - If no pre-answer is possible (the claim is not defensible), soften or cut the claim.
 
-After all six sub-rewrites, re-scan the page. If any sub-check still fails, iterate once. If a second pass still fails, flag the offending section for manual review and mark `rule_6_{x}_unresolved: true` in the artifact report.
+**6g scan -> rewrite: Coined Terminology**
+- Scan: `sections[].title` fields matching descriptive-phrase patterns (`{Adjective} {Noun} {Noun}`, `{Verb}-ing {Noun}`, `Per-X Y`, `X Security`, `X Management`, `X Detection`, `X Chain`, `Server-Side X`)
+- Rewrite: replace with a coined 2-4 word named concept. Borrow from supply chain (last mile), physics (blast radius), security industry (probe wall, zero trust), systems vocabulary (stateless proof, narrow waist, transport-agnostic), or networking (fat pipe, edge gate). Metaphor-borne coinage preferred. If a natural industry term already exists (MCP, JWT, OAuth), keep it; the coinage is at section-title level, not acronym level
+- Then propagate the flagship concept to `headline_highlight` and `highlights[]` list so the page has an ownable vocabulary
+- Exception: if the mechanism has a well-established industry name (e.g., "OAuth2 Token Exchange"), use it rather than inventing a competing coinage
+
+**6h scan -> rewrite: Dropdown Alignment**
+- Load `/var/www/html/systemprompt-web/services/web/config/navigation.yaml`. Find the entry where `href == /features/{slug}`. Read the `label` and the `description`.
+- Also load `/var/www/html/systemprompt-web/services/web/config/homepage.yaml`. Find the entry where `url == /features/{slug}`. Read the `title` and the `description`.
+- Rewrite `headline` to match the dropdown label verbatim (or extend minimally with a coined highlight to hit 6-10 words). Example: dropdown label "Secrets Management" -> headline "SECRETS MANAGEMENT." + highlight "LAST MILE DELIVERY, NEVER IN THE PROMPT."
+- Rewrite `subtitle` to preserve the anchor phrases from the dropdown description, extending as needed for the 15-25 word target. Example: dropdown description "Credentials are encrypted at rest and blocked from inference. Secrets never reach AI models." -> subtitle "Credentials for Claude agents are encrypted at rest and blocked from inference. API keys, tokens, and database URLs never reach AI models."
+- If the dropdown copy is itself broken under the skill rules (banned adjectives, unverifiable claims), flag the navigation.yaml entry for a separate menu-copy pass in the artifact report. Do not align a well-rewritten feature page to poorly-written menu copy.
+
+**6i scan -> rewrite: Plain-English Narrative (no Rust internals)**
+- Scan `sections[].content` and `items[].description` for Rust-specific tokens: `std::` paths, standard generic types (`HashMap<`, `Arc<`, `Box<`, `Option<`, `Result<`, `Vec<`, `Mutex<`), Rust macros (`#[`), function call syntax with `()` or `::` other than when the function name IS the mechanism
+- Rewrite: describe the behaviour in plain English. Move the Rust identifier to the matching `references[].description`.
+- Example: "`spawn_server()` writes provider keys onto the child `Command` environment and fires `spawn()`" -> "the system launches the tool as a separate subprocess and hands the provider credentials to it as environment variables". The function name `spawn_server` moves to the reference for `spawner.rs (lines 26-120)`.
+- Industry acronyms and protocol names remain inline (JWT, HS256, OAuth, MCP, RBAC, bearer, audience, issuer, scope) — decode them per 6b if they haven't been decoded yet.
+
+**6j scan -> rewrite: Natural Flow**
+- Scan content paragraphs for colons (>1 per paragraph), semicolons (any), em-dashes (any), and `items[].description` for "Without this" frequency (>2 per section).
+- Scan `sections[].references[].description` for entries longer than 15 words.
+- Rewrite colons to periods (break into two sentences). Rewrite semicolons to periods. Replace em-dashes with commas or periods (Rule 5). Trim formulaic "Without this, ___" appendices on every bullet to at most 2 per section; let the stake fall out of the sentence itself on other bullets. Trim reference descriptions to ≤15 words, preserving the function name and the core behavioural phrase.
+- Vary sentence openings across items[] so the page does not read as a template fill-in.
+
+After all ten sub-rewrites, re-scan the page. If any sub-check still fails, iterate once. If a second pass still fails, flag the offending section for manual review and mark `rule_6_{x}_unresolved: true` in the artifact report.
 
 ---
 
@@ -451,10 +512,10 @@ If total is 0 (no references at all), score is 0 because Section 2 failed the en
 
 **Technical-marketing synthesis (15 max):**
 ```
-passing = count of Section 11 sub-checks (6a, 6b, 6c, 6d, 6e, 6f) that pass across the whole page
-score = round(15 * (passing / 6))
+passing = count of Section 11 sub-checks (6a..6j, ten total) that pass across the whole page
+score = round(15 * (passing / 10))
 ```
-6 of 6 passing = 15. 4 of 6 = 10. 3 of 6 or fewer = Section 11 fails (critical override; the audit fails even before scoring runs). If the audit has aborted because of Section 11's override, do not report a score; report the abort.
+10 of 10 passing = 15. 7 of 10 = 11. 5 of 10 = 8. 3+ fails (i.e. 7 or fewer passing) = Section 11 fails (critical override; the audit fails even before scoring runs). If the audit has aborted because of Section 11's override, do not report a score; report the abort.
 
 **Conversion clarity (10 max):**
 2 points for each passing criterion:

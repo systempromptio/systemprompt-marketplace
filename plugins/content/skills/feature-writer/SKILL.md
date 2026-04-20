@@ -1,9 +1,9 @@
 ---
 name: feature-writer
-description: "Write and rewrite systemprompt.io feature pages as world-class technical copy. Research-first workflow with per-feature reports, Why-What-How doctrine, Technical-Marketing Synthesis (outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test), claim verification against source code, enterprise credibility assessment, and conversion path analysis. Speaks to skeptical CISOs, CTOs, and staff engineers. Load identity and brand-voice first."
+description: "Write and rewrite systemprompt.io feature pages as world-class technical copy. Research-first workflow with per-feature reports, Why-What-How doctrine, Technical-Marketing Synthesis (ten sub-checks: outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, coined terminology, dropdown alignment, plain-English narrative, natural flow), claim verification against source code, enterprise credibility assessment, and conversion path analysis. Speaks to skeptical CISOs, CTOs, and staff engineers. Load identity and brand-voice first."
 metadata:
-  version: "1.1.0"
-  git_hash: "c804c50"
+  version: "1.2.0"
+  git_hash: "pending"
 ---
 
 # systemprompt Feature Writer
@@ -148,7 +148,29 @@ These are the rules you apply line by line:
 
 The ten principles above fix copy line by line. Rule 6 is the structural craft on top: the layer that separates a well-written feature-spec dump from copy that a CISO, CTO, or staff engineer actually converts on. Every feature page must pass all six sub-checks before it ships. These sub-checks are also enforced deterministically by `feature-optimiser` Section 11.
 
-The named exemplar for all six is the Secrets Management page's "Server-Side Credential Injection" section (quoted in full under "Canonical Exemplar" below). Read that section before writing any new feature copy.
+The named exemplar for Rule 6 is the Secrets Management page's "Last Mile Secrets Delivery" section (quoted in full under "Canonical Exemplar" below). Read that section before writing any new feature copy. The full ten sub-checks are enforced by `feature-optimiser` Section 11 — see that skill for audit patterns and rewrite rules. Four additional sub-checks layered on top of 6a-6f:
+
+### 6g. Coined Terminology
+Section titles are coined 2-4 word named concepts, not descriptive phrases. The flagship concept appears in the `headline_highlight` and `highlights[]` so the page has an ownable vocabulary.
+- Pass examples: "Last Mile Secrets Delivery", "Stateless Proof of Session", "The Probe Wall", "Transport-Agnostic Bearer", "Blast Radius by Identity"
+- Fail: "Server-Side Credential Injection", "JWT Session Security", "Scanner Detection at the Edge", "Token Extraction Chain", "Per-User Secret Isolation" — all descriptive, none coined.
+- Sources for good coinage: supply chain (last mile), physics (blast radius), security industry (probe wall, zero trust), systems vocabulary (stateless proof, narrow waist, transport-agnostic).
+
+### 6h. Dropdown Alignment
+The feature page `headline` matches the navigation dropdown link label verbatim (extended minimally with a coined highlight). The `subtitle` echoes the two or three anchor phrases from the dropdown description.
+- Source of truth: `/var/www/html/systemprompt-web/services/web/config/navigation.yaml`. Find the entry where `href == /features/{slug}`. Read `label` and `description`.
+- Also check `/var/www/html/systemprompt-web/services/web/config/homepage.yaml` for the homepage card copy.
+- Rationale: a reader clicking from the nav should see consistent copy on landing, not a surprise rebrand.
+
+### 6i. Plain-English Narrative (no Rust internals)
+Rust-specific standard-library types, macros, and internal function-call syntax do NOT appear in content paragraphs or items[] descriptions. They live only in `references[].description`. Industry terminology (JWT, HS256, OAuth, MCP, RBAC, bearer, audience, issuer, scope) IS permitted — engineers recognise it regardless of language.
+- Banned from narrative: `std::process::Command`, `HashMap<...>`, `Arc<>`, `Box<>`, `Option<>`, `Result<>`, `Vec<>`, `Mutex<>`, `#[serde(...)]`, `#[derive(...)]`, `::new()`, `::standard()`, inline `crates/...` paths, method call syntax with `()`.
+- Example fix: "`spawn_server()` writes provider keys onto the child `Command` environment and fires `spawn()`" → "the system launches the tool as a separate subprocess and hands the provider credentials to it as environment variables". The function name moves to the reference entry.
+
+### 6j. Natural Flow
+Content prose minimises colons, semicolons, and em-dashes; stakes fall out of natural sentences rather than a formulaic "Without this, ___" appendix on every bullet. Reference descriptions stay ≤15 words so the UI layout does not break.
+- Rules: zero semicolons; zero em-dashes; at most one colon per content paragraph; the "Without this, ___" pattern appears at most twice per section (used sparingly where it genuinely lands); every `references[].description` ≤15 words.
+- Rewrite colons into two sentences. Replace em-dashes with commas or periods. Break compound sentences. Vary sentence openings across items[] so the page does not read as a template fill-in.
 
 ### 6a. Outcome Headlines (not mechanism)
 
@@ -210,20 +232,30 @@ Every technical claim paragraph must pre-answer at least one of the three buyer 
 
 A paragraph a skeptical reader can finish and still ask "so what?" is a failed paragraph. The pre-answer lives in the same paragraph, not three scrolls down.
 
-## Canonical Exemplar: Server-Side Credential Injection
+## Canonical Exemplar: Last Mile Secrets Delivery
 
-The paragraph below, from the Secrets Management feature page, is the named exemplar for Rule 6. Writers must produce to this bar. Optimiser scoring benchmarks against it.
+The three paragraphs below are from the Secrets Management feature page's first section. This is the named exemplar for Rule 6 (all ten sub-checks). Writers must produce to this bar. Optimiser scoring benchmarks against it.
 
-> "When a Claude agent calls a tool, the credential it needs to authenticate the downstream API never crosses the model boundary. `spawn_server()` in the MCP process spawner receives the resolved `Secrets` struct from `SecretsBootstrap::get()`, then sets `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, and `GITHUB_TOKEN` directly on the child `Command` environment before `spawn()`. Because the secret is bound to the subprocess environment and not to a request body, it cannot appear in a prompt, a completion, a tool argument, or any row of stored conversation history."
+> **Last Mile Secrets Delivery**
+>
+> In logistics, the last mile is the leg where a package actually reaches the customer, the failure-prone final delivery. For an AI agent, the last mile is the tool call. The credential has to reach the downstream API without ever entering a prompt, a completion, a tool argument, or an audit row, and that is what this section handles for a Claude agent.
+>
+> When a Claude agent calls a tool, the system launches the tool as a separate subprocess and hands the provider credentials (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, `GITHUB_TOKEN`) to it as environment variables. The credential lives inside that subprocess, outside the model's view. The agent names the tool, the tool returns a result, the key never appears in between.
+>
+> Custom credentials travel the same path. User-supplied secrets are handed to the subprocess as environment variables. An explicit allowlist named `SYSTEMPROMPT_CUSTOM_SECRETS` tells the subprocess which variables it is authorised to read. The tool execution log records tool name, server name, input arguments, status, and an execution id, and the credential is deliberately absent from every column.
 
-### Why this paragraph works
+### Why this section works
 
-- **Sentence 1 (the Why, outcome-as-mechanism):** names the actor (Claude agent), the moment (tool call), and the stake (credentials crossing the model boundary). Satisfies 6a because the mechanism and the outcome are the same sentence.
-- **Sentence 2 (the What, with decoded mechanism):** names `spawn_server`, `Secrets`, `SecretsBootstrap::get()`, `Command::env`, and the four specific environment variables. Each identifier names the exact behaviour; nothing here is plumbing that could move to references. Satisfies 6b (jargon decodes into the reader's concern) and 6e (mechanism-is-outcome lets the names stay inline).
-- **Sentence 3 (the How, pre-answering the skeptic):** "cannot appear in a prompt, a completion, a tool argument, or any row of stored conversation history" pre-answers the CISO question ("can I prove this in an audit?") by enumerating the four places a secret could leak, and saying it cannot be in any of them. Satisfies 6f.
-- **Binding and numbers:** the four env vars are named, and the number of leak paths (prompt, completion, argument, history) is implicit in the enumeration. No bare counts.
+- **6g Coined Terminology**: the section title "Last Mile Secrets Delivery" is a 4-word named concept borrowed from supply-chain vocabulary. It reads as engineering terminology, not as a documentation heading. A reader can cite it as "the Last Mile Secrets Delivery section" rather than "the server-side credential injection section".
+- **6a Outcome Headline**: the flagship concept reaches the reader in the page headline as well. Headline matches the dropdown label (`SECRETS MANAGEMENT`), highlight carries the coinage (`LAST MILE DELIVERY, NEVER IN THE PROMPT`).
+- **6h Dropdown Alignment**: hero copy uses the navigation dropdown's anchor phrases. Subtitle preserves "encrypted at rest and blocked from inference" and "never reach AI models" verbatim, extending with concrete credential types.
+- **6i Plain-English Narrative**: the prose describes the subprocess launch, credential handoff, and audit logging in plain English. The words `spawn_server`, `Secrets::get`, `McpToolExecutor::execute`, `HashMap`, `#[serde(flatten)]` do NOT appear in the body. They live only in the references block.
+- **6j Natural Flow**: zero colons, zero semicolons, zero em-dashes across the three paragraphs. No formulaic "Without this, ___" appendix on every bullet. The stake falls out of natural sentences ("the key never appears in between", "deliberately absent from every column").
+- **6b Jargon Payoff**: every technical term that does appear (environment variables, subprocess, allowlist, execution id) is decoded in the same sentence or paragraph, without needing a glossary.
+- **6d Feature-to-Outcome Binding**: each item caption binds capability to stake without the mad-libs template. "Lineage Without Disclosure" names the stake in the title itself.
+- **6f Skeptic's So What**: paragraph 3 pre-answers the CISO audit question by enumerating the five columns the execution log records (tool name, server name, input arguments, status, execution id) and stating the credential is absent from every column. A CISO can point an auditor at that table.
 
-Use this structure as the template for any new technical section. Problem (with stake) → mechanism (named, decoded) → impact restatement (enumerating what the mechanism makes impossible).
+Use this structure as the template for any new technical section. Concept name (coined) → problem (with stake) → mechanism (plain English, Rust internals in references) → impact restatement (enumerating what the mechanism makes impossible). Hero headline matches the navigation dropdown label; subtitle preserves the dropdown description's anchor phrases.
 
 ## Enterprise Credibility Layer
 
