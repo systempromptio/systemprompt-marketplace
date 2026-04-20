@@ -2,8 +2,8 @@
 name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
-  version: "1.2.0"
-  git_hash: "da44d62"
+  version: "1.2.1"
+  git_hash: "pending"
 ---
 
 ## HARD RULE — Evidence-or-silence (added 2026-04-20)
@@ -138,7 +138,8 @@ Rotate pillars across weeks so each pillar gets covered at least twice per month
 - NEVER include external links in the post body
 - NEVER use hashtags in the hook line
 - NEVER end with generic engagement questions ("Thoughts?", "Agree or disagree?", "Anyone else finding…?")
-- NEVER post content that reads as AI-generated (no "delve", "landscape", "game-changer")
+- NEVER use em dashes (—) in the post body or first comment. Rewrite as two sentences, a comma, a semicolon, or parentheses. Em dashes in LinkedIn text are the single clearest AI tell
+- NEVER post content that reads as AI-generated. Banned words and phrases (non-exhaustive, expand as new tells surface): "delve", "delving", "landscape", "game-changer", "game-changing", "leverage" (verb), "robust", "seamlessly", "seamless", "unleash", "unlock" (in marketing sense), "empower", "harness", "transformative", "cutting-edge", "bleeding-edge", "paradigm shift", "in the realm of", "navigate the complexities", "journey" (as metaphor for work), "it's not just X, it's Y" sentence structure, "at its core", "at the end of the day", "deep dive", "ever-evolving", "testament to", "elevate", "tapestry", "in today's fast-paced world", triads of three parallel adjectives or nouns used for rhythm rather than meaning
 - NEVER post the same content to LinkedIn and X — force variation
 - NEVER post more than once per day
 - NEVER use more than 3 hashtags (prefer 0)
