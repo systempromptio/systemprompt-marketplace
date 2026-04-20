@@ -3,7 +3,7 @@ name: feature-writer
 description: "Write and rewrite systemprompt.io feature pages as world-class technical copy. Research-first workflow with per-feature reports, Why-What-How doctrine, Technical-Marketing Synthesis (ten sub-checks: outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, coined terminology, dropdown alignment, plain-English narrative, natural flow), claim verification against source code, enterprise credibility assessment, and conversion path analysis. Speaks to skeptical CISOs, CTOs, and staff engineers. Load identity and brand-voice first."
 metadata:
   version: "1.2.0"
-  git_hash: "pending"
+  git_hash: "e345a19"
 ---
 
 # systemprompt Feature Writer
