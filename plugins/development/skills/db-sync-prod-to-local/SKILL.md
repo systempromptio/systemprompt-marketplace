@@ -3,7 +3,7 @@ name: db-sync-prod-to-local
 description: "Sync systemprompt-prod Postgres data into a local dev DB for dashboard/analytics preview when libpq can't complete the TLS handshake"
 metadata:
   version: "1.0.0"
-  git_hash: ""
+  git_hash: "ae3252f"
 ---
 
 # DB Sync — Production to Local
