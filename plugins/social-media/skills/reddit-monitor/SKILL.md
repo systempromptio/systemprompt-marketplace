@@ -3,7 +3,7 @@ name: reddit-monitor
 description: "Daily Reddit-only opportunity scanner. Reads the qualified subreddit list from reddit-audience-finder, fetches hot and new threads from each, scores each thread for engagement value, and outputs a ranked action list with draft reply hooks. Reply follow-ups are handled by reddit-reply. Load social-identity, identity, and brand-voice first."
 metadata:
   version: "2.0.0"
-  git_hash: "pending"
+  git_hash: "d9ea667"
 ---
 
 # Reddit Monitor (opportunity scanner)

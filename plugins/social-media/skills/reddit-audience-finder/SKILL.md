@@ -3,7 +3,7 @@ name: reddit-audience-finder
 description: "Quarterly skill that qualifies WHICH subreddits systemprompt.io should engage in. Fetches subscriber counts, moderation rules, and recent activity from Reddit's public JSON for each candidate, scores them against the ICP across five dimensions, and writes a tiered subreddit list to reports/social/reddit/audience/. Both reddit-monitor and reddit-post-composer read its output. Load social-identity first."
 metadata:
   version: "1.0.0"
-  git_hash: "pending"
+  git_hash: "d9ea667"
 ---
 
 # Reddit Audience Finder

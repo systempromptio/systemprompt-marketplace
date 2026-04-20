@@ -3,7 +3,7 @@ name: reddit-post-composer
 description: "Drafts genuine, non-marketing Reddit POSTS (top-level submissions) for systemprompt.io. Reads the qualified subreddit list from reddit-audience-finder, matches the sub's moderation rules and tone, and produces value-first drafts (data drops, lessons learned, calls for input). Refuses to draft without real data. Invoked on-demand, not daily. Load social-identity and brand-voice first."
 metadata:
   version: "1.0.0"
-  git_hash: "pending"
+  git_hash: "d9ea667"
 ---
 
 # Reddit Post Composer
