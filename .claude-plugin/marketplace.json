@@ -6,8 +6,8 @@
   },
   "metadata": {
     "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, social media, and CRM",
-    "version": "3.5.0",
-    "git_hash": "2da13af",
+    "version": "3.6.0",
+    "git_hash": "c804c50",
     "pluginRoot": "./plugins"
   },
   "plugins": [
