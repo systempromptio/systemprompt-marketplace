@@ -2,8 +2,8 @@
 name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
-  version: "1.2.1"
-  git_hash: "25c2ba1"
+  version: "1.3.0"
+  git_hash: "pending"
 ---
 
 ## HARD RULE — Evidence-or-silence (added 2026-04-20)
@@ -124,14 +124,52 @@ Derived from the enterprise value prop and ICP pain points:
 
 Rotate pillars across weeks so each pillar gets covered at least twice per month.
 
-**This cadence is a ceiling, not a floor.** The skill's default output when nothing real has happened is **skip the slot**. Zero posts this week is preferable to one fabricated post. A LinkedIn feed of silence is recoverable; a feed of invented traction is not. The hypothesis ledger must not treat a skipped slot as failure — it is the correct output of the "no evidence → no post" rule above.
+**This cadence is a ceiling, not a floor.** The skill's default output when nothing real has happened is **skip the slot**. Zero posts this week is preferable to one fabricated post. A LinkedIn feed of silence is recoverable; a feed of invented traction is not. A skipped slot is the correct output of the "no evidence, no post" rule above, not a ledger failure.
 
 ### Post Structure (mandatory)
 
 1. **Hook** (line 1, under 150 chars): Contrarian claim, surprising number, or pattern-interrupt. Must earn the "see more" click. Never a question. Never "I'm excited to announce."
-2. **Body** (3-5 short paragraphs): One idea per paragraph. Short sentences. Mobile-formatted with line breaks between paragraphs. Specific details — names, numbers, architecture decisions.
+2. **Body** (3-5 short paragraphs): One idea per paragraph. Short sentences. Mobile-formatted with line breaks between paragraphs. Specific details (names, numbers, architecture decisions).
 3. **Closing**: Strong final statement or specific observation. Never "What do you think?" or "Agree?". If there is a CTA, it is specific: "Clone the template and run the demo scripts."
 4. **First comment** (posted immediately after): External link + one sentence of context. This is the only place links appear.
+
+### Quality Gate (mandatory — benchmark against the PDF-governance post)
+
+Every LinkedIn draft must clear every item below before it ships. Reference post: `reports/linkedin/drafts/2026-04-20-pdf-governance.md` (body lines 12-22). If a new draft is weaker than that one on any axis, rewrite it or kill it.
+
+**Hook quality**
+- [ ] Line 1 stands alone as a quotable sentence. Read it aloud: does it work with zero context, the way a book title or a conference talk title works?
+- [ ] Contains a precise noun pairing that names the thing being argued against (e.g. "PDF, not a control" pairs PDF with control and forces the reader to pick a side).
+- [ ] Under 150 chars. Not a question. No hedging words (might, could, perhaps, potentially, arguably).
+
+**Argument structure**
+- [ ] Defines the enemy precisely in paragraph 2 (e.g. "Most of what gets sold right now as X is Y"). Generic enemies ("the industry", "many companies") fail this gate.
+- [ ] Makes the core technical distinction in paragraph 3 using the most specific vocabulary available (transport vs gateway, object vs afterthought, same object vs stitched reconstruction).
+- [ ] Includes at least one concession-then-pivot beat ("Proxies aren't bad. They're useful. But..."). Straw-man posts fail this gate.
+- [ ] Contains one concrete failure-mode image that a reader could picture in their own stack (e.g. "a reconstruction stitched from three log files and a Slack thread"). Pure abstraction fails.
+- [ ] Ends with a diagnostic the reader runs against themselves ("If your SOC can't tell you, right now..."). Ends the reader inside the argument, not outside it.
+
+**Rhythm**
+- [ ] Paragraph lengths vary. At least one two-sentence paragraph exists among the longer ones ("Proxies aren't bad. They're useful.").
+- [ ] Sentence lengths vary inside paragraphs. No stretch of four sentences of similar clause structure.
+- [ ] Read the whole post aloud in under 45 seconds. If it takes longer, cut.
+
+**Specificity**
+- [ ] At least two pieces of concrete vocabulary that only somebody who has built in this space would reach for (e.g. "tool invocation", "redacting its arguments", "transport layer", "audit record"). Generic governance vocabulary ("oversight", "accountability", "responsibility") fails.
+- [ ] Zero abstract nouns used as the subject of a sentence ("Governance is", "Control requires") unless the sentence then immediately defines them with a concrete claim.
+
+**Voice**
+- [ ] Zero em dashes in body or first comment.
+- [ ] Zero banned AI-tell words (see Anti-Patterns list).
+- [ ] No hedging. No "I think", "I believe", "in my opinion". The post asserts; comments are where it gets defended.
+- [ ] No generic engagement bait as closer. No "Thoughts?", "Agree?", "Anyone else finding...?"
+
+**Length and format**
+- [ ] 800-1300 chars for a text post. Under the ceiling to respect the mobile read; over the floor to earn the "see more" click.
+- [ ] Link lives in first comment, never in the body.
+- [ ] No emojis. No hashtags in line 1. Zero to three hashtags overall, prefer zero.
+
+A draft that fails any checkbox goes back to rewrite. A draft that fails three or more checkboxes is killed, not patched.
 
 ### Anti-Patterns (hard rules)
 
@@ -154,7 +192,7 @@ Rotate pillars across weeks so each pillar gets covered at least twice per month
 - British English (realise, optimise, organisation)
 - Personal experience framing: "I built", "I learned", "I talked to"
 - Sardonic humour where natural
-- Infrastructure-level thinking — systems, standards, architecture
+- Infrastructure-level thinking (systems, standards, architecture)
 - Genuine excitement about things that work, honest frustration about things that do not
 - Specific: names of tools, exact numbers, concrete architecture decisions
 
