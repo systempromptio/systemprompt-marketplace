@@ -2,9 +2,44 @@
 name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
-  version: "1.1.0"
-  git_hash: "3a55706"
+  version: "1.2.0"
+  git_hash: "pending"
 ---
+
+## HARD RULE — Evidence-or-silence (added 2026-04-20)
+
+**No draft ships without verified evidence.** Every numeric claim, URL, date, quote, and narrative beat in a post or DM must be traced to one of the following before the draft is written:
+
+- File path + line number in this repo (e.g. `extensions/web/src/foo.rs:42`)
+- A curl-verified API response saved as JSONL under `reports/marketing/data/evidence/YYYY-MM-DD-{slug}.jsonl`
+- A git commit SHA (verify with `git log -1 <sha>`)
+- A direct quote Ed has supplied in-conversation (record the conversation turn reference)
+
+A draft that cannot cite evidence for each factual element **must not be written**. The correct output is to say "nothing to post this week" and exit.
+
+### Banned hook classes
+
+The following hook patterns are forbidden. They invite fabrication and were the exact failure mode of the 2026-04-20 crates.io-traction draft:
+
+- **Vanity-traction hooks.** crates.io download counts, GitHub star counts, npm download counts, repo clone counts, or any "look how popular X is" framing for products <90 days old OR with <5 external reverse-dependencies. These numbers are mirror / CI / bot noise until there is downstream production usage. Posting them as if they were adoption is dishonest and readers who know Rust will see through it.
+- **Invented emotion.** Narrative hooks that dress up otherwise-thin data with manufactured affect ("I forgot about it and was shocked to see…", "I almost cried when…"). If the emotion is not real, the post is fiction.
+- **Fabricated specifics.** Named usernames, URLs, handles, or companies that have not been curl-verified. The 2026-04-20 draft invented `crates.io/users/edjturner` (404) — never again.
+
+### Pre-flight check (the only path to a draft)
+
+Before writing a single line of any LinkedIn draft, the skill must answer these four questions in writing inside the draft file's frontmatter:
+
+```yaml
+pre_flight:
+  event: "What specifically happened in the last 7 days that Ed earned the right to say?"
+  evidence:
+    - claim: "..."
+      source: "extensions/web/src/.../file.rs:NNN | evidence/YYYY-MM-DD-slug.jsonl | commit abc1234"
+  urls_verified: ["https://..."]   # every URL in the post body and first comment, each curl'd and 200-checked
+  banned_hook_check: "none-of-the-above"   # or the draft is killed
+```
+
+Missing or hand-waved `pre_flight` block → no draft. This is non-negotiable.
 
 # LinkedIn Engine
 
@@ -79,7 +114,7 @@ Derived from the enterprise value prop and ICP pain points:
 | 4 | **The build trap** | You could build AI governance in-house. By the time you ship v1, the landscape has moved. | "I have talked to three CTOs this month who started building AI governance in Q1. All three are now evaluating commercial options." |
 | 5 | **MCP is the governance surface** | MCP is not just a protocol for connecting tools. It is where governance happens — at the transport layer, not as a proxy. | "If your governance layer sits in front of MCP as a proxy, every tool call passes through unexamined. Governance must be the transport layer." |
 
-### Posting Cadence (3x per week)
+### Posting Cadence (target, not quota)
 
 | Day | Type | Pillar rotation | Format |
 |-----|------|----------------|--------|
@@ -88,6 +123,8 @@ Derived from the enterprise value prop and ICP pain points:
 | **Friday** | Personal/contrarian | Any pillar, personal angle | Text post, story format |
 
 Rotate pillars across weeks so each pillar gets covered at least twice per month.
+
+**This cadence is a ceiling, not a floor.** The skill's default output when nothing real has happened is **skip the slot**. Zero posts this week is preferable to one fabricated post. A LinkedIn feed of silence is recoverable; a feed of invented traction is not. The hypothesis ledger must not treat a skipped slot as failure — it is the correct output of the "no evidence → no post" rule above.
 
 ### Post Structure (mandatory)
 
@@ -100,12 +137,15 @@ Rotate pillars across weeks so each pillar gets covered at least twice per month
 
 - NEVER include external links in the post body
 - NEVER use hashtags in the hook line
-- NEVER end with generic engagement questions ("Thoughts?", "Agree or disagree?")
+- NEVER end with generic engagement questions ("Thoughts?", "Agree or disagree?", "Anyone else finding…?")
 - NEVER post content that reads as AI-generated (no "delve", "landscape", "game-changer")
 - NEVER post the same content to LinkedIn and X — force variation
 - NEVER post more than once per day
 - NEVER use more than 3 hashtags (prefer 0)
 - NEVER fabricate stories, statistics, or case studies
+- NEVER post a vanity-traction hook (see HARD RULE block above) — download counts, star counts, clone counts on a product <90 days old are mirror/bot noise
+- NEVER include a URL that has not been curl-verified 200 in the current session. crates.io user pages are not a valid CTA; they are a profile listing, not a landing page
+- NEVER invent a username, handle, or account name. If it is not in Ed's profile, in a git commit, or in a verified API response, it does not exist
 
 ### Voice (Ed's LinkedIn voice)
 
@@ -205,7 +245,18 @@ This week: {N} posts published, {M} DMs sent, {K} comments replied to
 
 ### Step 7: Weekly Actions (Monday and Friday only)
 
-**Monday:** Batch-generate 3 posts for the week (Mon/Wed/Fri). Enter draft mode automatically.
+**Monday — Posting-licence audit (not batch-generate).** Do not enter draft mode by default. Instead, ask Ed (or self-audit if Ed is not present):
+
+> Did anything real happen in the last 7 days that Ed has earned the right to say publicly? Candidates:
+> — A shipped feature with before/after code (cite the commit SHA)
+> — A customer or prospect conversation that revealed a defensible pattern (cite the thread)
+> — A hard-won integration lesson (cite the code and the problem it solved)
+> — A contrarian technical opinion Ed can defend under pushback (cite the architecture it rests on)
+> — A response to current industry news (cite the article with a URL verified this session)
+
+If the answer is none-of-the-above, **the correct output is "no LinkedIn posts this week"**. Do not enter draft mode. Reinvest the time into outbound DMs or into shipping something that unlocks next week's post. Log the skip as a ledger entry (channel=linkedin, action="skipped — no verified event", status=SKIPPED-HONEST) so the silence is auditable.
+
+If the answer is one-or-more, enter draft mode and produce one draft per verified event — never more. Do not manufacture pillar coverage to hit a weekly quota.
 
 **Friday:** Weekly performance review:
 - Compare this week's total impressions, likes, comments vs last week
@@ -218,14 +269,14 @@ This week: {N} posts published, {M} DMs sent, {K} comments replied to
 
 ## Draft Generation (`linkedin-engine draft`)
 
-Generate 3-5 posts in a single session. For each post:
+Generate **one draft per verified event**. Do not generate drafts to cover unused pillars. For each draft:
 
-1. **Select pillar** — rotate across the 5 pillars, avoiding repeats from the last 3 posts
-2. **Select type** — match to the scheduled day (thought leadership Mon, technical Wed, personal Fri)
-3. **Research** — search the web for recent news, announcements, or discussions related to the pillar. Ground the post in something current and specific.
+1. **Start from the event, not the pillar.** The verified event (commit, conversation, incident, news item) is the only reason to post. Pick the pillar that the event already fits; do not pick a pillar and then hunt for an event.
+2. **Fill the pre-flight block** (see HARD RULE at top). Every factual element must have a source line. If the block cannot be filled honestly, stop — there is no draft.
+3. **Select type** — thought leadership (opinion + argument), technical (code + architecture), or personal (lesson + specifics).
 4. **Write the draft** — follow post structure rules. Under 1,300 characters for text posts.
-5. **Write the first comment** — link + context sentence
-6. **Create the hypothesis** — each post gets an H-### from the hypothesis ledger
+5. **Write the first comment** — link + one-sentence context. The link must appear in `pre_flight.urls_verified` and have been curl-checked this session.
+6. **Create the hypothesis** — each post gets an H-### from the hypothesis ledger, with the measured metric and window explicitly tied to the event (not to "impressions in general").
 
 Save each draft to `data/linkedin/drafts/LI-{###}.md`:
 
@@ -436,9 +487,9 @@ On the very first run of this skill:
 3. Create empty `performance.jsonl`
 4. Create `strategy.md` with initial strategy (copy the strategy section from this skill)
 5. Read Ed's current LinkedIn profile and recent posts (Ed shares URL)
-6. **Batch-generate 5 initial posts** covering all 5 pillars
+6. **Identify up to 5 real events or opinions from Ed's last 30 days** — from git history, from conversations, from shipped features. If fewer than 5 exist, generate fewer drafts. Manufacturing pillar-coverage to hit a round number is banned.
 7. **Start prospect research** — guide Ed through building the first 10 prospects
-8. Schedule the first week: Mon/Wed/Fri posts assigned from the queue
+8. Schedule the first week only from the drafts that passed the pre-flight check. Empty slots are acceptable.
 
 ---
 
