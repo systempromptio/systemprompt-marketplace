@@ -1,16 +1,19 @@
 ---
 name: feature-optimiser
-description: "Deterministically audit and optimise a published feature page. Runs a 10-section quality audit, applies 5 rewrite rules for claim verification, conversion clarity, and brand discipline. Reads website analytics and GSC data per feature URL, produces a 75-point score delta (100 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
+description: "Deterministically audit and optimise a published feature page. Runs an 11-section quality audit and applies 6 rewrite rules: claim verification, conversion clarity, brand discipline, and Technical-Marketing Synthesis (outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test). Reads website analytics and GSC data per feature URL, produces a 90-point score delta (115 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
 metadata:
-  version: "1.0.0"
-  git_hash: "7f3e532"
+  version: "1.1.0"
+  git_hash: "pending"
 ---
 
 # Feature Optimiser
 
 Run a **deterministic, data-driven audit and rewrite** on a single published feature page. This skill is the complete lifecycle tool for feature page quality: audit, fix, score, commit, log. Every decision is grounded in a quantitative rule, a code reference verification, or a 28-day Google Search Console signal. No vibes, no "use your judgement" gaps.
 
-**Critical rule:** Section 10 (CTA Effectiveness) is a critical override. If Section 10 fails, the entire audit fails regardless of how many other sections pass. A feature page without a clear, effective call to action has no conversion value, regardless of how well it scores on technical criteria.
+**Critical overrides (two, independently fatal):**
+
+1. **Section 10 (CTA Effectiveness).** If Section 10 fails, the entire audit fails regardless of how many other sections pass. A feature page without a clear, effective call to action has no conversion value, regardless of how well it scores on technical criteria.
+2. **Section 11 (Technical-Marketing Synthesis).** If three or more of the six Rule 6 sub-checks (6a-6f) fail, the entire audit fails. A feature page that reads as a jargon-stacked spec dump does not convert enterprise buyers, regardless of how well the claims verify or how clear the CTA is. The Secrets Management page is the canonical exemplar for what passing looks like.
 
 ## Dependencies
 
@@ -149,9 +152,9 @@ This ensures every optimiser run has a feature report to work with, even for fea
 
 ---
 
-## Phase 1 -- 10-Section Audit
+## Phase 1 -- 11-Section Audit
 
-Run the full 10-section checklist against the target feature page. Record pass/fail per check. This phase writes nothing to disk. It produces a dict held in memory for Phase 2.5 scoring.
+Run the full 11-section checklist against the target feature page. Record pass/fail per check. This phase writes nothing to disk. It produces a dict held in memory for Phase 2.5 scoring.
 
 When Phase 1 produces a failing check, Phase 2 is responsible for fixing it only where the fix is covered by the rewrite rules below. Out-of-scope failures (e.g. missing source code files that need engineering work) are reported but not auto-fixed.
 
@@ -253,11 +256,55 @@ This is the conversion gate. A feature page that passes every quality check but 
 - [ ] No dead ends. Every section provides a path forward, either to the next section or to a CTA. No section ends with the reader having nowhere to go.
 - [ ] CTA language is specific. Not "Learn more" but "Schedule a 15-minute deployment review". Not "Get started" but "Install the CLI in 60 seconds". Specificity builds trust.
 
+### Section 11: Technical-Marketing Synthesis (CRITICAL OVERRIDE when 3+ sub-checks fail)
+
+**If three or more of the six sub-checks below fail, the entire audit fails regardless of other scores.**
+
+This is the craft gate. A page can verify every claim, hit every keyword, and ship a perfect CTA, and still read as an API doc stapled to a pitch deck. Section 11 enforces the layer of technical-marketing copy craft that turns a spec dump into a page a CISO, CTO, or staff engineer converts on. The named exemplar is the Secrets Management "Server-Side Credential Injection" section; the feature-writer skill carries it in full.
+
+**6a. Outcome Headlines (not mechanism)**
+- [ ] Headline names the stake, not the implementation (or the mechanism *is* the outcome, as in "Secrets never enter the context window")
+- [ ] A CISO reading only the headline can complete "without this, my organisation is exposed to ___"
+- [ ] Subtitle extends the stake with a concrete behaviour or number, not a restatement of the mechanism
+- Fail markers (pattern scan): headline matches `governed|unified|comprehensive|MCP-native|powerful|every-X-Yed` without an outcome clause
+
+**6b. Jargon Payoff (decode every technical term within one sentence)**
+- [ ] Every acronym (OAuth2, HS256, JWT, RBAC, SIEM, RPC, etc.) has a plain-English decoder within the same or next sentence
+- [ ] Every Rust type or trait name in narrative body copy (as opposed to `references[]`) is followed by a sentence explaining what it does for the reader
+- [ ] No stacked jargon lists (three or more technical terms in a row without interstitial decoding)
+- Fail markers (pattern scan): any paragraph with a backticked identifier that is not followed within one sentence by a decoder clause starting with "means", "so", "this", "the effect", or equivalent
+
+**6c. Numbers with Context (why this number, not another?)**
+- [ ] Every numeric claim in body copy is followed within the same paragraph by a clause explaining why that number
+- [ ] Rate limits, counts, thresholds, and tier multipliers have a sized-to / because / so-that clause adjacent
+- [ ] Performance numbers (ms, req/s, percentages) cite what they were measured against
+- Fail markers (pattern scan): any digit token not within ±2 sentences of the substrings "because", "so that", "sized to", "measured", "per", or a clause explaining intent
+
+**6d. Feature-to-Outcome Binding (what breaks without this?)**
+- [ ] Every `items[]` bullet binds the capability to a concrete failure mode or stake
+- [ ] Bullet text answers "what goes wrong without this?" implicitly or explicitly
+- [ ] No bullets that are bare capability names ("Role tiers", "Scoping", "Hooks")
+- Fail markers (pattern scan): any `items[].title` or `items[].description` that is a noun phrase under 8 words with no verb and no stake
+
+**6e. Narrative-vs-Reference Separation**
+- [ ] Inline `ModuleName::function_name` references in narrative body copy only appear where naming the type *is* the mechanism the reader cares about
+- [ ] Middleware names, internal plumbing types, and opaque trait names live in `references[]` entries with a description, not in narrative
+- [ ] Narrative prose speaks in behaviour; references speak in code
+- Fail markers (pattern scan): any backticked token in narrative containing `::` or snake_case that is not also named inline in a sentence describing its behaviour, with no matching entry in that section's `references[]`
+
+**6f. Skeptic's "So What" Test**
+- [ ] Every technical claim paragraph pre-answers at least one of CISO ("can I prove this in an audit?"), CTO ("does this replace what I'm building?"), or staff engineer ("can I verify this in source?")
+- [ ] The pre-answer lives in the same paragraph as the claim, not three scrolls below
+- [ ] A reader reaching the end of any technical paragraph cannot finish with an unanswered "so what?"
+- Fail markers: paragraph lacks audit cite (log table / signature / query), build-vs-buy delta, or file+line reference
+
+Record a pass/fail for each sub-check. If 3+ fail, Section 11 fails; if Section 11 fails, the audit fails.
+
 ---
 
 ## Phase 2 -- Deterministic Rewrite
 
-Five hard rules. Each is mechanically enforceable.
+Six hard rules. Each is mechanically enforceable.
 
 **Handling features without GSC data:** When `no_gsc_data: true` (new or unindexed features), Phase 2 still applies all five rules. Only SEO metadata optimisation within Rule 5 is limited because it benefits from search data. No feature gets a free pass.
 
@@ -319,18 +366,56 @@ For every entry in the `reference_inventory` built in Phase 0:
 6. **Strip second-person cheerleading.** "You get full control" becomes "The operator retains full control" or simply describes the mechanism.
 7. **Feature-specific ban list** (in addition to the global ban list): "solution", "leverage" (as verb), "utilize", "facilitate", "streamline", "optimize" (as marketing verb, allowed when describing actual code optimisation), "empower", "enable" (replace with specific mechanism).
 
+### Rule 6 -- Technical-Marketing Synthesis
+
+For every sub-check that failed Section 11, apply the matching rewrite. Apply in order 6a -> 6f so earlier rewrites do not create work for later ones.
+
+**6a scan -> rewrite: Outcome Headlines**
+- Scan: `headline` or `headline_highlight` contains any of `governed`, `unified`, `comprehensive`, `MCP-native`, `powerful`, `every-{noun}-{past-participle}` without an outcome clause
+- Rewrite: regenerate to outcome form using the Secrets Management template. Ask "without this, the reader is exposed to ___" and lead with the answer. If the current mechanism *is* the outcome (rare), preserve it. Keep within 6-10 words for headline plus highlight combined.
+- Example: "Every tool call governed" -> "Tool calls blocked before they touch your model" or "Stop destructive agent actions before they execute"
+
+**6b scan -> rewrite: Jargon Payoff**
+- Scan: any backticked identifier, acronym, or technical term in `sections[].content`, `items[].title`, or `items[].description` that is not followed within one sentence by a decoder clause ("means", "so", "the effect is", "which translates to")
+- Rewrite: append a one-sentence decoder that ties the term to a reader concern (from `commons:brand-voice` preferred-language lists where possible). If the term is internal plumbing that does not merit a decoder, move it to a `references[]` entry and replace the inline mention with a behaviour description (see 6e).
+- Example: "HS256 JWT signing" -> "HS256 signing means tokens verify locally in under a microsecond, with no external dependency"
+
+**6c scan -> rewrite: Numbers with Context**
+- Scan: any digit token in body copy (`sections[].content`, `items[].description`) that is not within ±2 sentences of any of: "because", "so that", "sized to", "measured", "budgeted for", "leaves headroom", "to catch", "because a loop", or an equivalent intent clause
+- Rewrite: add a clause explaining the sizing rationale in the same paragraph. If the rationale is unknown, read the source code or configuration defaults to recover it; if still unknown, remove the number and soften to a qualitative claim.
+- Example: "11 per-endpoint rates" -> "Eleven per-endpoint rates, sized to catch runaway agents without throttling normal use"
+
+**6d scan -> rewrite: Feature-to-Outcome Binding**
+- Scan: any `items[].title` that is a bare capability noun phrase under 8 words with no verb, OR any `items[].description` that describes *what the feature is* without describing *what breaks without it*
+- Rewrite: append or lead with a failure-mode clause. Template: "{capability} — prevents {failure mode}" or "{capability}, so that {stake}".
+- Example: "Six role tiers" -> "Six role tiers — prevents an analyst inheriting production database access from an overloaded admin role"
+
+**6e scan -> rewrite: Narrative-vs-Reference Separation**
+- Scan: any backticked token in narrative body copy containing `::` or snake_case that is not explicitly described as a mechanism in the same sentence (i.e. the sentence would not change meaning if the identifier were replaced with a behaviour phrase)
+- Rewrite: move the identifier to a `references[]` entry with a one-line description. Replace the inline mention with a behaviour phrase ("the middleware that checks permissions", "the helper that spawns the subprocess"). Preserve the link to source via the references entry, not inline.
+- Example: "Routed through `enforce_rbac_from_registry` middleware" -> "Every request passes a permission check before it reaches a handler. The middleware is named in the reference below." plus matching `references[]` entry.
+- Exception: if the identifier *is* the mechanism (e.g. `spawn_server()` setting `ANTHROPIC_API_KEY` on a `Command`), leave it inline.
+
+**6f scan -> rewrite: Skeptic's So What**
+- Scan: any paragraph containing a technical claim that does not cite one of (a) an audit log table, signature, or query; (b) a build-vs-buy delta with specificity; (c) a file path and line range
+- Rewrite: add a sentence pre-answering the matching buyer question. Choose CISO if the paragraph touches security, compliance, audit, or secrets; CTO if it touches control-plane consolidation, single-binary claims, or cost/consolidation; staff engineer if it describes internals.
+- If no pre-answer is possible (the claim is not defensible), soften or cut the claim.
+
+After all six sub-rewrites, re-scan the page. If any sub-check still fails, iterate once. If a second pass still fails, flag the offending section for manual review and mark `rule_6_{x}_unresolved: true` in the artifact report.
+
 ---
 
 ## Phase 2.5 -- Scoring
 
-Every feature page gets a **75-point score** across nine dimensions (expandable to 100 when analytics data is available). Compute both pre- and post-rewrite. The delta is the proof of work.
+Every feature page gets a **90-point score** across ten dimensions (expandable to 115 when analytics data is available). Compute both pre- and post-rewrite. The delta is the proof of work.
 
-### Rubric (75-point base)
+### Rubric (90-point base)
 
 | Dimension | Max | How to score |
 |-----------|----:|-------------|
 | Why-What-How compliance | 15 | `round(15 * (passing_sections / total_sections))` |
 | Claim verification | 15 | `round(15 * (verified_refs / total_refs))` |
+| Technical-marketing synthesis | 15 | `round(15 * (passing_sub_checks / 6))` where passing_sub_checks is the count of Section 11 sub-checks (6a-6f) that pass across the whole page |
 | Conversion clarity | 10 | 2 points each: hero formula, CTA quality, 10-second rule, conversion paths, no dead ends |
 | Technical accuracy | 10 | `round(10 * (valid_refs / total_refs))` |
 | Brand/voice compliance | 8 | `max(0, 8 - adjective_count - cliche_count)` |
@@ -363,6 +448,13 @@ total = total references across all sections
 score = round(15 * (verified / total))
 ```
 If total is 0 (no references at all), score is 0 because Section 2 failed the entire audit.
+
+**Technical-marketing synthesis (15 max):**
+```
+passing = count of Section 11 sub-checks (6a, 6b, 6c, 6d, 6e, 6f) that pass across the whole page
+score = round(15 * (passing / 6))
+```
+6 of 6 passing = 15. 4 of 6 = 10. 3 of 6 or fewer = Section 11 fails (critical override; the audit fails even before scoring runs). If the audit has aborted because of Section 11's override, do not report a score; report the abort.
 
 **Conversion clarity (10 max):**
 2 points for each passing criterion:
@@ -415,16 +507,16 @@ Each violation subtracts 1 point, floored at 0. Zero violations = 8.
 - Page demonstrates genuine technical depth (architecture details, type names, code flow)
 - Social proof elements are real (no fabrication, no invented metrics)
 
-### Score tiers (75-point scale)
+### Score tiers (90-point scale)
 
-- **65-75:** Top-tier feature page. No further action.
-- **50-64:** Acceptable. Rewrite opportunities exist but page is not broken.
-- **Below 50:** Failing. Priority candidate for rewrite.
+- **78-90:** Top-tier feature page. No further action.
+- **60-77:** Acceptable. Rewrite opportunities exist but page is not broken.
+- **Below 60:** Failing. Priority candidate for rewrite.
 
-When analytics expand the scale to 100:
-- **85-100:** Top-tier. No further action.
-- **70-84:** Acceptable.
-- **Below 70:** Failing.
+When analytics expand the scale to 115:
+- **100-115:** Top-tier. No further action.
+- **80-99:** Acceptable.
+- **Below 80:** Failing.
 
 ---
 
@@ -432,7 +524,7 @@ When analytics expand the scale to 100:
 
 After rewriting:
 
-1. **Re-run the 10-section audit.** Sections 2, 3, and 10 must pass (claim verification, conversion clarity, CTA effectiveness). Other sections must be no worse than the baseline from Phase 1.
+1. **Re-run the 11-section audit.** Sections 2 (claim verification), 3 (conversion clarity), 10 (CTA effectiveness), and 11 (Technical-Marketing Synthesis) must all pass. Other sections must be no worse than the baseline from Phase 1. If Section 11 still fails on re-audit, abort and roll back the YAML; report the specific sub-checks that could not be satisfied.
 2. **Diff the YAML file.** If diff is empty or trivially whitespace-only, abort with `no_material_change`. Never commit a no-op.
 3. **Recompute the score.** If `post_score < pre_score`, abort and roll back. This is a bug in the rules, not an improvement. Report the regression.
 4. **Reference spot-check.** Pick 3 random references from the updated YAML. Verify each file exists and the line anchor is accurate. If any fail, abort.
@@ -449,13 +541,15 @@ After rewriting:
 ### Commit message format
 
 ```
-optimise feature/{slug}: {pre_score} -> {post_score}
+optimise feature/{slug}: {pre_score} -> {post_score} (scale 90)
 
 - refs verified: {verified}/{total} ({dead_removed} dead removed, {anchors_updated} anchors updated)
 - adjectives removed: {count}
 - cliches removed: {count}
 - cta: "{before}" -> "{after}"
 - hero: headline {word_count} words, subheadline {word_count} words
+- rule 6 sub-checks: {passing}/6 ({fail_list}, e.g. 6a,6c resolved)
+- rule 6 rewrites: {headline_changed}, {jargon_decoded} decoders added, {numbers_contexted} numbers contexted, {bullets_bound} bullets bound, {refs_separated} identifiers moved to references
 - gsc baseline: {impressions_28d} imp, {ctr}% CTR, position {position}
 ```
 
@@ -539,12 +633,13 @@ Rules:
 
 ## 6. Current Scores
 
-### Optimiser Score: pending/75
+### Optimiser Score: pending/90
 
 | Dimension | Score | Max |
 |-----------|------:|----:|
 | Why-What-How compliance | | 15 |
 | Claim verification | | 15 |
+| Technical-marketing synthesis | | 15 |
 | Conversion clarity | | 10 |
 | Technical accuracy | | 10 |
 | Brand/voice compliance | | 8 |
@@ -553,7 +648,7 @@ Rules:
 | SEO metadata | | 5 |
 | Enterprise credibility | | 2 |
 
-### Revision Audit: pending/10 sections passing
+### Revision Audit: pending/11 sections passing
 
 ## 7. Title, Description and Keywords Rationale
 
@@ -596,12 +691,13 @@ Per-feature artifact report template:
 **Mode:** optimise
 **Commit:** {sha}
 
-## Score: {post}/75 (was {pre}/75, {delta:+d})
+## Score: {post}/90 (was {pre}/90, {delta:+d})
 
 | Dimension | Before | After | Max |
 |-----------|-------:|------:|----:|
 | Why-What-How compliance | {} | {} | 15 |
 | Claim verification | {} | {} | 15 |
+| Technical-marketing synthesis | {} | {} | 15 |
 | Conversion clarity | {} | {} | 10 |
 | Technical accuracy | {} | {} | 10 |
 | Brand/voice compliance | {} | {} | 8 |
@@ -609,6 +705,19 @@ Per-feature artifact report template:
 | Visual hierarchy | {} | {} | 5 |
 | SEO metadata | {} | {} | 5 |
 | Enterprise credibility | {} | {} | 2 |
+
+## Rule 6 Sub-checks (Technical-Marketing Synthesis)
+
+| Sub-check | Before | After | Rewrites applied |
+|-----------|:------:|:-----:|-----------------|
+| 6a Outcome Headlines | PASS/FAIL | PASS/FAIL | {headline change summary} |
+| 6b Jargon Payoff | PASS/FAIL | PASS/FAIL | {decoders added} |
+| 6c Numbers with Context | PASS/FAIL | PASS/FAIL | {numbers contexted} |
+| 6d Feature-to-Outcome Binding | PASS/FAIL | PASS/FAIL | {bullets bound} |
+| 6e Narrative-vs-Reference Separation | PASS/FAIL | PASS/FAIL | {identifiers moved} |
+| 6f Skeptic's So What | PASS/FAIL | PASS/FAIL | {audience answers added} |
+
+Sub-checks passing: {before_passing}/6 -> {after_passing}/6
 
 ## GSC Baseline
 
@@ -676,14 +785,15 @@ Per-feature artifact report template:
 | 7. Visual hierarchy | PASS/FAIL | |
 | 8. SEO metadata | PASS/FAIL | |
 | 9. Enterprise credibility | PASS/FAIL | |
-| 10. CTA effectiveness | PASS/FAIL | CRITICAL |
+| 10. CTA effectiveness | PASS/FAIL | CRITICAL (fails audit on its own) |
+| 11. Technical-marketing synthesis | PASS/FAIL | CRITICAL (fails audit if 3+ of 6a-6f fail) |
 
 ## Verification
 
 - Schema valid: PASS | FAIL
 - References spot-checked: PASS | FAIL
 - Score improved: PASS | FAIL
-- Critical sections (2, 3, 10) pass: PASS | FAIL
+- Critical sections (2, 3, 10, 11) pass: PASS | FAIL
 - YAML parseable: PASS | FAIL
 - Feature report updated: PASS | FAIL
 ```

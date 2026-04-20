@@ -1,9 +1,9 @@
 ---
 name: feature-writer
-description: "Write and rewrite systemprompt.io feature pages as world-class technical copy. Research-first workflow with per-feature reports, Why-What-How doctrine, claim verification against source code, enterprise credibility assessment, and conversion path analysis. Speaks to skeptical staff engineers. Load identity and brand-voice first."
+description: "Write and rewrite systemprompt.io feature pages as world-class technical copy. Research-first workflow with per-feature reports, Why-What-How doctrine, Technical-Marketing Synthesis (outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test), claim verification against source code, enterprise credibility assessment, and conversion path analysis. Speaks to skeptical CISOs, CTOs, and staff engineers. Load identity and brand-voice first."
 metadata:
-  version: "1.0.0"
-  git_hash: "7f3e532"
+  version: "1.1.0"
+  git_hash: "pending"
 ---
 
 # systemprompt Feature Writer
@@ -69,7 +69,7 @@ If the feature page URL is indexed, pull Google Search Console data for the path
 
 Use the same auth pattern as the guide-optimiser skill. If no GSC data exists, note "not yet indexed" and skip. Even without GSC data, check `reports/seo/data/keyword-targets.json` for keywords assigned to this feature's slug or cluster. Record any relevant keywords and their volume in the per-feature report.
 
-### Step 1.4: Enterprise Credibility Assessment (The 10-Second Rule)
+### Step 1.4: Enterprise Credibility Assessment (The 10-Second Rule and the Audience-Question Test)
 
 Load the current rendered page (or read the YAML and mentally render it). Answer:
 
@@ -79,7 +79,17 @@ Load the current rendered page (or read the YAML and mentally render it). Answer
 4. Does the messaging lead with governance and control, not memory, persistence, or plugin management?
 5. Is the competitive frame build-vs-buy, not us-vs-them?
 
-Score: pass or fail. Record the assessment in the per-feature report.
+Then run the **Audience-Question Test**. The page serves three readers, and each one must be able to answer their question by a specific scroll position. If a reader cannot answer, the page has failed that reader regardless of overall quality.
+
+| Reader | Asks | Must be answerable by |
+|--------|------|-----------------------|
+| CISO | "Can I prove this in an audit?" (cite a log table, a signature, a query) | End of hero section |
+| CTO | "Does this replace something I'm building?" (build-vs-buy delta, specific) | End of first body section |
+| Staff engineer | "Can I verify this in source?" (file path plus line range) | Any section with a reference |
+
+Mark in the per-feature report which sections answer which reader's question. A section that answers none of the three is a section that fails the skeptic test and must be rewritten or cut.
+
+Score: pass or fail on the 10-second rule and on each of the three audience questions. Record all four results in the per-feature report.
 
 ### Step 1.5: Document Findings in Per-Feature Report
 
@@ -133,6 +143,87 @@ These are the rules you apply line by line:
 8. **Active voice, present tense.** "The policy engine blocks the call," not "the call will be blocked by the policy engine."
 9. **No second-person cheerleading.** "You get full control" is a marketing tic. State what the software does; the reader infers their benefit.
 10. **Every section terminates in evidence.** If a section has no `references[]` entry, either add one from the codebase or cut the section.
+
+## Rule 6: Technical-Marketing Synthesis
+
+The ten principles above fix copy line by line. Rule 6 is the structural craft on top: the layer that separates a well-written feature-spec dump from copy that a CISO, CTO, or staff engineer actually converts on. Every feature page must pass all six sub-checks before it ships. These sub-checks are also enforced deterministically by `feature-optimiser` Section 11.
+
+The named exemplar for all six is the Secrets Management page's "Server-Side Credential Injection" section (quoted in full under "Canonical Exemplar" below). Read that section before writing any new feature copy.
+
+### 6a. Outcome Headlines (not mechanism)
+
+The headline and subtitle must name the **stake** the reader holds, not the implementation that delivers it. A mechanism headline is valid only when the mechanism *is* the outcome and they collapse into one statement.
+
+- Test: a CISO reading only the headline can complete the sentence *"without this, my organisation is exposed to ___"*. If they cannot, the headline fails.
+- Fail: "Every tool call governed", "MCP-native governance", "Unified control plane", "Powerful policy engine".
+- Pass: "Secrets never enter the context window" (mechanism is outcome), "Survive an audit with one query", "Your binary, your data, no SaaS handoff".
+
+### 6b. Jargon Payoff (decode every technical term within one sentence)
+
+Every acronym, algorithm, protocol, trait, or type name in body copy must be followed within the same or next sentence by a plain-English decoder that ties the term to a reader concern. The reader should never have to know Rust, MCP internals, or JWT mechanics to finish a paragraph. Type names used without a decoder belong in the `references[]` array, not the narrative (see 6e).
+
+- Fail: "HS256 JWT signing"
+- Pass: "HS256 signing means tokens verify locally in under a microsecond. No round-trip to an auth service, no external dependency, offline-capable."
+- Fail: "`McpToolHandler` trait enforces type safety at compile time. Input types must implement `DeserializeOwned + JsonSchema`."
+- Pass: "Tool inputs and outputs are type-checked before the binary compiles. A mismatched schema fails the build, not a customer call. The trait that enforces this is named in the reference below."
+- Fail: "Per-user key hierarchy"
+- Pass: "Per-user key hierarchy: one compromised key exposes one user's tools, never the whole fleet."
+
+### 6c. Numbers with Context (why this number, not another?)
+
+Any numeric claim in body copy must answer *why this number* within the same paragraph. Bare counts and unexplained rates fail. A number without context reads as arbitrary; a number with context reads as engineering judgement.
+
+- Fail: "`RateLimitsConfig` defines 11 per-endpoint base rates: oauth 10/s, contexts 100/s, agents 20/s, MCP 200/s."
+- Pass: "Eleven per-endpoint rate limits, sized to catch runaway agents without throttling normal use. MCP tools get 200/s because real workflows batch. Inference gets 10/s because a loop at 100/s is always a bug."
+- Fail: "Nine behavioural checks."
+- Pass: "Nine behavioural checks, each mapped to a specific failure mode we have seen in production: ghost sessions, request floods, UA inconsistencies."
+- Fail: "Under 2ms policy evaluation."
+- Pass: "Under 2ms policy evaluation, measured against a 14-rule policy set. The budget leaves headroom for a tool call the agent actually wants to make."
+
+### 6d. Feature-to-Outcome Binding (what breaks without this?)
+
+Feature-list bullets and `items[]` titles must bind to a concrete failure mode or a concrete stake. A capability name alone is a failed bullet. Every bullet answers the reader's implicit question: "why does this matter and what goes wrong without it?"
+
+- Fail (bare capabilities): "Six role tiers. Department scoping. Per-entity rules."
+- Pass:
+  - "Six role tiers prevent an analyst inheriting production database access from an overloaded admin role."
+  - "Department scoping keeps finance tools away from engineering's audit surface and vice versa."
+  - "Per-entity rules let you block one tool for one user group without rewriting the role tree."
+
+### 6e. Narrative-vs-Reference Separation
+
+Inline `ModuleName::function_name` references belong in narrative copy only when naming the type *is* the mechanism the reader cares about. "`spawn_server()` sets `ANTHROPIC_API_KEY` on the child `Command` environment before `spawn()`" is legal because the function names describe the exact behaviour. "Routed through the `enforce_rbac_from_registry` middleware" is not legal because the middleware name is internal plumbing the reader does not need.
+
+When in doubt, move the identifier to a `references[]` entry with a description, and let the narrative speak in behaviour.
+
+- Fail: "Requests flow through `enforce_rbac_from_registry` middleware before reaching the handler."
+- Pass: "Every request passes a permission check before it touches a handler. The middleware is named in the reference below."
+- Legal (mechanism-is-outcome): "`scanner_detector.rs` blocks twenty-plus scanner signatures at the edge before a request reaches your app."
+
+### 6f. Skeptic's "So What" Test (pre-answer one of three buyer questions)
+
+Every technical claim paragraph must pre-answer at least one of the three buyer questions from Step 1.4:
+
+- **CISO**: "Can I prove this in an audit?" - cite the log table, the signature, the query that shows up for an auditor.
+- **CTO**: "Does this replace something my team is building?" - cite the build-vs-buy delta with specificity.
+- **Staff engineer**: "Can I verify this in source?" - cite the file path and line range.
+
+A paragraph a skeptical reader can finish and still ask "so what?" is a failed paragraph. The pre-answer lives in the same paragraph, not three scrolls down.
+
+## Canonical Exemplar: Server-Side Credential Injection
+
+The paragraph below, from the Secrets Management feature page, is the named exemplar for Rule 6. Writers must produce to this bar. Optimiser scoring benchmarks against it.
+
+> "When a Claude agent calls a tool, the credential it needs to authenticate the downstream API never crosses the model boundary. `spawn_server()` in the MCP process spawner receives the resolved `Secrets` struct from `SecretsBootstrap::get()`, then sets `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GEMINI_API_KEY`, and `GITHUB_TOKEN` directly on the child `Command` environment before `spawn()`. Because the secret is bound to the subprocess environment and not to a request body, it cannot appear in a prompt, a completion, a tool argument, or any row of stored conversation history."
+
+### Why this paragraph works
+
+- **Sentence 1 (the Why, outcome-as-mechanism):** names the actor (Claude agent), the moment (tool call), and the stake (credentials crossing the model boundary). Satisfies 6a because the mechanism and the outcome are the same sentence.
+- **Sentence 2 (the What, with decoded mechanism):** names `spawn_server`, `Secrets`, `SecretsBootstrap::get()`, `Command::env`, and the four specific environment variables. Each identifier names the exact behaviour; nothing here is plumbing that could move to references. Satisfies 6b (jargon decodes into the reader's concern) and 6e (mechanism-is-outcome lets the names stay inline).
+- **Sentence 3 (the How, pre-answering the skeptic):** "cannot appear in a prompt, a completion, a tool argument, or any row of stored conversation history" pre-answers the CISO question ("can I prove this in an audit?") by enumerating the four places a secret could leak, and saying it cannot be in any of them. Satisfies 6f.
+- **Binding and numbers:** the four env vars are named, and the number of leak paths (prompt, completion, argument, history) is implicit in the enumeration. No bare counts.
+
+Use this structure as the template for any new technical section. Problem (with stake) → mechanism (named, decoded) → impact restatement (enumerating what the mechanism makes impossible).
 
 ## Enterprise Credibility Layer
 
@@ -353,6 +444,13 @@ Before a rewrite ships, every item must pass. Binary checks, no partial credit.
 - [ ] Every claim verified against source code references
 - [ ] Hero section follows formula (headline 6-10 words, subheadline 15-25 words, single CTA)
 - [ ] Page passes the 10-Second Rule for enterprise credibility
+- [ ] Page passes the Audience-Question Test (CISO answered by end of hero, CTO by end of first section, staff engineer at every referenced section)
+- [ ] **Rule 6a (Outcome Headlines):** headline names a stake, not a mechanism (or mechanism-is-outcome)
+- [ ] **Rule 6b (Jargon Payoff):** every acronym, type, algorithm, or protocol has a plain-English decoder within one sentence
+- [ ] **Rule 6c (Numbers with Context):** every numeric claim explains why that number within the same paragraph
+- [ ] **Rule 6d (Feature-to-Outcome Binding):** every `items[]` bullet binds to a concrete failure mode or stake
+- [ ] **Rule 6e (Narrative-vs-Reference Separation):** inline `Module::fn` names survive only where the name describes the mechanism; otherwise moved to `references[]`
+- [ ] **Rule 6f (Skeptic's So What):** every technical paragraph pre-answers at least one of CISO/CTO/staff-engineer questions
 - [ ] No marketing adjectives ("powerful", "seamless", "robust", "comprehensive", "cutting-edge", "enterprise-grade", "next-generation")
 - [ ] No em dashes, no AI cliches ("delve", "leverage", "harness", "it's worth noting"), correct terminology
 - [ ] Competitive frame is build-vs-buy, not us-vs-them
@@ -382,6 +480,8 @@ For each section:
 - Proposed new opening (the `why`)
 - Proposed anchor (the `what`, with the real type name)
 - Proposed evidence (the `how`, with file path and line range)
+- **Rule 6 sub-check results:** pass/fail per 6a-6f, with the specific offender quoted for each fail
+- **Audience question answered:** which of CISO/CTO/staff-engineer the section answers, or "none" (a "none" verdict is a cut or rewrite recommendation)
 
 ### Enterprise Credibility Assessment
 

@@ -36,8 +36,8 @@
     {
       "name": "content",
       "source": "./plugins/content",
-      "description": "Content creation and publishing: three writer+optimiser pairs (guides, features, documentation) with research-first workflows, per-content reports, and deterministic audit scoring. Daily content brief, content hypothesis ledger (CT-###), content strategy master, image generation, multi-channel distribution (Dev.to, Medium, LinkedIn, Reddit, email), and end-to-end publishing via CLI",
-      "version": "4.0.0",
+      "description": "Content creation and publishing: three writer+optimiser pairs (guides, features, documentation) with research-first workflows, per-content reports, and deterministic audit scoring. Feature writer+optimiser now enforce Technical-Marketing Synthesis (Rule 6: outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test) on top of Why-What-How. Daily content brief, content hypothesis ledger (CT-###), content strategy master, image generation, multi-channel distribution (Dev.to, Medium, LinkedIn, Reddit, email), and end-to-end publishing via CLI",
+      "version": "4.1.0",
       "category": "content",
       "author": {
         "name": "systemprompt.io",
