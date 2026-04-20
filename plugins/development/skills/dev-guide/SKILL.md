@@ -29,6 +29,12 @@ All development skills for building systemprompt.io. Covers Rust backend, web fe
 | Build web features (pages, templates, prerendering) | `web-building` |
 | Front-end coding standards (JS, CSS, HTML) | `frontend-coding-standards` |
 
+### Operations
+
+| Task | Skill |
+|------|-------|
+| Sync production Postgres data into local dev DB when libpq fails ALPN | `db-sync-prod-to-local` |
+
 ### UX/UI Design
 
 | Task | Skill |
