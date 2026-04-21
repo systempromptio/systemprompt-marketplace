@@ -3,7 +3,7 @@ name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
   version: "1.4.0"
-  git_hash: "b6c8fff"
+  git_hash: "b94d5d1"
 ---
 
 ## HARD RULE — Evidence-or-silence (added 2026-04-20)
