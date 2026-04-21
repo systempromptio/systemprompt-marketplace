@@ -2,8 +2,8 @@
 name: reddit-post-composer
 description: "Drafts genuine, non-marketing Reddit POSTS (top-level submissions) for systemprompt.io. Reads the qualified subreddit list from reddit-audience-finder, matches the sub's moderation rules and tone, and produces value-first drafts (data drops, lessons learned, calls for input). Refuses to draft without real data. Invoked on-demand, not daily. Load social-identity and brand-voice first."
 metadata:
-  version: "1.0.0"
-  git_hash: "d9ea667"
+  version: "1.1.0"
+  git_hash: "a4cd51d"
 ---
 
 # Reddit Post Composer
@@ -98,7 +98,7 @@ Read the `key_rules` field from `subreddits.json`. Apply these enforcement patte
 | "3+ years experience" (r/ExperiencedDevs) | Voice must reflect senior IC reality, not beginner framing. If the post could be asked by a junior, abort. |
 | "Competitor posts need homework" (r/ClaudeAI) | If the draft compares systemprompt to another tool, include our own evaluation with concrete data. Opinion-only comparisons get removed. |
 | "Must be specifically about Claude Code" (r/ClaudeCode) | Body must anchor in a Claude Code workflow, tool, or extension. General AI governance commentary gets removed. Use "Showcase" flair for own-work posts. GitHub template link goes in first comment only — one sentence of context, no pitch. |
-| "Posts must be genuinely about Rust" (r/rust) | Body must centre on the Rust implementation: architecture decisions, benchmark methodology, crate design, or specific Rust idioms used. Governance is context; Rust is the topic. No product mentions in body. GitHub link in first comment, framed as "code is here if you want to look." r/rust is extremely sensitive to AI-generated prose — vary sentence length aggressively, use short technical sentences. |
+| "Posts must be genuinely about Rust" (r/rust) | Body must centre on the Rust implementation: architecture decisions, benchmark methodology, crate design, or specific Rust idioms used. Governance is context; Rust is the topic. No product mentions in body. GitHub link in first comment, framed as "code is here if you want to look." r/rust is extremely sensitive to AI-generated prose — vary sentence length aggressively, use short technical sentences. **At least one fenced code block (struct definition, trait signature, or short function) is required** for project/showcase posts; prose-only Rust posts read as marketing. **No product-category bullet dumps** (e.g. "here are all 10 demo categories") — each bullet in a Rust post must bind to a mechanism or stake, per Step 4b. |
 | "No AI-generated slop" (r/mcp) | Strict. Vary sentence length (mix 6-word and 25-word sentences). Zero AI-prose markers. Use `showcase` flair if showing our work. |
 | "Disclose purpose" (r/LLMDevs) | If the post is seeking input that feeds product decisions, say so in the body. |
 | "Provide sources" (r/LLMDevs) | Every numeric claim needs a source or a note that the data is internal. |
@@ -108,13 +108,25 @@ Read the `key_rules` field from `subreddits.json`. Apply these enforcement patte
 
 Write the post. Run through anti-sludge gate:
 
-- No em dashes
+- No em dashes (U+2014) and no en dashes (U+2013) used as sentence punctuation. En dashes in numeric ranges (`1,000–5,000 ms`) are fine; en dashes replacing an em dash ("we shipped it – and it broke") are not. Grep the draft for both code points before saving.
 - No hashtags
-- No AI clichés (revolutionize, leverage verb, supercharge, unlock, seamlessly, harness, cutting-edge, next-generation, paradigm shift, disrupt, empower, reimagine)
+- No AI clichés (revolutionize, leverage verb, supercharge, unlock, seamlessly, harness, cutting-edge, next-generation, paradigm shift, disrupt, empower, reimagine, here's what it is and the numbers, the interesting part is, where it gets interesting)
 - No sludge openings ("Fellow {X}...", "Wanted to share...", "Hey everyone...")
+- No listing bridges ("Here's what's inside:", "The tl;dr:", "Quick rundown:") immediately preceding a bulleted list — write a topic sentence that carries meaning, not a scan-prompt
 - No fabricated data
-- No generic closers ("Thoughts?", "What do you all think?") — calls-for-input close with a specific question instead
-- Vary sentence length. Mix short and long.
+- No generic closers ("Thoughts?", "What do you all think?", "Happy to dig into any of the above", "Let me know what you think", "Curious what others are doing") — every post closes with either a specific named question or nothing. If the post is a data-drop or lesson-learned with no open question, end on the last substantive sentence.
+- Vary sentence length aggressively. Every paragraph must contain at least one sentence under 12 words next to at least one sentence over 20 words. Uniform medium-length sentences are the strongest AI-prose tell on r/rust and r/mcp.
+
+### Step 4b: Narrative-over-listing discipline
+
+Comma-list enumerations in prose are the second-strongest AI-prose tell after em dashes. Audit every list — in-prose and bulleted — against these rules:
+
+1. **Every bulleted list item binds to a mechanism or a stake.** A bullet that names a capability ("Analytics: agent usage, token costs, latency") without explaining how it works or what breaks without it is feature-sheet noise. Delete it or rewrite it with the mechanism.
+2. **Feature-category bullet dumps are banned in the post body.** Listing product surface area (e.g. "the repo ships 43 demos across 10 categories: Governance, Analytics, MCP, Agents, Users, Skills, Infrastructure...") reads as a pitch deck and fails r/rust, r/ExperiencedDevs, r/cto, and r/mcp. If the breadth is genuinely relevant, pick the one category that matches the sub and go deep on it.
+3. **Three-or-more-item comma lists in prose must each earn their place.** "We run four checks: scope, secret scan, blocklist, rate limit" is a scan-list. Convert to narrative: "We answer four questions in order. Is the agent's scope allowed to call this tool. Does the payload carry a credential. Is the tool on a blocklist this tenant maintains. Has this session blown its budget." The narrative version is longer and tests better because each item now carries its own stake.
+4. **Every jargon term gets a plain-English decoder within the same paragraph.** Type names, protocol names, algorithm names, and crate names must be followed within the same or next sentence by a phrase that ties the term to a reader concern. `ChaCha20-Poly1305` alone is a term drop; `ChaCha20-Poly1305, so a captured log file does not hand over the credential` is a term that earned its place.
+
+Feature-writer Rule 6 (Technical-Marketing Synthesis) sub-checks 6b (Jargon Payoff), 6d (Feature-to-Outcome Binding), 6i (Plain-English Narrative), and 6j (Natural Flow) apply directly to Reddit post bodies. Load `content:feature-writer` for the full exemplar if the draft is mechanism-heavy.
 
 ## Step 5: Mention audit
 
@@ -193,11 +205,15 @@ Inline checklist — what rule applied, how the draft satisfies it.
 ## Pre-submit checklist (for Ed)
 
 - [ ] Read 10 most-upvoted posts from this sub in the last 7 days — our draft matches the native format
-- [ ] Zero AI-clichés, em dashes, hashtags (anti-sludge gate passed)
+- [ ] Zero AI-clichés, em dashes (U+2014), punctuation en dashes (U+2013), hashtags (anti-sludge gate passed)
+- [ ] Narrative-over-listing audit passed (Step 4b): no feature-category bullet dumps, every list item binds to mechanism or stake, every jargon term has a plain-English decoder
+- [ ] Every paragraph contains at least one short (<12 word) and one long (>20 word) sentence
+- [ ] Closer is a specific named question or the last substantive sentence — not "Thoughts?" / "Happy to dig into..." / "Curious what others think"
 - [ ] Every numeric claim is real (not fabricated)
 - [ ] Mention budget respected per this sub's tolerance
 - [ ] Link (if any) placed in first comment only
 - [ ] Appropriate flair selected
+- [ ] If r/rust and post is project/showcase, at least one fenced code block present
 - [ ] If r/selfhosted and project <3 months old, target is the megathread not the main feed
 - [ ] If r/ClaudeAI and this is a comparison, our own evaluation data is included
 
@@ -231,7 +247,8 @@ If this post is shipped as a seeded hypothesis, log format:
 - [ ] Real data/experience provided by user (not abstract)
 - [ ] Post-type matches sub culture per Step 2 table
 - [ ] All applicable sub-specific rules enforced per Step 3 table
-- [ ] Anti-sludge gate passed
+- [ ] Anti-sludge gate passed (Step 4)
+- [ ] Narrative-over-listing audit passed (Step 4b)
 - [ ] Mention budget respected per tolerance (Step 5)
 - [ ] Draft file saved with correct date, sub, slug
 - [ ] Pre-submit checklist populated for Ed's review
