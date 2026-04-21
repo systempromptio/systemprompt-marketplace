@@ -143,8 +143,11 @@ For each selected thread, draft a reply. Hook, not essay.
 - `r/cybersecurity` — rigorous, threat-model-aware
 - `r/ITManagers`, `r/msp` — business-practical, margin-aware
 - `r/ClaudeAI`, `r/AI_Agents` — casual fellow-user, evidence-valued
+- `r/ClaudeCode` — technical, Claude power-user, workflow-improvement oriented; expects specifics about Claude Code behaviour, not general AI commentary
+- `r/rust` — precise, performance-aware, skeptical of benchmarks without reproducible numbers; no marketing language, no hype
 - `r/LocalLLaMA`, `r/selfhosted` — deeply technical, respect for open-source sovereignty
 - `r/LLMDevs`, `r/RAG` — practitioner, sources-required
+- `r/mcp` — technical, protocol-focused; "no AI slop" enforced hard — vary sentence length, zero AI-prose markers
 
 ## Step 6: Mention cap (30%)
 

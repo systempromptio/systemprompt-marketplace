@@ -97,6 +97,8 @@ Read the `key_rules` field from `subreddits.json`. Apply these enforcement patte
 | "<3 months = megathread only" (r/selfhosted) | If systemprompt's first public release is younger than 3 months, redirect to the current New Project Megathread. Do not submit to main feed. |
 | "3+ years experience" (r/ExperiencedDevs) | Voice must reflect senior IC reality, not beginner framing. If the post could be asked by a junior, abort. |
 | "Competitor posts need homework" (r/ClaudeAI) | If the draft compares systemprompt to another tool, include our own evaluation with concrete data. Opinion-only comparisons get removed. |
+| "Must be specifically about Claude Code" (r/ClaudeCode) | Body must anchor in a Claude Code workflow, tool, or extension. General AI governance commentary gets removed. Use "Showcase" flair for own-work posts. GitHub template link goes in first comment only — one sentence of context, no pitch. |
+| "Posts must be genuinely about Rust" (r/rust) | Body must centre on the Rust implementation: architecture decisions, benchmark methodology, crate design, or specific Rust idioms used. Governance is context; Rust is the topic. No product mentions in body. GitHub link in first comment, framed as "code is here if you want to look." r/rust is extremely sensitive to AI-generated prose — vary sentence length aggressively, use short technical sentences. |
 | "No AI-generated slop" (r/mcp) | Strict. Vary sentence length (mix 6-word and 25-word sentences). Zero AI-prose markers. Use `showcase` flair if showing our work. |
 | "Disclose purpose" (r/LLMDevs) | If the post is seeking input that feeds product decisions, say so in the body. |
 | "Provide sources" (r/LLMDevs) | Every numeric claim needs a source or a note that the data is internal. |

@@ -43,7 +43,11 @@ Start with these 20 candidates, grouped by bucket. Expand when new governance-re
 
 ### Bucket 3: Claude / MCP / AI ecosystem
 
-`r/ClaudeAI`, `r/Anthropic`, `r/mcp`, `r/AI_Agents`, `r/LLMDevs`, `r/LocalLLaMA`, `r/PromptEngineering`, `r/RAG`, `r/AIOps`, `r/OpenAI`
+`r/ClaudeAI`, `r/ClaudeCode`, `r/Anthropic`, `r/mcp`, `r/AI_Agents`, `r/LLMDevs`, `r/LocalLLaMA`, `r/PromptEngineering`, `r/RAG`, `r/AIOps`, `r/OpenAI`
+
+### Bucket 2 addition: Rust ecosystem
+
+`r/rust` — systemprompt.io is a Rust project. Architecture and benchmark posts are native content there, not promotion. Include in Bucket 2 (senior practitioners).
 
 Drop candidates after scoring if they fall below the Tier-C threshold. Do not prune the candidate list in advance — let the scoring decide.
 
