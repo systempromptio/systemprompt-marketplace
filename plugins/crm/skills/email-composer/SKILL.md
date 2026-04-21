@@ -2,7 +2,7 @@
 name: email-composer
 description: "Draft and send CRM emails via the Resend API. Loads templates from reports/crm/templates/, personalises with lead context, presents draft for MANDATORY human approval, then sends via curl. Every email requires Ed's explicit approval before sending — no exceptions."
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Email Composer
@@ -32,6 +32,10 @@ Load in order:
 
 Emails are sent via the [Resend](https://resend.com) API using a simple `curl` call from the local machine.
 
+**IMPORTANT — API key is send-only.** The `resend_api_key` in secrets.json is restricted to sending only (HTTP 401 on GET /emails). You **cannot** check delivery stats, list sent emails, or read bounce/complaint data via the API. If Resend dashboard stats are needed, Ed checks resend.com manually. Do not generate a hypothesis or action that depends on reading Resend delivery data.
+
+**Python urllib is blocked by Cloudflare 1010.** Always use `subprocess` to shell out to `curl` when sending programmatically. Direct Python HTTP clients (urllib, requests) will receive a 403 from Cloudflare.
+
 ### Credentials Location
 
 The Resend API key and SMTP config are stored in the **production profile secrets**:
@@ -44,7 +48,7 @@ Relevant keys:
 
 | Key | Value | Purpose |
 |---|---|---|
-| `resend_api_key` | `re_Cc87TvR...` | API authentication |
+| `resend_api_key` | `re_Cc87TvR...` | API authentication (send-only) |
 | `smtp_from` | `systemprompt.io <hello@systemprompt.io>` | Sender address |
 | `smtp_host` | `smtp.resend.com` | SMTP relay (used by the Rust binary, not this skill) |
 | `smtp_port` | `587` | SMTP port (used by the Rust binary, not this skill) |
@@ -240,10 +244,26 @@ When `daily-crm-brief` generates multiple email actions:
 10. **Never CC multiple leads**
 11. **Always log** every email to both `email-log.jsonl` and `interactions.jsonl`
 
+## Permanent Exclusions
+
+Some people in `leads.json` are friends, colleagues, or otherwise not prospects. When Ed says "exclude X — they're a friend", set `stage: "opted_out"` and append a note like `EXCLUDED: personal/friends not prospects ({date}).` to their leads.json record. This prevents them from appearing in future batch candidate searches.
+
+When building a batch candidate list, always filter out `stage: "opted_out"` leads.
+
+## Reading leads.json
+
+**leads.json exceeds 256KB** — the Read tool will fail. Always use Python to query it:
+
+```python
+import json
+data = json.load(open('/var/www/html/systemprompt-web/reports/crm/data/leads.json'))
+lead = next((l for l in data['leads'] if l['id'] == 'L-001'), None)
+```
+
 ## Error Handling
 
 - If the Resend API returns an error, show the full error to Ed and do not retry automatically
 - If the API key is missing from `secrets.json`, stop and tell Ed to configure it
 - If the lead has no email address, suggest Ed find it via GitHub profile or LinkedIn and update `leads.json` first
-- If the lead is in the exclusion list, refuse to compose (they are not a real lead)
+- If the lead is in `opted_out` stage, refuse to compose — they are permanently excluded
 - If the template references variables that can't be filled, flag them with `[FILL: description]` for Ed to complete manually

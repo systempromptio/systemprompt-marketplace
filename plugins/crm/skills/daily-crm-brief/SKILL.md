@@ -2,8 +2,8 @@
 name: daily-crm-brief
 description: "The morning CRM briefing. Orchestrates pipeline-tracker + hypothesis-ledger into a single actionable brief: pipeline snapshot, hot leads, overdue follow-ups, email drafts to review, and all effective copy-paste-ready actions for Ed (minimum 3, no cap) — each tagged with a new [C-###] hypothesis. Load crm-identity first."
 metadata:
-  version: "0.3.0"
-  git_hash: "c05387b"
+  version: "0.3.1"
+  git_hash: "9b8a605"
 ---
 
 # Daily CRM Brief
@@ -40,13 +40,34 @@ If missing, invoke `pipeline-tracker` via the Skill tool. If it fails, degrade g
 
 ### 2. Read CRM State
 
-Read all of these:
-- `/var/www/html/systemprompt-web/reports/crm/data/leads.json` — current leads
-- `/var/www/html/systemprompt-web/reports/crm/data/deals.json` — current deals
-- `/var/www/html/systemprompt-web/reports/crm/data/pipeline-history.jsonl` — last 2 entries for deltas
-- `/var/www/html/systemprompt-web/reports/crm/data/interactions.jsonl` — last 7 days of interactions
-- `/var/www/html/systemprompt-web/reports/crm/data/email-log.jsonl` — pending drafts
-- `/var/www/html/systemprompt-web/reports/crm/data/hypothesis-ledger.md` — in-flight and maturing
+**leads.json WARNING:** This file exceeds 256KB and cannot be read with the Read tool. Always use Python/Bash to query it:
+
+```bash
+# Count by stage
+python3 -c "
+import json
+data = json.load(open('/var/www/html/systemprompt-web/reports/crm/data/leads.json'))
+from collections import Counter
+counts = Counter(l.get('stage','?') for l in data['leads'])
+print(dict(counts))
+"
+
+# Find top leads by score
+python3 -c "
+import json
+data = json.load(open('/var/www/html/systemprompt-web/reports/crm/data/leads.json'))
+top = sorted([l for l in data['leads'] if l.get('stage') not in ('converted','lost','opted_out')], key=lambda x: x.get('score',0) or 0, reverse=True)[:10]
+for l in top: print(l.get('id'), l.get('name'), l.get('score'), l.get('stage'), l.get('email'))
+"
+```
+
+Read all of these (using the correct method per file size):
+- `leads.json` — **use Python** (file > 256KB, Read tool will fail)
+- `/var/www/html/systemprompt-web/reports/crm/data/deals.json` — Read tool OK
+- `/var/www/html/systemprompt-web/reports/crm/data/pipeline-history.jsonl` — Read tool OK
+- `/var/www/html/systemprompt-web/reports/crm/data/interactions.jsonl` — Read tool OK (tail last 20 if large)
+- `/var/www/html/systemprompt-web/reports/crm/data/email-log.jsonl` — Read tool OK
+- `/var/www/html/systemprompt-web/reports/crm/data/hypothesis-ledger.md` — Read tool OK
 
 ### 3. Read Strategy Context
 
@@ -90,14 +111,59 @@ No arbitrary maximum — emit every action that is hypothesis- and data-driven. 
 
 ### How emails actually get sent (non-negotiable)
 
-This brief **drafts** emails. It does not send them. Every send goes through `crm:email-composer`, which:
+**Resend API key is send-only.** It can POST to `/emails` but cannot GET delivery stats, list sent emails, or check bounce rates. Do NOT generate a "check Resend delivery stats" hypothesis or action — it cannot be executed or scored with this key. If delivery health is needed, Ed checks the Resend dashboard manually at resend.com.
 
+**Two send paths:**
+
+**A. Single email (via email-composer):** For individual targeted emails (enterprise follow-ups, direct outreach). Goes through `crm:email-composer`, which:
 1. Loads the Resend API key from `/var/www/html/systemprompt-web/.systemprompt/profiles/systemprompt-prod/secrets.json` (`resend_api_key`)
 2. Presents the draft to Ed for explicit approval (Ed replies `send` / `edit: ...` / `skip`)
-3. On `send`, POSTs to `https://api.resend.com/emails` with `Authorization: Bearer $RESEND_API_KEY` and a JSON body containing `from`, `to`, `subject`, `text`
-4. Logs the resulting Resend `id` into `reports/crm/data/email-log.jsonl` AND appends an interaction to `reports/crm/data/interactions.jsonl`
+3. On `send`, POSTs to `https://api.resend.com/emails`
+4. Logs the Resend `id` into `email-log.jsonl` AND appends an interaction to `interactions.jsonl`
 
-When this brief generates a send-type action, the action body **must** reference `crm:email-composer` as the send path — never invite Ed to send directly from Gmail or paste into a client. The Resend log is the only system of record for outbound; Gmail sends are invisible to the ledger.
+**B. Batch send (20 emails via orchestrator script):** For cold-email batches from pre-generated draft directories. Use this Python + curl orchestrator (Python urllib is blocked by Cloudflare 1010 — must shell out to curl):
+
+```python
+import os, re, subprocess, json, time
+
+RESEND_API_KEY = # read from secrets.json
+draft_dir = "/var/www/html/systemprompt-web/reports/crm/drafts/batch-{DATE}/"
+files = sorted([f for f in os.listdir(draft_dir) if f.endswith('.md') and f != 'README.md'])
+
+for i, fname in enumerate(files, 1):
+    with open(os.path.join(draft_dir, fname)) as f:
+        content = f.read()
+    
+    to_email = re.search(r'\*\*To:\*\* (.+)', content).group(1).strip()
+    lead_id  = re.search(r'\*\*Lead:\*\* (L-\d+)', content).group(1).strip()
+    subject  = re.search(r'\*\*Subject:\*\* (.+)', content).group(1).strip()
+    
+    # Body: everything after the Subject line
+    subj_pos = content.find(f'**Subject:** {subject}')
+    body = content[content.find('\n', subj_pos) + 1:].strip()
+    
+    payload = json.dumps({
+        "from": "systemprompt.io <hello@systemprompt.io>",
+        "to": [to_email],
+        "subject": subject,
+        "text": body
+    })
+    
+    result = subprocess.run(
+        ["curl", "-s", "-w", "\nHTTP:%{http_code}",
+         "-X", "POST", "https://api.resend.com/emails",
+         "-H", f"Authorization: Bearer {RESEND_API_KEY}",
+         "-H", "Content-Type: application/json",
+         "-d", payload],
+        capture_output=True, text=True, timeout=30
+    )
+    # Parse and log result...
+    time.sleep(2)  # 2s between sends
+```
+
+After batch sends: append all 20 entries to `email-log.jsonl` + `interactions.jsonl`, update each lead's `stage` to `contacted` in leads.json, append a pipeline-history.jsonl snapshot, and add a `C-###-EXEC` row to the hypothesis ledger.
+
+When this brief generates a batch-send action, the action body **must** include the full orchestrator script. Never invite Ed to send directly from Gmail. The Resend log is the only system of record for outbound; Gmail sends are invisible to the ledger.
 
 **Drop rules:**
 - Never two emails to the same lead on the same day
