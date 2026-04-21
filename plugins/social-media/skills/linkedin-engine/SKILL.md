@@ -2,7 +2,7 @@
 name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
-  version: "1.4.0"
+  version: "1.5.0"
   git_hash: "b94d5d1"
 ---
 
@@ -114,17 +114,22 @@ Derived from the enterprise value prop and ICP pain points:
 | 4 | **The build trap** | You could build AI governance in-house. By the time you ship v1, the landscape has moved. | "I have talked to three CTOs this month who started building AI governance in Q1. All three are now evaluating commercial options." |
 | 5 | **MCP is the governance surface** | MCP is not just a protocol for connecting tools. It is where governance happens — at the transport layer, not as a proxy. | "If your governance layer sits in front of MCP as a proxy, every tool call passes through unexamined. Governance must be the transport layer." |
 
-### Posting Cadence (target, not quota)
+### Posting Cadence
 
-| Day | Type | Pillar rotation | Format |
-|-----|------|----------------|--------|
-| **Monday** | Thought leadership | Pillars 1-2 (visibility, governance) | Text post, 800-1300 chars |
-| **Wednesday** | Technical depth | Pillars 3-5 (binary, build trap, MCP) | Carousel (PDF) or text with code |
-| **Friday** | Personal/contrarian | Any pillar, personal angle | Text post, story format |
+Daily posting. Every day requires a post OR an explicit skip decision. Skip is always valid. Fabrication is never valid.
 
-Rotate pillars across weeks so each pillar gets covered at least twice per month.
+| Day | Type | Pillar | Format |
+|-----|------|--------|--------|
+| Monday | Thought leadership | 1-2 | Text post, 800-1300 chars |
+| Tuesday | Technical or personal | Any | Text post |
+| Wednesday | Technical depth | 3-5 | Carousel or text with specifics |
+| Thursday | Personal or contrarian | Any | Text post |
+| Friday | Personal/contrarian | Any | Text post, story format |
+| Weekend | Skip unless something real happened | — | — |
 
-**This cadence is a ceiling, not a floor.** The skill's default output when nothing real has happened is **skip the slot**. Zero posts this week is preferable to one fabricated post. A LinkedIn feed of silence is recoverable; a feed of invented traction is not. A skipped slot is the correct output of the "no evidence, no post" rule above, not a ledger failure.
+**Posts are credibility infrastructure for the DM pipeline, not a conversion mechanism.** Content without active DM outreach is noise. The DM prospect table must have active leads for LinkedIn posting to earn its time cost.
+
+**The "what does the reader learn?" test is the first gate, not the last.** Every draft starts with that answer. If the answer is only "that a problem exists," the post is cut.
 
 ### Post Structure (mandatory)
 
@@ -136,6 +141,14 @@ Rotate pillars across weeks so each pillar gets covered at least twice per month
 ### Quality Gate (mandatory — benchmark against the PDF-governance post)
 
 Every LinkedIn draft must clear every item below before it ships. Reference post: `reports/linkedin/drafts/2026-04-20-pdf-governance.md` (body lines 12-22). If a new draft is weaker than that one on any axis, rewrite it or kill it.
+
+**"What does the reader learn?" gate (run this first)**
+
+Before any other check: answer in one sentence — what is the one thing a reader learns from this post that they did not know before?
+
+- Problem-awareness without mechanism fails. "AI agents are a blind spot" is not a lesson. "MCP operates over stdio, not HTTP — that is why your SIEM cannot see tool calls" is a lesson.
+- Every post must deliver at least one of: a mechanism (the WHY), a concrete failure-mode image (what it looks like when wrong), an architecture decision with a reason, or a diagnostic the reader can run against their own stack right now.
+- If the answer to "what does the reader learn?" is "that a problem exists," the post is not ready. Rewrite or kill it.
 
 **Hook quality**
 - [ ] Line 1 stands alone as a quotable sentence. Read it aloud: does it work with zero context, the way a book title or a conference talk title works?
