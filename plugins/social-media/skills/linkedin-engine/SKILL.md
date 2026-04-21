@@ -2,7 +2,7 @@
 name: linkedin-engine
 description: "Daily interactive LinkedIn session: feed posts, DM outreach, prospect research, engagement tracking, and performance review. Human-in-the-loop. Designed for daily /loop."
 metadata:
-  version: "1.3.0"
+  version: "1.4.0"
   git_hash: "b6c8fff"
 ---
 
@@ -334,12 +334,34 @@ likes: null
 comments: null
 reposts: null
 link_clicks: null
+pre_flight:
+  event: "What specifically happened or was observed that Ed earned the right to say this?"
+  evidence:
+    - claim: "..."
+      source: "file:line | evidence/YYYY-MM-DD-slug.jsonl | commit SHA | conversation turn"
+  urls_verified: []
+  banned_hook_check: "none-of-the-above"
+why_this_post_now:
+  - "What signal (conversation, observation, shipped feature, news item) triggered this specific post?"
+  - "Why this pillar, today, given what was posted in the last 7 days?"
+  - "What audience response is expected (ICP1/ICP2, engagement, pipeline signal)?"
 ---
 
 {post body}
 
 ---
-**First comment:** {link + context}
+**First comment:** {link + one sentence of context}
+
+---
+**Pre-submit checklist (Ed completes before posting):**
+- [ ] Read last 3 posts on Ed's profile — this does not repeat a recent angle
+- [ ] Zero em dashes in body and first comment
+- [ ] Zero banned AI-tell words (delve, landscape, game-changer, leverage as verb, robust, seamlessly, etc.)
+- [ ] Every numeric claim sourced to pre_flight.evidence above
+- [ ] No product name or URL in post body
+- [ ] First comment ready to paste immediately after posting
+- [ ] Ed is available for 60-90 minutes after posting to respond to comments
+- [ ] Mention count: {0 / contextual / direct} (must match funnel tier — 70% = 0, 20% = contextual, 10% = direct)
 ```
 
 ### Draft Quality Rules
@@ -349,6 +371,18 @@ link_clicks: null
 - No post should be publishable without Ed reading and approving it — drafts are starting points, not final copy
 - If the post references a guide or repo, verify the URL exists before including it
 - Read Ed's actual LinkedIn profile and recent posts (if available) to match his voice
+
+### Mention Audit
+
+Count product mentions before shipping. Apply the 70/20/10 funnel rule:
+
+| Funnel tier | % of posts | Product mentions in body | First-comment link |
+|-------------|-----------|--------------------------|-------------------|
+| Top of funnel | 70% | 0 — no product name, no URL, no "we built" | Optional, one sentence of context |
+| Middle of funnel | 20% | 1 — systemprompt named as context, not pitched | Permitted |
+| Bottom of funnel | 10% | 1 inline + template/repo CTA | Required |
+
+If the draft exceeds its tier budget, rewrite or reclassify. A top-of-funnel post that sneaks in a product mention at the end is a middle-of-funnel post — label it correctly and recalibrate the weekly mix.
 
 ---
 
