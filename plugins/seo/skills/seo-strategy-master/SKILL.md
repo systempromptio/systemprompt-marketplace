@@ -2,8 +2,8 @@
 name: seo-strategy-master
 description: "Maintains the living SEO strategy doc at reports/seo/seo-strategy-master.md. Never rewrites wholesale, only diffs. Contains objectives, pillar health, hypotheses, technical SEO issues, and content pipeline. Load identity first."
 metadata:
-  version: "1.2.0"
-  git_hash: "dc0c940"
+  version: "1.3.0"
+  git_hash: "pending"
 ---
 
 # SEO Strategy Master
@@ -91,7 +91,19 @@ All satellite documents live in `reports/seo/`:
 | `guide-inventory.md` | All guides with metadata, publication history |
 | `metadata-audit.md` | Title and description length audits per guide |
 | `interlinking-strategy.md` | Internal link map between guides |
-| `backlink-strategy.md` | External link opportunities |
+| `backlink-strategy.md` | External link opportunities — Tier 1 (permanent assets), Tier 2 (automated), Tier 3 (manual). **Always read before recommending off-page actions.** |
 | `traffic-analytics.md` | Traffic source history |
 | `data/hypothesis-ledger.md` | SEO hypothesis test records |
 | `data/seo-metrics.jsonl` | Append-only daily metric snapshots |
+
+## Off-Page SEO Strategy
+
+The strategy doc covers on-page SEO (content, CTR, technical). Off-page (authority, backlinks) is tracked in `backlink-strategy.md`. Key permanent assets as of 2026-04-21:
+
+- **`Ejb503/awesome-ai-agent-governance`** (GitHub) — 13-section curated list, 80+ entries. Targets "ai agent governance" and "awesome ai governance" in Google. systemprompt-template listed twice. Links to OWASP, NIST, ENISA, CISA, ISO — authority signal. Maintain and grow this repo actively.
+- **hesreallyhim/awesome-claude-code** — submission pending merge (issue #1652, 2026-04-21).
+- **mcpservers.org** — systemprompt-core submitted 2026-04-21.
+
+When an SEO action involves publishing an external GitHub repo, curated list, or tool that links back to systemprompt.io, log it in `backlink-strategy.md` Tier 1 table and note the target keywords and section placement.
+
+When assessing indexation failures (guides "Discovered but not indexed"), check `backlink-strategy.md` before recommending content changes — the root cause is often zero inbound backlinks, not content quality.
