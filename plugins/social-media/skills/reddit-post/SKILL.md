@@ -3,7 +3,7 @@ name: reddit-post
 description: "Drafts Reddit posts for developer audiences (ICP: principal engineers). Two registers: Practitioner Story (community subs, viral post formula) and Technical Merit (r/rust, r/ExperiencedDevs, engineering subs). Refuses to draft without a surprise hook (Register 1) or real benchmark data (Register 2). Load social-identity and brand-voice first."
 metadata:
   version: "1.0.0"
-  git_hash: "a4cd51d"
+  git_hash: "88d59b5"
 ---
 
 # Reddit Post — Developer Audience
