@@ -3,7 +3,7 @@ name: x-twitter-engine
 description: "Daily X/Twitter session: reply-first engagement with anchor accounts, news-reactive posts, and earned original threads. 4-week reply-first test with anchor-engagement pass criteria. Human-in-the-loop. Designed for daily /loop."
 metadata:
   version: "2.0.0"
-  git_hash: "pending"
+  git_hash: "acc9662"
 ---
 
 ## HARD RULE — Evidence-or-silence
