@@ -190,6 +190,23 @@ For each of the 5 strategy master documents, read:
 - Compute days since last update
 - Flag as STALE if > 7 days since last update
 
+### Step 6b: Check GitHub Notifications (run every day)
+
+Fetch unread GitHub notifications using the token from `gh auth token` (or the `github` key in `.systemprompt/profiles/systemprompt-prod/secrets.json`):
+
+```bash
+GH_TOKEN=$(gh auth token 2>/dev/null)
+curl -s -H "Authorization: token ${GH_TOKEN}" \
+  -H "Accept: application/vnd.github.v3+json" \
+  "https://api.github.com/notifications?all=false&per_page=30"
+```
+
+For each notification, record: `[reason] repo | type | title`. For any notification on a PR we authored (`reason: author`), also fetch the PR status (open/closed/merged) and note it.
+
+Add a **GitHub Notifications** row to Section 7 (System Health) with: total unread count, and a table of each notification with merge/close status for authored PRs. Mark any MERGED PR as a hypothesis partial PASS in the relevant hypothesis notes. Mark any CLOSED-NOT-MERGED PR as a hypothesis partial FAIL.
+
+If `gh auth token` fails, note "GitHub notifications: auth required" in Section 7 and continue.
+
 ### Step 7: Collect Key Stats (MANDATORY — never skip)
 
 The Key Stats block is **Section 1** of the master brief, immediately after the Yesterday Debrief Summary. These are the numbers Ed glances at every morning before reading anything else. **If this section is missing, the brief has failed.** Step 11 asserts its presence before the run can complete.
@@ -494,6 +511,7 @@ Actions that don't meet a PRIORITY criterion still appear in rank order below th
 | Orphaned actions (logged but never confirmed) | | {count + list IDs} |
 | Data collection errors today | | {list from domain briefs} |
 | Hypothesis ledger consistency | | {any gaps in ID sequences} |
+| GitHub notifications (unread) | | {count} — {list any authored PRs with merge/close status} |
 
 ### Domain Brief Links
 
