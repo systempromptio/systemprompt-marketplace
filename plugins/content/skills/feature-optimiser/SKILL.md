@@ -1,9 +1,9 @@
 ---
 name: feature-optimiser
-description: "Deterministically audit and optimise a published feature page. Runs an 11-section quality audit and applies 6 rewrite rules: claim verification, conversion clarity, brand discipline, and Technical-Marketing Synthesis (ten sub-checks: outcome headlines, jargon payoff, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, coined terminology, dropdown alignment, plain-English narrative, natural flow). Reads website analytics and GSC data per feature URL, produces a 90-point score delta (115 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
+description: "Deterministically audit and optimise a published feature page for HashiCorp / Stripe / Tailscale register. Runs an 11-section quality audit and applies 6 rewrite rules: claim verification, conversion clarity, brand discipline, and Technical-Marketing Synthesis (ten sub-checks: outcome headlines, implementation-choice decoders, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, named surfaces over coined metaphors, dropdown alignment, no Rust internals in narrative, dense sentences no filler). Penalises metaphor-stacking and marketing adjectives. Reads website analytics and GSC data per feature URL, produces a 90-point score delta (115 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
 metadata:
-  version: "1.2.0"
-  git_hash: "e345a19"
+  version: "1.3.0"
+  git_hash: "pending"
 ---
 
 # Feature Optimiser
@@ -187,7 +187,7 @@ Feature pages exist to convert visitors into users or conversations. Every eleme
 - [ ] Hero section follows formula: headline (6-10 words), subheadline (15-25 words), single CTA
 - [ ] CTA text uses action verbs appropriate to audience. Enterprise visitors: "Schedule a deployment review". Individual developers: "Start building". Not "Learn more".
 - [ ] Each value prop section answers one specific objection. The objection is identifiable. "Why should I trust a third-party governance layer?" is an objection. "Our product is great" is not.
-- [ ] Page passes the 10-Second Rule: a CTO landing after a cold email understands "serious AI governance infrastructure" within 10 seconds of scanning the hero and first section
+- [ ] Page passes the Expert Density Test: within the first 300 characters the hero names a real surface (endpoint, table, trait, config key), cites a concrete mechanism, and states the operational boundary ("on your network", "before the tool process spawns", "before the response returns")
 - [ ] No more than one primary CTA per section. Multiple CTAs create decision paralysis.
 - [ ] Conversion path clear for all three personas: CTO (enterprise conversation), technical partner (integration discussion), individual developer (activation)
 
@@ -260,9 +260,9 @@ This is the conversion gate. A feature page that passes every quality check but 
 
 **If three or more of the ten sub-checks below fail, the entire audit fails regardless of other scores.**
 
-This is the craft gate. A page can verify every claim, hit every keyword, and ship a perfect CTA, and still read as an API doc stapled to a pitch deck. Section 11 enforces the layer of technical-marketing copy craft that turns a spec dump into a page a CISO, CTO, or staff engineer converts on. The named exemplar is the Secrets Management "Last Mile Secrets Delivery" section; the feature-writer skill carries it in full.
+This is the craft gate. A page can verify every claim, hit every keyword, and ship a perfect CTA, and still read as an API doc stapled to a pitch deck, or as a brand exercise stapled to a spec. Section 11 enforces the register: dense, metaphor-free, every claim tied to a named surface and a verifiable reference — the register a staff engineer, CISO, or platform lead reads in HashiCorp, Stripe, and Tailscale documentation. The primary exemplar is the `/v1/messages` Gateway hero in the feature-writer skill. The Secrets Management "Last Mile Secrets Delivery" section is the secondary exemplar for permissible-coinage cases only.
 
-Six-check Section 11 (6a–6f) addresses copy clarity and outcome-binding. Sub-checks 6g–6j address brand naming, navigation consistency, Rust-plumbing discipline, and prose naturalness — four axes that were surfaced in iterative review of the Secrets Management rewrite and apply equally to every other feature page.
+Six-check Section 11 (6a–6f) addresses copy clarity and outcome-binding. Sub-checks 6g–6j address naming discipline, navigation consistency, Rust-plumbing exclusion, and prose density. The bar: at most one invented coined title per page; industry terms (JWT, OAuth, RBAC, MCP) assumed known; sentences dense with named surfaces and guarantees stated as verbs.
 
 **6a. Outcome Headlines (not mechanism)**
 - [ ] Headline names the stake, not the implementation (or the mechanism *is* the outcome, as in "Secrets never enter the context window")
@@ -300,13 +300,13 @@ Six-check Section 11 (6a–6f) addresses copy clarity and outcome-binding. Sub-c
 - [ ] A reader reaching the end of any technical paragraph cannot finish with an unanswered "so what?"
 - Fail markers: paragraph lacks audit cite (log table / signature / query), build-vs-buy delta, or file+line reference
 
-**6g. Coined Terminology**
-- [ ] Every `sections[].title` is a coined 2-4 word named concept, not a descriptive phrase
-- [ ] The flagship concept appears in the `headline_highlight` and in the `highlights[]` list, reinforcing the page's ownable vocabulary
-- [ ] Each coined term reads as engineering-vocabulary-grade (could appear in a HashiCorp, Tailscale, Cloudflare feature doc)
-- [ ] Plain-English unpacking sits beneath each coined title; the descriptor doesn't evaporate, only the title compresses
-- Pass examples (from Secrets Management exemplar): "Last Mile Secrets Delivery", "Stateless Proof of Session", "The Probe Wall", "Transport-Agnostic Bearer", "Blast Radius by Identity"
-- Fail markers: section titles of form `Server-Side X Y`, `X Security`, `X Management`, `X Chain`, `X Detection`, `Per-X Y`, `{Verb}-ing {Noun}`, or any descriptive phrase that reads like a documentation heading rather than a named concept
+**6g. Named Surfaces Over Coined Metaphors**
+- [ ] Every `sections[].title` names the real surface (endpoint, table, trait, config key), the industry term, or the operational boundary — **not** an invented metaphor
+- [ ] At most one invented coined title appears on the page (metaphor-stacking fails)
+- [ ] Any invented coinage is grounded in an industry-standard metaphor (supply chain's "last mile" for credential delivery, "blast radius" for IAM scoping) and the section's opening sentence collapses the metaphor to the real surface
+- [ ] A reader scanning the sidebar can tell what each section does without opening it
+- Pass examples: "`/v1/messages` on Your Infrastructure", "Per-Server OAuth Scoping", "Subprocess Credential Injection", "Per-Endpoint Rate Limits", "On-Host Audit Trail", "Air-Gap Deployment"
+- Fail markers: more than one of "The Probe Wall", "Blast Doors", "The Fleet Manifest", "The Lifecycle Chokepoint", "The Executor Spine", "Transport-Agnostic Bearer" on the same page; any section title whose subject cannot be guessed by a reader who knows JWT/OAuth/RBAC/MCP/air-gap; any coined title whose opening paragraph does not name the real surface within the first sentence
 
 **6h. Dropdown Alignment**
 - [ ] The feature page `headline` matches the navigation `dropdown-link-label` verbatim (extended minimally with a coined highlight to hit the 6-10 word hero formula is allowed)
@@ -437,11 +437,12 @@ For every sub-check that failed Section 11, apply the matching rewrite. Apply in
 - Rewrite: add a sentence pre-answering the matching buyer question. Choose CISO if the paragraph touches security, compliance, audit, or secrets; CTO if it touches control-plane consolidation, single-binary claims, or cost/consolidation; staff engineer if it describes internals.
 - If no pre-answer is possible (the claim is not defensible), soften or cut the claim.
 
-**6g scan -> rewrite: Coined Terminology**
-- Scan: `sections[].title` fields matching descriptive-phrase patterns (`{Adjective} {Noun} {Noun}`, `{Verb}-ing {Noun}`, `Per-X Y`, `X Security`, `X Management`, `X Detection`, `X Chain`, `Server-Side X`)
-- Rewrite: replace with a coined 2-4 word named concept. Borrow from supply chain (last mile), physics (blast radius), security industry (probe wall, zero trust), systems vocabulary (stateless proof, narrow waist, transport-agnostic), or networking (fat pipe, edge gate). Metaphor-borne coinage preferred. If a natural industry term already exists (MCP, JWT, OAuth), keep it; the coinage is at section-title level, not acronym level
-- Then propagate the flagship concept to `headline_highlight` and `highlights[]` list so the page has an ownable vocabulary
-- Exception: if the mechanism has a well-established industry name (e.g., "OAuth2 Token Exchange"), use it rather than inventing a competing coinage
+**6g scan -> rewrite: Named Surfaces Over Coined Metaphors**
+- Scan: `sections[].title` fields. Count invented coined titles (metaphors that cannot be decoded without reading the section body). If the count exceeds 1, the page fails 6g until reduced.
+- Rewrite: replace invented coinage with the real surface the section operates on. "Blast Doors" → "Per-Server OAuth Scoping". "The Lifecycle Chokepoint" → "Managed MCP Server Lifecycle". "The Probe Wall" → "Edge Scanner Rejection". "The Executor Spine" → "Subprocess Tool Execution".
+- Prefer the protocol endpoint (`/v1/messages` Gateway, `audit_events` Table), the industry term (Per-Server OAuth Scoping, Subprocess Credential Injection, Per-Endpoint Rate Limits), or the operational boundary (Air-Gap Deployment, On-Host Audit Trail).
+- Exception: one invented coined title per page is allowed when grounded in an industry-standard metaphor (supply chain's "last mile", "blast radius" from IAM) AND the opening sentence collapses the metaphor to the real surface. The rest of the section titles must name surfaces.
+- Do not propagate invented coinage into `headline_highlight` or `highlights[]` unless the coinage survived the exception test above.
 
 **6h scan -> rewrite: Dropdown Alignment**
 - Load `/var/www/html/systemprompt-web/services/web/config/navigation.yaml`. Find the entry where `href == /features/{slug}`. Read the `label` and the `description`.
@@ -477,7 +478,7 @@ Every feature page gets a **90-point score** across ten dimensions (expandable t
 | Why-What-How compliance | 15 | `round(15 * (passing_sections / total_sections))` |
 | Claim verification | 15 | `round(15 * (verified_refs / total_refs))` |
 | Technical-marketing synthesis | 15 | `round(15 * (passing_sub_checks / 6))` where passing_sub_checks is the count of Section 11 sub-checks (6a-6f) that pass across the whole page |
-| Conversion clarity | 10 | 2 points each: hero formula, CTA quality, 10-second rule, conversion paths, no dead ends |
+| Conversion clarity | 10 | 2 points each: hero specification (operation + boundary + ≥3 concrete nouns), CTA quality (gated by evidence depth, names artefact), Expert Density Test (surface + mechanism + boundary in first 300 chars), conversion paths present, no dead ends |
 | Technical accuracy | 10 | `round(10 * (valid_refs / total_refs))` |
 | Brand/voice compliance | 8 | `max(0, 8 - adjective_count - cliche_count)` |
 | Competitive positioning | 5 | 1 point each: build-vs-buy frame, no competitor names, governance-first positioning, code-backed differentiators, build-vs-buy implicit in depth |
@@ -521,7 +522,7 @@ score = round(15 * (passing / 10))
 2 points for each passing criterion:
 - Hero follows formula (headline 6-10 words, subheadline 15-25 words, single CTA)
 - CTA text uses specific action verbs (not generic "learn more")
-- 10-second rule passes (CTO understands the value prop within 10 seconds)
+- Expert Density Test passes (surface, mechanism, and operational boundary present in the first 300 characters of the hero)
 - Conversion paths clear for all three personas
 - No dead ends (every section has a path forward)
 
