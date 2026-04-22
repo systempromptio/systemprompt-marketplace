@@ -3,7 +3,7 @@ name: feature-writer
 description: "Write and rewrite systemprompt.io feature pages in the register of HashiCorp, Stripe, and Tailscale documentation: dense, metaphor-free, every claim tied to a named surface and a verifiable reference. Research-first workflow with per-feature reports, Why-What-How doctrine, Technical-Marketing Synthesis (ten sub-checks: outcome headlines, implementation-choice decoders, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, named surfaces over coined metaphors, dropdown alignment, no Rust internals in narrative, dense sentences no filler), claim verification against source code, Expert Density Test, and audience-question test. Speaks to skeptical CISOs, CTOs, and staff engineers. Load identity and brand-voice first."
 metadata:
   version: "1.3.0"
-  git_hash: "pending"
+  git_hash: "a75a984"
 ---
 
 # systemprompt Feature Writer
