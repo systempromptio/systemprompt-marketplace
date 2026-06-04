@@ -46,12 +46,34 @@ pub enum ServiceError {
 }
 ```
 
+#### HTTP error propagation (entry layer)
+
+HTTP status mapping lives at the **entry layer only**; `domain/*` must never reference the HTTP
+envelope (`ApiError`) — Domain → HTTP inverts the dependency rule. The orphan rule forbids
+`impl From<DomainError> for ApiError` in `entry/api`, so map domain → HTTP via an **entry-local
+error type** that owns the `From` impls (the `oauth/error/` `OAuthHttpError` and `error/`
+`ApiHttpError` pattern), then propagate with bare `?`. Variant → status is decided once, in one
+place; `IntoResponse` logs exactly once by status class. Reuse the shared
+`From<RepositoryError|ServiceError> for ApiError` for methods that return those.
+
+**Banned:** inline `map_err(|e| ApiError::ctor(format!("…{e}")))` at HTTP call sites — it discards
+the typed cause and flattens distinct failure modes into one status (a DB outage becomes a 404).
+Also banned: `tracing::*` inside a `map_err` that then propagates (the boundary logs once).
+`map_err` stays correct for deliberate variant re-classification (must `match`, not catch-all) and
+for adapting a foreign, variant-less error (`http::Error`, `std::io::Error`) at the boundary.
+
 ### Logging
 
+The message is a static event label; every runtime value is a structured field. Interpolating
+a named value into the message is banned — interpolated messages can't be filtered or aggregated.
+
 ```rust
-tracing::info!(user_id = %user.id, "Created user");
-tracing::error!(error = %e, "Operation failed");
+tracing::info!(user_id = %user.id, "Created user");   // required
+tracing::error!(error = %e, "Operation failed");      // required
+tracing::info!("Created user {}", user.id);           // banned
 ```
+
+The sole exception is a freeform prepared string carrying no named value (`tracing::debug!("{summary}")`).
 
 ### Forbidden Constructs
 
@@ -60,7 +82,9 @@ tracing::error!(error = %e, "Operation failed");
 | `unsafe` | Remove -- forbidden |
 | `unwrap()` / `expect()` | Use `?` or `ok_or_else()`. `expect()` is permitted **only** in macro-generated `From<String>` impls for validated typed IDs and for compile-time-constant `Regex::new()`; both must be unreachable at runtime. |
 | `panic!()` / `todo!()` / `unimplemented!()` | Return `Result` or implement |
+| `map_err(\|e\| ApiError::ctor(format!("…{e}")))` at an HTTP call site | Map domain → HTTP via an entry-local error type's `From` impls and propagate with bare `?`; the variant decides the status. Exempt: deliberate variant re-classification (`match`, not catch-all) and foreign variant-less adaptation (`http::Error`, `io::Error`). |
 | `dbg!()` / `println!` / `eprintln!` in libraries | Use `tracing`. CLI-display layers (`infra/logging/services/cli`, `database/services/display`) and `build.rs` `cargo:rerun-if-changed=` directives are exempt -- nothing else. |
+| Interpolating a named value into a `tracing` message (`tracing::info!("started {}", name)`) | Emit it as a structured field: `tracing::info!(name = %name, "started")`. Identifiers, counts, paths, and errors are fields, not message text. |
 | Inline comments (`//`) | Delete unless they encode a non-obvious *why*. WHAT-comments are banned; WHY-comments are required when the code's intent is not derivable from naming. Never narrate "what we just changed" or reference past callers/issues. |
 | Doc comments (`///`) | Allowed only at crate / module heads (`//!`) and on the small set of items where rustdoc adds genuine non-obvious value. **NEVER** add `///` mechanically "on every pub item." A `///` line that paraphrases the function's name and signature ("/// Fetch all matching rows.", "/// Errors if zero or more than one row matches.") is a code smell — strip on sight. See "Rustdoc placement" below. |
 | Raw SQL strings (`sqlx::query()`) | Use compile-time-verified `query!` / `query_as!` / `query_scalar!`. Allowlist (and ONLY this allowlist) for dynamic SQL: `crates/infra/database/src/admin/**` and `crates/infra/database/src/services/postgres/{introspection,query_executor,transaction,ext}.rs`. Anything else is a violation. |
@@ -133,13 +157,13 @@ Every published crate has a `CHANGELOG.md`. Entries are written for **downstream
 
 `///` exists to answer questions a reader CANNOT answer from the type, the signature, and the function name. Anything that just restates them is noise.
 
-**Add `///` only when one of these is true:**
+**Add `///` only when one of these is true** — and in every case the comment must encode something that **is not present in the code at all**. If the fact can be reconstructed by reading the body, the signature, and the names, it is not an exception, no matter how accurately the prose restates it:
 
 - A hidden constraint or invariant the signature does not encode (e.g. "callers must hold the registry lock before calling").
 - An error case that is non-obvious AND not implied by the `Result` type (e.g. "returns `Err(InvalidGrant)` if the code was issued for a different `client_id`" — yes; "errors if the query matches zero or more than one row" for `fetch_one` returning `Result<Row>` — no, the function name says it).
 - A security or safety boundary the caller must respect.
 - A performance characteristic worth flagging (allocation, blocking, retry behaviour).
-- A workaround for a specific bug that a future reader would otherwise undo.
+- A workaround for a specific bug that a future reader would otherwise undo — naming the **external** cause (the upstream quirk, the prior incident), not paraphrasing what the workaround code does.
 - A footgun that has caused a production incident.
 
 **Strip on sight (a non-exhaustive list of the smell):**
@@ -150,6 +174,29 @@ Every published crate has a `CHANGELOG.md`. Entries are written for **downstream
 - `/// Errors if X.` when `X` is implied by the parameter or return type
 - One-liners on enum variants whose name is the entire content of the line
 - One-liners on struct fields whose name is the entire content of the line
+- **Multi-line `///` (or `//`) that narrates the body's own control flow** — a doc that walks the reader through which `match` arm maps where, which branch fires when, or what each step does, when the body below already says exactly that. The length and accuracy of the prose make it *worse*, not better: it is a second, un-compiled copy of the logic that will rot. Delete it; the code is the documentation.
+
+**Worked example — the canonical rejected form.** This is unacceptable:
+
+```rust
+/// Translates an upstream failure into the status the *client* should see.
+///
+/// A malformed request (400/404/422) or rate limit (429) is the caller's to
+/// fix, so it passes through; auth, 5xx, timeout, and transport failures are
+/// the gateway/provider's problem and collapse to 502/504 without leaking the
+/// upstream's credential-level detail.
+pub fn map_upstream_error(e: &UpstreamError) -> (StatusCode, String) {
+    let mapped = match *status {
+        400 | 404 | 422 => StatusCode::from_u16(*status).unwrap_or(StatusCode::BAD_REQUEST),
+        429 => StatusCode::TOO_MANY_REQUESTS,
+        408 | 504 => StatusCode::GATEWAY_TIMEOUT,
+        _ => StatusCode::BAD_GATEWAY,
+    };
+    // ...
+}
+```
+
+The correct form is the **same function with no doc at all**: the `match` is the spec, the name says the intent, the prose is noise. Every clause of that six-line doc is already spelled out in the arms beneath it. Self-documenting code means the reader looks *down* at the body, not *up* at a paragraph that will silently drift from it.
 
 **Crate / module heads are different.** Write a real `//!` block at the top of `lib.rs` and at the top of significant `mod.rs` files. That is where docs.rs gets its landing page; that is where the public surface, layering, feature flags, and error model are explained. A reader who lands on a docs.rs page with a one-paragraph crate-level overview and a clean module index will find what they need; a reader landing on a wall of method paraphrases will not.
 
@@ -168,6 +215,10 @@ Comments are governed by a single principle: **the code documents itself unless 
 Entry binaries are held to the **same** comment bar as libraries — entry is not special. The only thing unique to published crates is *publishing* hygiene (docs.rs config, semver, feature matrix, examples), not comment style.
 
 A WHY-comment must answer one of: a hidden constraint, a subtle invariant, a workaround for a specific bug, behaviour that would surprise a reader. WHAT-comments ("increments the counter"), narrative comments ("we just refactored this"), and reference-to-history comments ("used by X flow", "added for issue #123") are all banned.
+
+**The default is no comment.** A WHY-comment is the rare exception, not a routine annotation — reach for one only when omitting it would let a competent reader silently break a real invariant. The bar is *genuinely exceptional*: if the "why" is derivable from the code, the types, or a well-named function, write none. Prose that re-explains intent at length, paints a consumer-facing picture ("so the UI can tell X apart from Y rather than crying wolf"), or recounts protocol/format trivia belongs in a `//!` module head if it belongs anywhere — not scattered as inline `//`. When in doubt, delete it. A file dense with why-comments is a signal the bar has slipped, not that the code is unusually subtle.
+
+**Accurate is not sufficient.** Truth is the floor, not the bar. A `///` that is perfectly correct but merely restates the signature, the type, or the body's control flow is *still banned* — the test is whether it carries **non-derivable signal**, not whether it is true. An AI writing this code will be fluent and will produce confident, well-phrased narration for every function; that fluency is exactly the trap. Hold the line: most functions in world-class self-documenting code have **no** `///` and **no** `//`, and that is the target state, not a gap to fill.
 
 ### serde_json::Value is a Code Smell
 
