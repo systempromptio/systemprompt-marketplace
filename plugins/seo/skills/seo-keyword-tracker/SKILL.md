@@ -2,8 +2,8 @@
 name: seo-keyword-tracker
 description: "Pulls DataForSEO keyword data, updates keyword-targets.json, refreshes keyword-research.md, discovers new keywords, and seeds hypotheses. Monthly full refresh + daily lightweight cross-reference in daily-seo-brief. Load identity first."
 metadata:
-  version: "1.0.1"
-  git_hash: "dc0c940"
+  version: "1.0.2"
+  git_hash: "c19db16"
 ---
 
 # SEO Keyword Tracker
@@ -13,6 +13,22 @@ Keyword intelligence layer for the SEO system. Owns the canonical keyword target
 ## Dependencies
 
 Load `identity` first. It defines ICP, positioning, and which keyword clusters matter.
+
+## Credentials
+
+DataForSEO Basic auth is **not embedded in this skill**. Resolve it at runtime in this order:
+
+1. `$DATAFORSEO_AUTH` environment variable (preferred — set in shell or `.env`).
+2. The `Base64 auth` line in the operator's local memory file `reference_dataforseo.md`.
+3. If neither is present, surface the error to the operator. Do NOT prompt the API without credentials and do NOT hardcode them in this skill.
+
+Before running any `curl` below, export the value:
+
+```bash
+export DATAFORSEO_AUTH="<base64 of login:password>"
+```
+
+If the API returns `40100 You are not authorized`, the credential is stale or wrong — re-read the source above rather than retrying.
 
 ## Two Run Modes
 
@@ -120,7 +136,7 @@ Read `data/keyword-targets.json` to get the keyword list. Pull fresh search volu
 
 ```bash
 curl -s -X POST "https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/live" \
-  -H "Authorization: Basic ZWRAdHlpbmdzaG9lbGFjZXMuY29tOjBmOThlODg1YmZlN2RlMWQ0" \
+  -H "Authorization: Basic ${DATAFORSEO_AUTH}" \
   -H "Content-Type: application/json" \
   -d '[{
     "keywords": ["claude code vs cursor", "claude code cost", "...all tracked keywords..."],
@@ -137,7 +153,7 @@ Use the "keywords for site" endpoint to discover what Google associates with sys
 
 ```bash
 curl -s -X POST "https://api.dataforseo.com/v3/keywords_data/google_ads/keywords_for_site/live" \
-  -H "Authorization: Basic ZWRAdHlpbmdzaG9lbGFjZXMuY29tOjBmOThlODg1YmZlN2RlMWQ0" \
+  -H "Authorization: Basic ${DATAFORSEO_AUTH}" \
   -H "Content-Type: application/json" \
   -d '[{
     "target": "systemprompt.io",
@@ -150,7 +166,7 @@ Also pull suggestions for our top 5 keywords:
 
 ```bash
 curl -s -X POST "https://api.dataforseo.com/v3/keywords_data/google_ads/keywords_for_keywords/live" \
-  -H "Authorization: Basic ZWRAdHlpbmdzaG9lbGFjZXMuY29tOjBmOThlODg1YmZlN2RlMWQ0" \
+  -H "Authorization: Basic ${DATAFORSEO_AUTH}" \
   -H "Content-Type: application/json" \
   -d '[{
     "keywords": ["claude code vs cursor", "claude code cost", "anthropic marketplace", "claude agent sdk", "how to use claude code"],
@@ -163,7 +179,7 @@ curl -s -X POST "https://api.dataforseo.com/v3/keywords_data/google_ads/keywords
 
 ```bash
 curl -s -X POST "https://api.dataforseo.com/v3/dataforseo_labs/google/bulk_keyword_difficulty/live" \
-  -H "Authorization: Basic ZWRAdHlpbmdzaG9lbGFjZXMuY29tOjBmOThlODg1YmZlN2RlMWQ0" \
+  -H "Authorization: Basic ${DATAFORSEO_AUTH}" \
   -H "Content-Type: application/json" \
   -d '[{
     "keywords": ["...all tracked + newly discovered keywords..."],

@@ -94,8 +94,11 @@ systemprompt-template/
 ```
 extensions/my-extension/
 ├── Cargo.toml
+├── build.rs
 ├── schema/
-│   └── 001_tables.sql
+│   ├── 001_tables.sql
+│   └── migrations/
+│       └── 001_add_status.sql
 └── src/
     ├── lib.rs
     ├── extension.rs
@@ -129,6 +132,10 @@ async-trait = { workspace = true }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 tracing = { workspace = true }
+
+# Required only if the extension has schema/migrations/ files.
+[build-dependencies]
+systemprompt-extension = { workspace = true }
 ```
 
 ### src/lib.rs
@@ -285,14 +292,33 @@ fn migration_weight(&self) -> u32 {
 
 ### Migrations
 
+Migration SQL lives in `schema/migrations/NNN_<name>.sql` files — never as a Rust
+string literal. The crate's `build.rs` discovers them; `extension_migrations!()`
+returns them. The version (`NNN`) and name come from the filename, so adding a
+migration is adding one file with no Rust edit.
+
 ```rust
-fn migrations(&self) -> Vec<Migration> {
-    vec![
-        Migration::new(1, "add_status",
-            "ALTER TABLE my_items ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active'"),
-    ]
+// build.rs
+fn main() {
+    systemprompt_extension::build::emit_migrations();
 }
 ```
+
+```rust
+// src/extension.rs
+fn migrations(&self) -> Vec<Migration> {
+    extension_migrations!()
+}
+```
+
+```sql
+-- schema/migrations/001_add_status.sql
+ALTER TABLE my_items ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active';
+```
+
+Inline SQL strings and hand-written `Migration::new(...)` lists are rejected by
+`just lint-extensions`. Add `build.rs` to the package `include` list so it ships
+on publish.
 
 ### Extending Core Tables
 
