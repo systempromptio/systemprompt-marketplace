@@ -3,7 +3,7 @@ name: identity
 description: "The foundational source of truth for what systemprompt.io is, who it serves, and how it goes to market. Load this skill before any other content skill. Defines product identity, ICP, go-to-market strategy, competitive positioning, and messaging hierarchy."
 metadata:
   version: "2.1.0"
-  git_hash: "a8d5b1e"
+  git_hash: "41ef419"
 ---
 
 # systemprompt Identity
