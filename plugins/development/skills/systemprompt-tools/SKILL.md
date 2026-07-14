@@ -59,7 +59,13 @@ The CLAUDE.md scorer and llms.txt tools also offer an LLM deep review at `POST .
 
 ## MCP alternative
 
-Prefer MCP? `npx -y systemprompt-tools-mcp` exposes the same tools as an MCP server: https://github.com/systempromptio/systemprompt-tools-mcp
+Prefer MCP? The same tools are served over anonymous streamable HTTP by systemprompt.io itself (no OAuth, no key):
+
+```bash
+claude mcp add --transport http systemprompt-tools https://systemprompt.io/api/v1/mcp/systemprompt-tools/mcp
+```
+
+MCP tool names: `classify_eu_ai_act_risk`, `score_claude_md`, `validate_llms_txt`, `generate_llms_txt`, `generate_github_actions_permissions`, `calculate_ai_roi`.
 
 ## Workflow ideas
 
