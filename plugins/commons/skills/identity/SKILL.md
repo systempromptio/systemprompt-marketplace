@@ -2,7 +2,7 @@
 name: identity
 description: "The foundational source of truth for what systemprompt.io is, who it serves, and how it goes to market. Load this skill before any other content skill. Defines product identity, ICP, go-to-market strategy, competitive positioning, and messaging hierarchy."
 metadata:
-  version: "2.1.0"
+  version: "3.0.0"
   git_hash: "41ef419"
 ---
 
@@ -12,7 +12,9 @@ The single source of truth for what systemprompt is, who it serves, and how it g
 
 ## What systemprompt Is
 
-**One sentence:** systemprompt gives you control of every AI client your organisation uses.
+**One sentence:** systemprompt.io is the only AI infrastructure you actually own.
+
+**The differentiation principle:** The AI market is a sea of indistinguishable rented tools. systemprompt.io stands out on the one claim nobody else can make: you install it on your own systems, build on it, and keep it forever. Ownership is the lead message everywhere; control and governance are the first elaboration of what owning it gives you.
 
 **Full definition:** systemprompt.io is AI governance infrastructure. It lets organizations own, standardize, and control how AI is used (Claude, Codex, Gemini, or in-house agents) across their teams, their departments, and (through white-label deployment) their customers. Provider support is verified in source: Anthropic, OpenAI, and Gemini providers plus a /v1 gateway that routes to any compatible upstream. Claude remains the best-supported client and the main SEO surface, but positioning is provider-neutral, Claude-aware: lead with governing every AI client, name Claude as one of them.
 
@@ -44,7 +46,7 @@ These are the concrete proof points that content skills should draw from when sp
 
 ## What systemprompt Is NOT
 
-- It is not just an MCP server (the platform is much broader)
+- It is not just an MCP server (the infrastructure is much broader)
 - It is not competing with Anthropic (it works with the Anthropic ecosystem, making it governable)
 - It is not a developer tool (built for organizations, accessible to non-technical users)
 - It is not a consumer product (the free tier exists to demonstrate the technology and build brand awareness, not as the core business)
@@ -58,7 +60,7 @@ Some try to build governance in-house. This is a trap. The AI landscape moves so
 
 systemprompt solves this permanently. Organizations get a governance layer that evolves with the ecosystem. When Anthropic ships something new, systemprompt supports it. When new governance requirements emerge, systemprompt handles them. The organization stays current without maintaining a single line of governance code.
 
-**The value proposition is not the platform. It is freedom from maintaining the platform yourself.**
+**The value proposition is ownership without the maintenance burden. You own the infrastructure; we keep it current.**
 
 ## ICP (Ideal Customer Profile)
 
@@ -104,7 +106,7 @@ SaaS companies whose customers are asking for AI governance capabilities. These 
 
 ### ICP 4: Individual Users (Awareness and Brand Building)
 
-Individual Claude users who want ownership and portability of their plugins. These users matter for brand awareness and credibility, not for direct revenue. When a CTO Googles systemprompt after receiving a cold email, these users and their activity create the signal that this is a real, active platform.
+Individual Claude users who want ownership and portability of their plugins. These users matter for brand awareness and credibility, not for direct revenue. When a CTO Googles systemprompt after receiving a cold email, these users and their activity create the signal that this is real, actively used software.
 
 ## Go-to-Market Strategy
 
@@ -124,7 +126,7 @@ Content and SEO are supporting channels that build credibility and inbound disco
 
 ### Role of the Website (systemprompt.io)
 
-The website's primary job is **enterprise credibility.** When a CTO who has received a cold email visits systemprompt.io to vet the company before taking a meeting, the site must communicate "this is an AI governance platform" within 10 seconds. When a CISO searches for AI agent governance solutions, the site must demonstrate technical depth and security-first infrastructure.
+The website's primary job is **enterprise credibility.** When a CTO who has received a cold email visits systemprompt.io to vet the company before taking a meeting, the site must communicate "this is AI infrastructure you own" within 10 seconds. When a CISO searches for AI agent governance solutions, the site must demonstrate technical depth and security-first infrastructure.
 
 The website's secondary job is supporting the free tier for individual users, which builds visible activity and brand familiarity.
 
@@ -132,7 +134,7 @@ The website must NOT look like a consumer product. The first impression must be 
 
 ### Role of the Free Tier
 
-The free tier is a **demonstration environment.** It proves the technology works. It creates visible user activity that signals a real, active platform. It gives individual users genuine value (ownership and portability of their plugins). But it is not the business model. It is a credibility engine.
+The free tier is a **demonstration environment.** It proves the technology works. It creates visible user activity that signals real, active software. It gives individual users genuine value (ownership and portability of their plugins). But it is not the business model. It is a credibility engine.
 
 ### Channels
 
@@ -145,7 +147,7 @@ The free tier is a **demonstration environment.** It proves the technology works
 
 ### The Competitive Frame: Build vs. Buy
 
-The primary competitor is not another platform. It is the internal engineering team that says "we can build this ourselves."
+The primary competitor is not another vendor. It is the internal engineering team that says "we can build this ourselves."
 
 **The argument against building in-house:**
 The AI landscape evolves so rapidly that internal governance tooling becomes a maintenance burden that never ends. Anthropic ships new features, plugin architectures, and capabilities continuously. An in-house solution requires a dedicated team tracking every change, rewriting integrations, and maintaining compatibility. systemprompt absorbs that complexity. The organization gets governance that evolves with the ecosystem, maintained by a team whose entire focus is staying current with the AI landscape.
@@ -162,6 +164,7 @@ The AI landscape evolves so rapidly that internal governance tooling becomes a m
 
 ### Differentiation
 
+- **You own it outright:** Source-available under BSL 1.1, installed on your own systems, everything built on it is the customer's property. Every alternative is rented access; this is the only complete AI infrastructure a company owns. Lead with this.
 - **Governance, not just management:** systemprompt enforces rules, permissions, and standards. It does not just store prompts.
 - **One binary, complete stack:** A single ~50 MB Rust binary consolidates what others assemble from multiple services.
 - **White-label infrastructure:** No competitor offers brandable, deployable AI governance that SaaS companies can offer to their customers.
@@ -173,9 +176,9 @@ The AI landscape evolves so rapidly that internal governance tooling becomes a m
 ## Messaging Hierarchy
 
 ### Tier 1: The Core Message
-**"systemprompt gives you control of every AI client your organisation uses."**
+**"systemprompt.io is the only AI infrastructure you actually own."**
 
-Use this as the anchor. Everything else is elaboration.
+Use this as the anchor. Control of every AI client your organisation uses is the first elaboration of ownership; everything else follows from it.
 
 ### Tier 2: Audience-Specific Messages
 
@@ -193,10 +196,11 @@ Use this as the anchor. Everything else is elaboration.
 
 ### Tier 3: Supporting Messages
 
+- "Rent a thousand indistinguishable AI tools, or own one system that runs them all."
 - "You could build it yourself. But by the time you ship it, you will need to rebuild it."
 - "AI adoption without governance is chaos. systemprompt brings order."
 - "The AI landscape moves too fast to maintain governance tooling in-house."
-- "One platform. Your brand. Full control."
+- "One system. Your brand. Full control."
 - "Same binary. Same features. Different story."
 
 ## Pricing Context
@@ -207,13 +211,13 @@ Use this as the anchor. Everything else is elaboration.
 
 ## What the Name Means
 
-"System prompt" is a technical term in AI. It is the foundational instruction that controls how an AI behaves. The name is an asset: it signals to CTOs and technical leaders that this platform operates at the foundational layer of AI control. It communicates authority and depth to the people who matter most (the primary ICP).
+"System prompt" is a technical term in AI. It is the foundational instruction that controls how an AI behaves. The name is an asset: it signals to CTOs and technical leaders that this infrastructure operates at the foundational layer of AI control. It communicates authority and depth to the people who matter most (the primary ICP).
 
 ## Rules for All Content
 
 All content created using any systemprompt skill must align with this identity document. Specifically:
 
-1. **Lead with governance and control,** not memory or persistence
+1. **Lead with ownership, then governance and control,** not memory or persistence
 2. **Position as infrastructure,** not as a consumer product
 3. **Speak to CTOs first,** individual users second
 4. **The free tier is a demonstration environment,** not the product

@@ -2,7 +2,7 @@
 name: brand-voice
 description: "Apply and enforce the systemprompt.io brand voice, style guide, and messaging pillars across all content. Always load identity first. Use when reviewing content for brand consistency, drafting content, or checking terminology compliance."
 metadata:
-  version: "2.0.0"
+  version: "3.0.0"
   git_hash: "a8d5b1e"
 ---
 
@@ -44,7 +44,7 @@ The voice carries authority on AI governance without being academic. It is the C
 - **This does NOT sound like**: "AI governance is super easy now! Anyone can set it up!"
 
 ### Infrastructure-Minded
-- **We are**: thinking at the platform layer, talking about systems and standards, focused on what scales
+- **We are**: thinking at the infrastructure layer, talking about systems and standards, focused on what scales
 - **We are not**: feature-focused, demo-driven, selling individual capabilities
 - **This sounds like**: "systemprompt is not a tool your team uses. It is the layer underneath that ensures every tool works the way your organization needs it to."
 - **This also sounds like**: "MCP is the governance surface. Govern at the protocol layer and every client, every model, every tool inherits the policy."
@@ -94,10 +94,10 @@ Banned: revolutionize, game-changer, unlock, supercharge, seamlessly, harness th
 - Connectors (not "integrations" or "bridges")
 - MCP servers (not "APIs" or "services")
 - Claude Cowork (not "the desktop app")
-- The systemprompt platform (not "the systemprompt tool" or "the systemprompt app")
+- systemprompt.io, the system, or the infrastructure (never "the systemprompt platform", "tool", or "app")
 
-### 7. Lead with governance
-Every piece of content should reinforce systemprompt's position as AI governance infrastructure. Not memory. Not persistence. Not plugin management. Governance: ownership, control, observability, enforcement, standards.
+### 7. Lead with ownership
+Every piece of content should reinforce systemprompt.io's position as the only AI infrastructure you actually own. Not memory. Not persistence. Not plugin management. Ownership first, then what owning it gives you: control, observability, enforcement, standards.
 
 ## Preferred Language
 
@@ -124,9 +124,10 @@ Use these phrases when they are accurate. They are tested, specific, and grounde
 - "see your team's AI usage by Friday"
 
 **Cross-ICP (always appropriate):**
+- own the binary, own the data
+- "stop renting AI, own the system"
 - one binary, complete stack
 - the build trap
-- own the binary, own the data
 - governance at the transport layer
 - source-available
 - self-hosted
@@ -147,10 +148,10 @@ Do not mix ICP frames in a single piece of content. A blog post targeting CISOs 
 
 ## Messaging Pillars (in priority order)
 
-1. **Control and governance first** - systemprompt gives you control of Claude. Standardized implementation, observability, and enforcement across the org. (All ICPs, but especially ICP 1 and ICP 2.)
-2. **Build vs. buy** - You could build AI governance in-house. But the landscape moves too fast. By the time you ship it, you will need to rebuild it. systemprompt handles continuous adaptation. (ICP 2 and ICP 3 primarily.)
-3. **Infrastructure, not a tool** - systemprompt is the governance layer other companies build on. White-label deployment. Your brand. Our infrastructure. (ICP 3, and enterprise credibility for ICP 1.)
-4. **Ownership of your AI** - Your skills, agents, connectors. Portable, decoupled, yours. Not locked to any single ecosystem. (ICP 4, and supporting message for ICP 2.)
+1. **Ownership of your AI** - The only AI infrastructure you actually own. Your binary, your data, your skills, agents, and connectors. Installed on your systems, built on, kept forever. Every alternative is rented. (All ICPs. This is the lead pillar everywhere.)
+2. **Control and governance** - Owning the system is what makes control real. Standardized implementation, observability, and enforcement across the org. (Especially ICP 1 and ICP 2.)
+3. **Build vs. buy** - You could build AI governance in-house. But the landscape moves too fast. By the time you ship it, you will need to rebuild it. systemprompt handles continuous adaptation. (ICP 2 and ICP 3 primarily.)
+4. **Infrastructure, not a tool** - systemprompt is the governance layer other companies build on. White-label deployment. Your brand. Our infrastructure. (ICP 3, and enterprise credibility for ICP 1.)
 
 ## LinkedIn Strategy
 
