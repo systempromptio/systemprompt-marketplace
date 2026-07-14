@@ -3,7 +3,7 @@ name: systemprompt-tools
 description: "Call the free systemprompt.io tools API from any agent: EU AI Act risk classification, CLAUDE.md scoring, llms.txt/AGENTS.md generation and validation, GitHub Actions permissions, and AI ROI calculation. No API key, no signup."
 metadata:
   version: "1.0.0"
-  git_hash: "10613ae"
+  git_hash: "3630b38"
 ---
 
 # systemprompt.io Free Tools
