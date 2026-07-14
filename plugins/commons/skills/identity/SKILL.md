@@ -2,7 +2,7 @@
 name: identity
 description: "The foundational source of truth for what systemprompt.io is, who it serves, and how it goes to market. Load this skill before any other content skill. Defines product identity, ICP, go-to-market strategy, competitive positioning, and messaging hierarchy."
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   git_hash: "a8d5b1e"
 ---
 
@@ -12,9 +12,9 @@ The single source of truth for what systemprompt is, who it serves, and how it g
 
 ## What systemprompt Is
 
-**One sentence:** systemprompt gives you control of Claude.
+**One sentence:** systemprompt gives you control of every AI client your organisation uses.
 
-**Full definition:** systemprompt.io is AI governance infrastructure. It is the platform that lets organizations own, standardize, and control how Claude is used across their teams, their departments, and (through white-label deployment) their customers.
+**Full definition:** systemprompt.io is AI governance infrastructure. It lets organizations own, standardize, and control how AI is used (Claude, Codex, Gemini, or in-house agents) across their teams, their departments, and (through white-label deployment) their customers. Provider support is verified in source: Anthropic, OpenAI, and Gemini providers plus a /v1 gateway that routes to any compatible upstream. Claude remains the best-supported client and the main SEO surface, but positioning is provider-neutral, Claude-aware: lead with governing every AI client, name Claude as one of them.
 
 systemprompt is not a consumer app. It is not a prompt library. It is not an MCP server (though it includes one). It is infrastructure that other companies build on.
 
@@ -22,7 +22,7 @@ systemprompt is not a consumer app. It is not a prompt library. It is not an MCP
 
 1. **For enterprise security teams:** A governance pipeline that integrates with existing security infrastructure. SIEM-compatible structured JSON audit logs, role-based access control with six tiers, end-to-end request tracing, and provable compliance for every AI agent interaction. Runs on-premises, air-gapped if needed, no data leaves the perimeter.
 
-2. **For mid-market engineering teams (SMEs):** Standardized AI implementation across the organization. A centralised skill marketplace, shared knowledge base, usage analytics, and cost visibility. Every team member uses Claude with the same knowledge, the same rules, the same processes. Full observability of what AI you have, how it is used, and where it is used.
+2. **For mid-market engineering teams (SMEs):** Standardized AI implementation across the organization. A centralised skill marketplace, shared knowledge base, usage analytics, and cost visibility. Every team member uses AI with the same knowledge, the same rules, the same processes, whichever client they run. Full observability of what AI you have, how it is used, and where it is used.
 
 3. **For individual users:** A free tier that provides ownership and portability of your Claude plugins. Your skills, agents, and connectors stored securely in a third-party cloud, decoupled from any single ecosystem. Reusable, shareable, yours.
 
@@ -173,7 +173,7 @@ The AI landscape evolves so rapidly that internal governance tooling becomes a m
 ## Messaging Hierarchy
 
 ### Tier 1: The Core Message
-**"systemprompt gives you control of Claude."**
+**"systemprompt gives you control of every AI client your organisation uses."**
 
 Use this as the anchor. Everything else is elaboration.
 
@@ -183,7 +183,7 @@ Use this as the anchor. Everything else is elaboration.
 "Every AI agent request traced end-to-end. SIEM-compatible audit logs. RBAC at the transport layer. One binary, your infrastructure, provable governance."
 
 **To a CTO evaluating for their org:**
-"Standardize how your organization uses Claude. Full observability, enforcement, and permissions across every team."
+"Standardize how your organization uses AI. Full observability, enforcement, and permissions across every team and every client."
 
 **To a SaaS company evaluating white-label:**
 "Give your customers AI governance without building it yourself. Deploy under your own brand. We handle the infrastructure."
