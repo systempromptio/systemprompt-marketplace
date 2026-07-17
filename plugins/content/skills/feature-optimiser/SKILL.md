@@ -1,9 +1,9 @@
 ---
 name: feature-optimiser
-description: "Deterministically audit and optimise a published feature page for HashiCorp / Stripe / Tailscale register. Runs an 11-section quality audit and applies 6 rewrite rules: claim verification, conversion clarity, brand discipline, and Technical-Marketing Synthesis (ten sub-checks: outcome headlines, implementation-choice decoders, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, named surfaces over coined metaphors, dropdown alignment, no Rust internals in narrative, dense sentences no filler). Penalises metaphor-stacking and marketing adjectives. Reads website analytics and GSC data per feature URL, produces a 90-point score delta (115 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
+description: "Deterministically audit and optimise a published feature page on the register ladder: struggling-moment heroes with zero implementation jargon, mechanism evidence relocated to section bodies and dropdowns in the HashiCorp / Stripe / Tailscale register. Runs an 11-section quality audit plus register-ladder checks (hero jargon count, homepage narrative echo, struggling-moment opener, identifier-enumeration, established-not-indie voice) and applies 6 rewrite rules: claim verification, conversion clarity, brand discipline, and Technical-Marketing Synthesis (ten sub-checks: outcome headlines, jargon payoff scoped to sections/dropdowns, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, named surfaces over coined metaphors, dropdown alignment, no Rust internals in narrative, dense sentences no filler). Penalises metaphor-stacking and marketing adjectives. Reads website analytics and GSC data per feature URL, produces a 90-point score delta (115 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
 metadata:
-  version: "1.3.0"
-  git_hash: "a75a984"
+  version: "1.4.0"
+  git_hash: "pending"
 ---
 
 # Feature Optimiser
@@ -187,9 +187,21 @@ Feature pages exist to convert visitors into users or conversations. Every eleme
 - [ ] Hero section follows formula: headline (6-10 words), subheadline (15-25 words), single CTA
 - [ ] CTA text uses action verbs appropriate to audience. Enterprise visitors: "Schedule a deployment review". Individual developers: "Start building". Not "Learn more".
 - [ ] Each value prop section answers one specific objection. The objection is identifiable. "Why should I trust a third-party governance layer?" is an objection. "Our product is great" is not.
-- [ ] Page passes the Expert Density Test: within the first 300 characters the hero names a real surface (endpoint, table, trait, config key), cites a concrete mechanism, and states the operational boundary ("on your network", "before the tool process spawns", "before the response returns")
+- [ ] Page passes the Expert Density Test in the **section bodies** (not the hero): the mechanism-bearing paragraphs name a real surface (endpoint, table, trait, config key), cite a concrete mechanism, and state the operational boundary ("on your network", "before the tool process spawns", "before the response returns"). The hero is judged by Section 3R, not this check.
 - [ ] No more than one primary CTA per section. Multiple CTAs create decision paralysis.
 - [ ] Conversion path clear for all three personas: CTO (enterprise conversation), technical partner (integration discussion), individual developer (activation)
+
+### Section 3R: Register Ladder (Charter, authoritative)
+
+Governed by `/var/www/html/systemprompt-web/reports/content/features/copy-charter.md`. The hero leads with the reader's struggling moment and the ownership stake in plain language; mechanism evidence lives in the section bodies and dropdowns. Jargon is demoted, never deleted.
+
+- [ ] **Hero jargon count.** No protocol or implementation noun appears in `headline`, `headline_highlight`, `subtitle`, or `highlights[].text`. Banned in the hero: OAuth, OAuth2, JWT, RBAC, Postgres/PostgreSQL, SQL, Rust type or trait names, `.rs` file names, column names, "resource server", "middleware", "IdP", "PDP", "AEAD". Product nouns (MCP, Claude Code) are allowed. Any banned noun in a hero field fails the check.
+- [ ] **Homepage narrative echo present (exactly one).** The page echoes exactly one homepage phrase (rent vs own, "one binary", "governance you can prove", "evidence not screenshots", "stops working the day you stop paying", "still yours if you never pay us again", Run/Own/Build pillar language). Zero echoes fails; two or more (verbatim-spam) fails.
+- [ ] **Struggling-moment opener.** The first paragraph of the first `sections[].content` opens on a concrete incident, audit, or renewal the reader recognises, in plain prose, not on a mechanism statement.
+- [ ] **Only-ness / category-sameness.** The hero makes one claim only a self-hosted, source-available binary can make. If the headline could sit on a Datadog, LangSmith, or Credo AI feature page, it fails.
+- [ ] **Identifier-enumeration check.** No list of three or more variable, env-var, or file names strung together in narrative prose as decoration (e.g. `ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY, database URLs and OAuth tokens`). One representative concrete detail is fine; a padded list fails. Named identifiers belong in `references[]` and dropdown descriptions.
+- [ ] **Established-not-indie voice.** No self-deprecating framing ("our Achilles heel", "if we disappear tomorrow", "happy to do a deal"), no head-counting, no "solo/indie/one-person", no fabricated scale. Institutional proof (due diligence at the largest tech companies, production deployments, USPTO registration, BSL 1.1, crates.io, load numbers) is used where present.
+- Fail markers (pattern scan): any banned hero noun in `headline`/`headline_highlight`/`subtitle`/`highlights[].text`; zero or ≥2 homepage-phrase matches; first section paragraph opening on a backticked identifier or "The {Type} …" mechanism statement; ≥3 comma-separated backticked identifiers in one narrative sentence; any of the self-deprecating or head-counting strings above.
 
 ### Section 4: Technical Accuracy
 
@@ -270,11 +282,12 @@ Six-check Section 11 (6a–6f) addresses copy clarity and outcome-binding. Sub-c
 - [ ] Subtitle extends the stake with a concrete behaviour or number, not a restatement of the mechanism
 - Fail markers (pattern scan): headline matches `governed|unified|comprehensive|MCP-native|powerful|every-X-Yed` without an outcome clause
 
-**6b. Jargon Payoff (decode every technical term within one sentence)**
-- [ ] Every acronym (OAuth2, HS256, JWT, RBAC, SIEM, RPC, etc.) has a plain-English decoder within the same or next sentence
+**6b. Jargon Payoff (in sections and dropdowns, not the hero)**
+- [ ] **Scope:** this sub-check applies to `sections[].content` paragraphs 2+ and `items[].description` only. The hero (`headline`, `headline_highlight`, `subtitle`, `highlights[]`) must carry no implementation jargon at all. That is Section 3R, not a decode-it check. A hero with a technical term to decode has already failed the register ladder; do not "fix" it by adding a decoder, strip the term.
+- [ ] Every acronym (OAuth2, HS256, JWT, RBAC, SIEM, RPC, etc.) in a section body or dropdown has a plain-English decoder within the same or next sentence
 - [ ] Every Rust type or trait name in narrative body copy (as opposed to `references[]`) is followed by a sentence explaining what it does for the reader
 - [ ] No stacked jargon lists (three or more technical terms in a row without interstitial decoding)
-- Fail markers (pattern scan): any paragraph with a backticked identifier that is not followed within one sentence by a decoder clause starting with "means", "so", "this", "the effect", or equivalent
+- Fail markers (pattern scan): any section-body or dropdown paragraph with a backticked identifier that is not followed within one sentence by a decoder clause starting with "means", "so", "this", "the effect", or equivalent. Jargon found in a hero field is a Section 3R failure, not a 6b decoder gap.
 
 **6c. Numbers with Context (why this number, not another?)**
 - [ ] Every numeric claim in body copy is followed within the same paragraph by a clause explaining why that number
@@ -402,17 +415,30 @@ For every entry in the `reference_inventory` built in Phase 0:
 6. **Strip second-person cheerleading.** "You get full control" becomes "The operator retains full control" or simply describes the mechanism.
 7. **Feature-specific ban list** (in addition to the global ban list): "solution", "leverage" (as verb), "utilize", "facilitate", "streamline", "optimize" (as marketing verb, allowed when describing actual code optimisation), "empower", "enable" (replace with specific mechanism).
 
+### Rule 5R -- Register Ladder (Charter)
+
+For every Section 3R check that failed, apply the matching rewrite. Read the charter and the homepage (`services/web/config/homepage.yaml`) first.
+
+1. **Hero jargon strip.** Scan `headline`, `headline_highlight`, `subtitle`, `highlights[].text` for banned implementation nouns (OAuth, OAuth2, JWT, RBAC, Postgres, SQL, trait names, `.rs` file names, column names, "resource server", "middleware", "IdP", "PDP", "AEAD"). Do not decode them, remove them. Rewrite the hero to open on the struggling moment or ownership stake in plain language, echoing one homepage phrase. Relocate the stripped mechanism intact into a section body (paragraph 2+) or a dropdown, never delete it. Example: "Per-Server OAuth Scoping keeps each MCP token isolated" -> hero "One stolen key should open one door, not all of them", with the OAuth scoping detail moved to the section body.
+2. **Homepage echo.** If zero homepage phrases are present, weave exactly one into the headline or subtitle. If two or more appear, keep the one that matches the page's stake and cut the rest.
+3. **Struggling-moment opener.** If the first `sections[].content` paragraph opens on a mechanism statement, rewrite paragraph 1 to open on the concrete incident, audit, or renewal. Move the displaced mechanism to paragraph 2+.
+4. **Identifier-enumeration.** Collapse any list of three or more variable/env/file names in narrative prose to one representative detail or "your API keys". Move the full list to a `references[]` entry or dropdown description.
+5. **Established-voice.** Replace self-deprecating or head-counting phrasing with institutional proof (due diligence at the largest tech companies, production deployments, USPTO registration, BSL 1.1, crates.io, load numbers) or engineering-led framing. Never fabricate scale.
+
+Relocation of already-verified evidence needs no re-verification. Nothing verified gets deleted.
+
 ### Rule 6 -- Technical-Marketing Synthesis
 
 For every sub-check that failed Section 11, apply the matching rewrite. Apply in order 6a -> 6f so earlier rewrites do not create work for later ones.
 
 **6a scan -> rewrite: Outcome Headlines**
-- Scan: `headline` or `headline_highlight` contains any of `governed`, `unified`, `comprehensive`, `MCP-native`, `powerful`, `every-{noun}-{past-participle}` without an outcome clause
-- Rewrite: regenerate to outcome form using the Secrets Management template. Ask "without this, the reader is exposed to ___" and lead with the answer. If the current mechanism *is* the outcome (rare), preserve it. Keep within 6-10 words for headline plus highlight combined.
-- Example: "Every tool call governed" -> "Tool calls blocked before they touch your model" or "Stop destructive agent actions before they execute"
+- Scan: `headline` or `headline_highlight` contains any of `governed`, `unified`, `comprehensive`, `MCP-native`, `powerful`, `every-{noun}-{past-participle}` without an outcome clause, OR any banned implementation noun (see Rule 5R.1)
+- Rewrite: regenerate to the struggling-moment / ownership-stake form with zero implementation jargon and one homepage echo. Ask "without this, the reader is exposed to ___" and lead with the answer. Keep within 6-10 words for headline plus highlight combined.
+- Example: "Every tool call governed" -> "Stop it before it runs. Not report it after." "Per-Server OAuth Scoping" -> "One stolen key should open one door, not all of them"
 
-**6b scan -> rewrite: Jargon Payoff**
-- Scan: any backticked identifier, acronym, or technical term in `sections[].content`, `items[].title`, or `items[].description` that is not followed within one sentence by a decoder clause ("means", "so", "the effect is", "which translates to")
+**6b scan -> rewrite: Jargon Payoff (sections and dropdowns only)**
+- Scope: applies to `sections[].content` paragraphs 2+, `items[].title`, and `items[].description`, never the hero. Jargon in a hero field is repaired by Rule 5R.1 (strip and relocate), not by adding a decoder.
+- Scan: any backticked identifier, acronym, or technical term in the section bodies or dropdowns that is not followed within one sentence by a decoder clause ("means", "so", "the effect is", "which translates to")
 - Rewrite: append a one-sentence decoder that ties the term to a reader concern (from `commons:brand-voice` preferred-language lists where possible). If the term is internal plumbing that does not merit a decoder, move it to a `references[]` entry and replace the inline mention with a behaviour description (see 6e).
 - Example: "HS256 JWT signing" -> "HS256 signing means tokens verify locally in under a microsecond, with no external dependency"
 
@@ -841,6 +867,7 @@ Sub-checks passing: {before_passing}/6 -> {after_passing}/6
 | 1. Why-What-How | PASS/FAIL | |
 | 2. Claim verification | PASS/FAIL | |
 | 3. Conversion clarity | PASS/FAIL | |
+| 3R. Register ladder (hero jargon, homepage echo, struggling-moment opener, identifier enumeration, established voice) | PASS/FAIL | |
 | 4. Technical accuracy | PASS/FAIL | |
 | 5. Brand/voice | PASS/FAIL | |
 | 6. Competitive positioning | PASS/FAIL | |
