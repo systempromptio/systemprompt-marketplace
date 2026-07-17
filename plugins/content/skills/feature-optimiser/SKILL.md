@@ -3,7 +3,7 @@ name: feature-optimiser
 description: "Deterministically audit and optimise a published feature page on the register ladder: struggling-moment heroes with zero implementation jargon, mechanism evidence relocated to section bodies and dropdowns in the HashiCorp / Stripe / Tailscale register. Runs an 11-section quality audit plus register-ladder checks (hero jargon count, homepage narrative echo, struggling-moment opener, identifier-enumeration, established-not-indie voice) and applies 6 rewrite rules: claim verification, conversion clarity, brand discipline, and Technical-Marketing Synthesis (ten sub-checks: outcome headlines, jargon payoff scoped to sections/dropdowns, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, named surfaces over coined metaphors, dropdown alignment, no Rust internals in narrative, dense sentences no filler). Penalises metaphor-stacking and marketing adjectives. Reads website analytics and GSC data per feature URL, produces a 90-point score delta (115 with analytics), commits changes, and updates the per-feature report. Load identity and brand-voice first."
 metadata:
   version: "1.4.0"
-  git_hash: "pending"
+  git_hash: "b4719c6"
 ---
 
 # Feature Optimiser

@@ -3,7 +3,7 @@ name: feature-writer
 description: "Write and rewrite systemprompt.io feature pages on a register ladder: heroes lead with the reader's struggling moment and ownership stake in plain language, mechanism evidence relocated intact into section bodies and dropdowns where it stays dense, metaphor-free, and tied to a verifiable reference. Research-first workflow with per-feature reports, Why-What-How doctrine, register ladder (hero vs body), homepage-anchor echo, established-not-indie voice, evidence-earns-its-place rule, Technical-Marketing Synthesis (ten sub-checks: outcome headlines, implementation-choice decoders in sections/dropdowns, numbers with context, feature-to-outcome binding, narrative-vs-reference separation, skeptic test, named surfaces over coined metaphors, dropdown alignment, no Rust internals in narrative, dense sentences no filler), claim verification against source code, and audience-question test. Speaks to struggling CISOs, CTOs, and staff engineers. Load identity and brand-voice first."
 metadata:
   version: "1.4.0"
-  git_hash: "pending"
+  git_hash: "b4719c6"
 ---
 
 # systemprompt Feature Writer
