@@ -44,7 +44,7 @@ Pull Google Search Console query data, run automated checks, and build the worki
 
 ### Authenticate
 
-Use the service account at `/var/www/html/systemprompt-web/gsc.json`. Read scope is `https://www.googleapis.com/auth/webmasters.readonly`.
+Use the service account at `/var/www/html/systemprompt-web/.keys/gsc.json`. Read scope is `https://www.googleapis.com/auth/webmasters.readonly`.
 
 ```bash
 python3 <<'PY' > /tmp/gsc_token
@@ -53,7 +53,7 @@ from urllib.request import urlopen, Request
 from urllib.parse import urlencode
 from pathlib import Path
 
-key = json.loads(Path('/var/www/html/systemprompt-web/gsc.json').read_text())
+key = json.loads(Path('/var/www/html/systemprompt-web/.keys/gsc.json').read_text())
 now = int(time.time())
 claims = {
     'iss': key['client_email'],

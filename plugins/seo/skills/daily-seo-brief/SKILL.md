@@ -143,14 +143,14 @@ GSC integration requires a service account. If not configured, skip this step an
 1. Create a Google Cloud project with the Search Console API enabled
 2. Create a service account and download the JSON key
 3. Add the service account email as a user in Google Search Console for `sc-domain:systemprompt.io`
-4. Save the JSON key as `gsc.json` in the systemprompt-web project root (`/var/www/html/systemprompt-web/gsc.json`)
+4. Save the JSON key as `gsc.json` in the systemprompt-web `.keys/` dir (`/var/www/html/systemprompt-web/.keys/gsc.json`)
 
 ### Service Account Key
 
 The key file is at:
 
 ```
-/var/www/html/systemprompt-web/gsc.json
+/var/www/html/systemprompt-web/.keys/gsc.json
 ```
 
 If this file does not exist, skip the GSC step and note "GSC data: Not configured" in the report.
@@ -161,7 +161,7 @@ Generate a JWT and exchange it for an access token. The service account JSON con
 
 ```bash
 # Load the service account key from file
-GSC_KEY_FILE="/var/www/html/systemprompt-web/gsc.json"
+GSC_KEY_FILE="/var/www/html/systemprompt-web/.keys/gsc.json"
 
 # Use python3 to authenticate and get an access token:
 ACCESS_TOKEN=$(python3 -c "

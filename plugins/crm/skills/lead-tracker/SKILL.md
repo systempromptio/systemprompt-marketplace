@@ -189,14 +189,14 @@ Confirmed shapes (2026-04-15, 7d window):
 
 ### 7. Google Search Console
 
-Service account key lives at **`/var/www/html/systemprompt-web/gsc.json`** (NOT in the marketplace repo). Confirmed working 2026-04-15 with service account `gsc-559@gen-lang-client-0891438583.iam.gserviceaccount.com` against site `sc-domain:systemprompt.io`.
+Service account key lives at **`/var/www/html/systemprompt-web/.keys/gsc.json`** (NOT in the marketplace repo). Confirmed working 2026-04-15 with service account `gsc-559@gen-lang-client-0891438583.iam.gserviceaccount.com` against site `sc-domain:systemprompt.io`.
 
 Follow the exact GSC bash pattern from `seo:daily-seo-brief` SKILL.md (JWT → access token → POST to Search Analytics), but with the correct key path.
 
 **What to pull every run** (7-day window, compared against prior 7d):
 
 ```bash
-GSC_KEY_FILE="/var/www/html/systemprompt-web/gsc.json"
+GSC_KEY_FILE="/var/www/html/systemprompt-web/.keys/gsc.json"
 
 # Get access token (full bash block is in seo:daily-seo-brief SKILL.md — copy from there)
 

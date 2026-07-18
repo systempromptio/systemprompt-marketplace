@@ -116,7 +116,7 @@ Use real baseline captured on 2026-04-15:
 ## Instrumentation Gaps (known at seed time)
 
 - No GitHub Discussions enabled on either repo → feedback path routes through Issues with `feedback` label, plus `hello@systemprompt.io`. Needs a decision: enable Discussions?
-- GSC service account key lives at `/var/www/html/systemprompt-web/gsc.json` (NOT in the marketplace repo). Working as of 2026-04-15; service account `gsc-559@gen-lang-client-0891438583.iam.gserviceaccount.com` on site `sc-domain:systemprompt.io`.
+- GSC service account key lives at `/var/www/html/systemprompt-web/.keys/gsc.json` (NOT in the marketplace repo). Working as of 2026-04-15; service account `gsc-559@gen-lang-client-0891438583.iam.gserviceaccount.com` on site `sc-domain:systemprompt.io`.
 - No way to deduplicate "CI bot clones" from "human clones" beyond the unique-cloner count. Large raw-clone spikes get flagged but not removed.
 - LinkedIn/X impressions are manual paste-in only (no API access yet).
 
