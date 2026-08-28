@@ -34,6 +34,7 @@ All development skills for building systemprompt.io. Covers Rust backend, web fe
 | Task | Skill |
 |------|-------|
 | Sync production Postgres data into local dev DB when libpq fails ALPN | `db-sync-prod-to-local` |
+| Cold-start validation of every distribution/install channel | `test-deploy` |
 
 ### UX/UI Design
 
@@ -43,4 +44,5 @@ All development skills for building systemprompt.io. Covers Rust backend, web fe
 | Component patterns (cards, tables, forms, dashboards) | `component-patterns` |
 | Modern CSS features (container queries, :has(), subgrid) | `modern-css-patterns` |
 | UX interaction patterns (micro-interactions, skeleton UI) | `ux-interaction-patterns` |
+| Print design for PDF factsheets and one-pagers | `factsheet-design` |
 | UX/UI skill routing | `ux-ui-guide` |

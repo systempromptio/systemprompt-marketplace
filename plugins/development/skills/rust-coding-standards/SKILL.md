@@ -86,7 +86,7 @@ The sole exception is a freeform prepared string carrying no named value (`traci
 | `dbg!()` / `println!` / `eprintln!` in libraries | Use `tracing`. CLI-display layers (`infra/logging/services/cli`, `database/services/display`) and `build.rs` `cargo:rerun-if-changed=` directives are exempt -- nothing else. |
 | Interpolating a named value into a `tracing` message (`tracing::info!("started {}", name)`) | Emit it as a structured field: `tracing::info!(name = %name, "started")`. Identifiers, counts, paths, and errors are fields, not message text. |
 | Inline comments (`//`) | Delete unless they encode a non-obvious *why*. WHAT-comments are banned; WHY-comments are required when the code's intent is not derivable from naming. Never narrate "what we just changed" or reference past callers/issues. |
-| Doc comments (`///`) | Allowed only at crate / module heads (`//!`) and on the small set of items where rustdoc adds genuine non-obvious value. **NEVER** add `///` mechanically "on every pub item." A `///` line that paraphrases the function's name and signature ("/// Fetch all matching rows.", "/// Errors if zero or more than one row matches.") is a code smell — strip on sight. See "Rustdoc placement" below. |
+| Doc comments (`///`) | Reserved for **pub traits, top-level types (`struct`/`enum`/`union`/`type`), and `mod` declarations** — and even there only when the doc carries non-obvious value. `///` on functions, methods, consts, statics, struct fields, enum variants, or macros is **banned** (machine-enforced by `scripts/lint-inline-comments.sh`): a non-obvious constraint on such an item becomes a `// Why:` comment or moves into the owning type/trait's `///` or the module's `//!`. See "Rustdoc placement" below. |
 | Raw SQL strings (`sqlx::query()`) | Use compile-time-verified `query!` / `query_as!` / `query_scalar!`. Allowlist (and ONLY this allowlist) for dynamic SQL: `crates/infra/database/src/admin/**` and `crates/infra/database/src/services/postgres/{introspection,query_executor,transaction,ext}.rs`. Anything else is a violation. |
 | `serde_json::Value` | Define typed structs with `#[derive(Deserialize)]` -- see exceptions below |
 | `let _ = <fallible>` | Banned for `Result`/`#[must_use]` exprs. Use `?`, log on error, or `.ok()` with a `tracing::warn!` first. Permitted ONLY for: unused trait-arg suppression in default method bodies, `OnceCell::set()` idempotent init, and writes to a CLI display sink that recursing into `tracing` would itself be the failure mode. Each exemption must be justified inline as a `// Why: ...` comment. |
@@ -108,7 +108,7 @@ Any crate published to crates.io has a different bar than internal application c
 | Public errors | `thiserror`-derived enum in `error.rs`; **never** `anyhow::Error` in a `pub fn` signature |
 | Feature flags | Documented in `lib.rs` `//!` matrix; `[package.metadata.docs.rs] all-features = true` set in `Cargo.toml` |
 | Examples | At least one runnable example per major feature flag in `examples/` (compiled in CI) — the facade's docs.rs landing page should show real usage, not a wall of one-liners |
-| Re-exports | The facade may carry a brief `///` on each `pub use` only when the user genuinely cannot tell what the re-export provides from the path; otherwise leave it bare |
+| Re-exports | Facade `pub use` lines stay bare — `///` is not a permitted placement on re-exports; the crate/module `//!` heads explain the surface |
 | Semver | Breaking changes go through a deliberate major bump, never piggyback on a patch |
 | `cargo doc -D warnings` | Must pass — broken intra-doc links are bugs. This is **not** the same as "every item must have a doc"; do NOT enable `#![deny(missing_docs)]` workspace-wide. |
 
@@ -157,7 +157,9 @@ Every published crate has a `CHANGELOG.md`. Entries are written for **downstream
 
 `///` exists to answer questions a reader CANNOT answer from the type, the signature, and the function name. Anything that just restates them is noise.
 
-**Add `///` only when one of these is true** — and in every case the comment must encode something that **is not present in the code at all**. If the fact can be reconstructed by reading the body, the signature, and the names, it is not an exception, no matter how accurately the prose restates it:
+**Placement is mechanical, not judgment-based.** `///` may appear ONLY on `pub` traits, top-level types (`struct`, `enum`, `union`, `type` aliases), and `mod` declarations. It is banned everywhere else — free functions, methods (obvious or not), associated consts, statics, struct fields, enum variants, and `macro_rules!`. This is enforced by `scripts/lint-inline-comments.sh`. When a function or method carries a genuinely non-obvious constraint, encode it as a `// Why:` inline comment above the item, or lift it into the owning trait/type's `///` block or the module's `//!` head — the contract belongs on the surface a reader lands on, not scattered per-method.
+
+**Within the allowed placements, add `///` only when one of these is true** — and in every case the comment must encode something that **is not present in the code at all**. If the fact can be reconstructed by reading the body, the signature, and the names, it is not an exception, no matter how accurately the prose restates it:
 
 - A hidden constraint or invariant the signature does not encode (e.g. "callers must hold the registry lock before calling").
 - An error case that is non-obvious AND not implied by the `Result` type (e.g. "returns `Err(InvalidGrant)` if the code was issued for a different `client_id`" — yes; "errors if the query matches zero or more than one row" for `fetch_one` returning `Result<Row>` — no, the function name says it).
@@ -208,7 +210,7 @@ Comments are governed by a single principle: **the code documents itself unless 
 
 | Crate type | `//` inline | `///` rustdoc | `//!` module |
 |------------|-------------|---------------|--------------|
-| Production code — **all** crates (`shared/*`, `infra/*`, `domain/*`, `app/*`, facade, `entry/*`) | only when encoding a non-obvious *why* | only where it adds non-obvious value (see "Rustdoc placement"); never as a per-item paraphrase | high-quality head on `lib.rs` and every significant `pub mod` file |
+| Production code — **all** crates (`shared/*`, `infra/*`, `domain/*`, `app/*`, facade, `entry/*`) | only when encoding a non-obvious *why* | only on pub traits, top-level types, and `mod` declarations — never on fns/methods/fields/variants (see "Rustdoc placement") | high-quality head on `lib.rs` and every significant `pub mod` file |
 | Tests (`crates/tests/**`) | as needed for test scaffolding | banned | optional |
 | `build.rs` | as needed | n/a | n/a |
 
