@@ -2,7 +2,7 @@
 name: css-coding-standards
 description: "CSS coding standards for systemprompt.io — one --sp- token system in OKLCH with color-mix derivation, BEM naming, one component per file, CSS-first behaviour, forbidden constructs, comment rules, and file limits. Canonical source of truth for all CSS. Load before writing or reviewing any stylesheet."
 version: "1.0.0"
-git_hash: "0d054c8"
+git_hash: "3c29369"
 ---
 
 # CSS Coding Standards

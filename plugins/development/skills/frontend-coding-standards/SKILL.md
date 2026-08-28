@@ -2,7 +2,7 @@
 name: frontend-coding-standards
 description: "Front-end entry point for systemprompt.io — HTML standards, progressive enhancement doctrine, asset registration, and performance requirements. Routes to javascript-coding-standards and css-coding-standards, which are canonical for their languages."
 version: "2.0.0"
-git_hash: "0d054c8"
+git_hash: "3c29369"
 ---
 
 # Front-End Coding Standards

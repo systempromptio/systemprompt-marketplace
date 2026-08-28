@@ -2,7 +2,7 @@
 name: javascript-coding-standards
 description: "JavaScript coding standards for systemprompt.io — native ES modules, Web Components, the two sanctioned rendering architectures, state ownership, forbidden constructs, comment rules, and file limits. Canonical source of truth for all JS. Load before writing or reviewing any JavaScript."
 version: "1.0.0"
-git_hash: "0d054c8"
+git_hash: "3c29369"
 ---
 
 # JavaScript Coding Standards
