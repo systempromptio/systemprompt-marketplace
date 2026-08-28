@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Plugin marketplace for systemprompt.io: shared infrastructure, development, content, SEO, social media, and CRM",
-    "version": "3.7.0",
+    "version": "3.8.0",
     "git_hash": "e345a19",
     "pluginRoot": "./plugins"
   },
@@ -25,8 +25,8 @@
     {
       "name": "development",
       "source": "./plugins/development",
-      "description": "All development skills for systemprompt.io: Rust backend (extensions, CLI binaries, MCP servers), web features, frontend coding standards, and UX/UI design system (visual design, component patterns, modern CSS, interaction patterns)",
-      "version": "1.0.0",
+      "description": "All development skills for systemprompt.io: Rust backend (extensions, CLI binaries, MCP servers), web features, canonical per-language coding standards (Rust, JavaScript, CSS) with mechanical forbidden-construct tables, HTML/asset workflow, print factsheet design, distribution-channel validation, and UX/UI design system (visual design, component patterns, modern CSS, interaction patterns)",
+      "version": "1.1.0",
       "category": "development",
       "author": {
         "name": "systemprompt.io",
@@ -55,7 +55,7 @@
         "email": "hello@systemprompt.io"
       }
     },
-{
+    {
       "name": "social-media",
       "source": "./plugins/social-media",
       "description": "Social media engagement: LinkedIn posting and DM outreach, three-skill Reddit pipeline (audience-finder for subreddit qualification, monitor for daily opportunity scanning, post-composer for genuine non-marketing posts), X/Twitter threads, cross-platform coordination, and daily social brief",

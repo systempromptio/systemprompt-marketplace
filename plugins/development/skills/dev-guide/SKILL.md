@@ -27,7 +27,9 @@ All development skills for building systemprompt.io. Covers Rust backend, web fe
 | Task | Skill |
 |------|-------|
 | Build web features (pages, templates, prerendering) | `web-building` |
-| Front-end coding standards (JS, CSS, HTML) | `frontend-coding-standards` |
+| JavaScript coding standards (canonical) | `javascript-coding-standards` |
+| CSS coding standards (canonical) | `css-coding-standards` |
+| HTML standards, progressive enhancement, asset registration | `frontend-coding-standards` |
 
 ### Operations
 
