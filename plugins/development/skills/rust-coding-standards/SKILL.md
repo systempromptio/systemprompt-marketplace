@@ -94,6 +94,9 @@ The sole exception is a freeform prepared string carrying no named value (`traci
 | `*Manager` type names | Use `*Service` (default), `*Handler` (HTTP/RPC request handlers only), `*Orchestrator` (cross-domain workflows only). |
 | Raw `String` / `&str` for entity IDs | Use typed IDs from `systemprompt_identifiers` constructed via `TypedId::new(s)` or `TypedId::try_new(s)?`. `From<String>` / `.into()` are forbidden at call sites (the impls exist for serde/`Into<T>` bounds only). Carve-out: A2A protocol types in `models/a2a/protocol/*` retain `String` to match external JSON-RPC spec. |
 | `#[cfg(test)] mod tests` | Banned. Tests live in `crates/tests/unit/<layer>/<crate>/`. |
+| A native-matrix test crate depending on DB-backed fixtures | A test crate that runs in the native (offline, Windows/macOS) matrix — listed in `scripts/bridge-native-crates.txt` — must not depend, directly or transitively within `crates/tests`, on `systemprompt-test-fixtures` or any crate using `sqlx::query*!`. Gates: `just lint-native-test-deps` (seconds) and `just lint-bridge-native-tests` (the offline build). |
+| `std::env::var` / `var_os` / `vars` in a production crate outside the sanctioned readers | Profile YAML is the source of truth; a runtime kill switch or feature flag is a profile field, never an env var. Sanctioned readers only: the `SYSTEMPROMPT_*` boot/subprocess variables, `${VAR}` interpolation in profile YAML, the secrets `env` source, cargo build-script env, and OS directory/identity probes — each file listed with a reason in `scripts/env-var-allowlist.txt`. Gate: `just lint-env-vars`. |
+| A policy projected over an inventory that may be empty or stale | A policy projected over an inventory (tool names, plugin ids, hosts) that may be empty or stale must withhold the subject — return `Option`/`Result` — never emit a partial map that a client resolves to a more permissive default. 0.51.0's tool catalog: `allowed_tools` walked the tools seen so far; on a cold start the map was `{}` and the client read "no restrictions". `just lint-fail-open` flags a guard fn iterating a `known_*`/`*_catalog`/`inventory` parameter without a fallible return (`partial-projection`) — a heuristic tripwire; the review is the real gate. |
 | Backwards-compat shims, `Option<T>` migration stubs, dual code paths | Land the new code AND delete the old form in the same PR. No deprecation periods inside this repo. |
 | Imperative SQL in `<crate>/schema/*.sql` | Schema files are pure declarative target state. Allowed: `CREATE TABLE IF NOT EXISTS`, `CREATE INDEX IF NOT EXISTS`, `CREATE [OR REPLACE] FUNCTION/VIEW/TRIGGER`, `CREATE TYPE`, `CREATE EXTENSION IF NOT EXISTS`, `COMMENT ON`. Rejected: `ALTER`, `DROP`, top-level `DO $$`, `UPDATE`/`INSERT`/`DELETE`, `TRUNCATE`, `GRANT`, `REVOKE`. State transitions go in `<crate>/schema/migrations/NNN_<name>.sql`. Boot-time linter at `infra/database/services/schema_linter` hard-rejects; pre-merge gate: `just lint-schema`. See `instructions/information/migrations.md`. |
 | SQL string literals or hand-written `Migration::new(...)` in `extension.rs` | No SQL as a Rust string. Schema DDL lives in `<crate>/schema/<table>.sql`, embedded via `include_str!()`. Migration SQL lives in `<crate>/schema/migrations/NNN_<name>.sql`, discovered by the crate's `build.rs` (`systemprompt_extension::build::emit_migrations()`) and returned by `extension_migrations!()` — version and name come from the filename, never a hand-listed `Vec<Migration>`. Pre-merge gate: `just lint-extensions`. |
@@ -370,7 +373,7 @@ Before committing any code:
 
 ```bash
 cargo fmt --all
-cargo clippy --workspace --all-targets --all-features -- -D warnings
+cargo clippy --workspace --all-targets --all-features --keep-going -- -D warnings
 cargo test --workspace
 RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --all-features
 just build
@@ -379,6 +382,11 @@ just check-bans     # raw sqlx::query, *Manager, raw String IDs
 just deny           # license + advisory check
 just audit          # cargo-audit
 ```
+
+Workspace `clippy` / `check` always run with `--keep-going`: without it the
+first crate that fails to compile hides every finding in the crates behind it
+and the gate is re-run once per crate. Read the whole list before fixing
+anything.
 
 The `quality.yml` CI workflow gates the same checks. Any of them red blocks merge.
 
@@ -417,7 +425,7 @@ Repos stay clean. The default state is `main` plus the release tags — nothing 
 | Task | Command |
 |------|---------|
 | Format | `cargo fmt --all` |
-| Lint | `cargo clippy --workspace --all-targets --all-features -- -D warnings` |
+| Lint | `cargo clippy --workspace --all-targets --all-features --keep-going -- -D warnings` |
 | Doc | `RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --all-features` |
 | Test | `cargo test --manifest-path crates/tests/Cargo.toml --workspace` |
 | Build | `just build` |
