@@ -2,7 +2,7 @@
 name: brand-review
 description: "Review any content against systemprompt.io's identity, brand voice, and governance infrastructure positioning before publishing. Pre-publish quality gate for blog posts, docs, website copy, and marketing content."
 metadata:
-  version: "1.1.0"
+  version: "2.0.0"
   git_hash: "a8d5b1e"
 ---
 
@@ -22,16 +22,15 @@ User asks to review, check, or audit content before publishing.
 
 1. **Content to review** (pasted text, file, or URL)
 2. **Channel** (LinkedIn, Reddit, blog, email outreach, email nurture, documentation, landing page)
-3. **Target audience** (CISOs/security leaders, CTOs/mid-market engineering, SaaS partners, individual users)
+3. **Target audience** (partners: consultancies, SIs, AI practices; or enterprise buyers: CIO, CISO, COO, CRO, CFO, CHRO; engineers reading mechanism evidence)
 
 ## Review Checklist
 
 ### Identity Alignment
-- Does the content position systemprompt as AI governance infrastructure (not a consumer tool, not a prompt library, not just an MCP server)?
-- Does it lead with governance and control (not memory or persistence)?
-- Does the competitive frame reference build-vs-buy (not systemprompt vs. other platforms)?
-- Is the free tier positioned as a demonstration environment (not the core product)?
-- Does it speak to the stated target audience (CTO, partner, or individual)?
+- Does the content position systemprompt.io as the software for AI architecture, delivered by certified partners (not a library, framework, platform, template or open-source project)?
+- Does it lead with partner-delivered AI architecture (not ownership, self-hosting or the binary)? Is "runs inside your environment" used at most once, as a property?
+- Is the go-to-market partner-led (no direct sales motion, no free tier, no template, no white-label as the route to market)?
+- Does it speak to the stated target audience (partner or buyer), with the buyer route, partner route and engineer evidence in the right places?
 
 ### Voice and Tone
 - Does it match the four voice attributes (authoritative, practical, sophisticated, infrastructure-minded)?
@@ -44,17 +43,23 @@ User asks to review, check, or audit content before publishing.
 - **Hashtags:** Any hashtags anywhere? Remove them
 - **Em dashes:** Any em dashes? Suggest restructured alternatives
 - **AI cliches:** Check against banned list (revolutionize, unlock, leverage, seamless, cutting-edge, etc.)
+- **Pivot banned list:** grep for every term in brand-voice rule 10: `open source`, `open-source`, `source-available`, `BSL`, `Business Source`, `MIT licen`, `template repo`, `systemprompt-template`, `clone the`, `cargo `, `crates.io`, `brew install`, `docker run`, `helm install`, `1-click deploy`, `evaluate on your laptop`, `Book a call`, `book a call`, `Evaluate the template`, `founder`, `solo`, `indie`, `platform` (except the `self-hosted-ai-platform` slug and "AI FinOps & Platform Operations"), `framework`, `SystemPrompt`, `powerful`, `seamless`, `robust`, `comprehensive`, `cutting-edge`, `enterprise-grade`, `next-generation`, `revolutionize`, `game-changer`, `unlock`, `supercharge`, `leverage`, `harness`, `transform`, `empower`, `delve`. Any hit is High severity
+- **"library" as product noun:** replace with "software" or "runtime"
+- **Numbers:** any percentage, "X hours saved" or invented count? Only the programme's own numbers and customer's-own-baseline framing are allowed
+- **Provider neutrality:** providers named only in lists of supported providers
 - **Engagement bait:** Any "Comment YES," "Like for Part 2," "Tag someone" patterns? Remove
 
 ### Messaging Hierarchy
-- Does the content reinforce the core message ("systemprompt gives you control of Claude")?
-- Does it align with at least one messaging pillar (control/governance, build-vs-buy, infrastructure, ownership)?
-- Is white-label mentioned only where appropriate (not in top-of-funnel content)?
+- Does the content reinforce the core message ("The software for AI architecture, delivered by certified partners")?
+- Does it align with at least one messaging pillar (AI architecture delivered; three tracks, seven pillars; governance as the operating boundary; value against your own baseline)?
+- **Two-CTA rule:** are the only CTAs "Become a partner" (`/partners/apply`) and "Find a certified partner" (`/partners/find`), plus "See the certification" on track and pillar pages only? Any "Book a call", "Request a demo", "Start free", clone, GitHub or install CTA is High severity
 
 ### Terminology
 - Correct Anthropic terms used (skill, agent, connector, plugin, MCP server, Claude Cowork)?
-- "The systemprompt platform" (not tool, app, marketplace)?
-- AI governance infrastructure (not persistence layer, memory tool)?
+- "the software" or "the runtime" (not platform, library, framework, tool, app, template)?
+- **Three tracks / seven pillars naming rule:** tracks are Sales, Business Analyst, Development; pillars are the seven outcome areas; never swapped, never "domains", "verticals" or "modules"?
+- Identity vocabulary table respected (certified partner, partner network, Foundation, credential, tier, pillar specialisation, Opportunity Brief, Solution Blueprint, Architecture Pack, value model, the five levers)?
+- Brand name lowercase `systemprompt.io`?
 
 ### Channel-Specific Checks
 
@@ -64,19 +69,20 @@ User asks to review, check, or audit content before publishing.
 - No external links in body?
 - No product pitch unless naturally part of a story?
 - Content funnel position appropriate (70/20/10)?
-- Speaks to CTOs and technical leaders?
+- Speaks to partners or buyers as intended?
 
 **Blog:**
 - SEO metadata present?
 - Primary keyword in first 100 words?
 - Heading structure correct?
-- Content serves enterprise pipeline (linkable in CTO outreach)?
+- Content routes to one of the two CTAs?
 
 **Email outreach:**
 - Subject under 50 characters?
 - Peer-to-peer tone (not vendor-to-customer)?
 - References something specific about the recipient?
-- One clear CTA?
+- One clear CTA, and it is one of the two CTAs?
+- Qualifies rather than offering a call? No unsubscribe footer?
 
 **Email nurture/onboarding:**
 - From Edward personally?
@@ -84,14 +90,14 @@ User asks to review, check, or audit content before publishing.
 - Not pushy or fake-urgent?
 
 **Landing page:**
-- Headline communicates AI governance in under 10 words?
-- Enterprise credibility within first 10 seconds?
-- CTA appropriate for audience (demo/meeting for enterprise, free signup for individuals)?
+- Headline communicates AI architecture delivered by certified partners in under 10 words?
+- Buyer gets outcome and "Find a certified partner" in hero and first section; partner finds track, credential and "Become a partner"; engineer finds mechanism evidence lower down?
+- CTAs limited to the two CTAs (plus "See the certification" on track and pillar pages)?
 
 ### AI Detection Risk
 - Formulaic patterns ("In today's world," "Let's dive in," "Here's the thing")?
 - Varied sentence structure?
-- Specific point of view that could only come from someone building AI governance?
+- Specific point of view that could only come from someone delivering AI architecture?
 - Distinctly Edward's voice?
 
 ## Output

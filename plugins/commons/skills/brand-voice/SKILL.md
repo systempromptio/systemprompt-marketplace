@@ -2,7 +2,7 @@
 name: brand-voice
 description: "Apply and enforce the systemprompt.io brand voice, style guide, and messaging pillars across all content. Always load identity first. Use when reviewing content for brand consistency, drafting content, or checking terminology compliance."
 metadata:
-  version: "3.0.0"
+  version: "4.0.0"
   git_hash: "a5b0f4d"
 ---
 
@@ -16,7 +16,7 @@ Source of truth for tone, style, and language across all systemprompt.io content
 
 ## Brand Personality
 
-systemprompt's voice belongs to Edward: a technical founder who has been building in the AI infrastructure space and speaks from direct experience. Not a company broadcasting. Not a marketing team. A person who understands the governance problem because he has watched organizations struggle with it firsthand.
+systemprompt's voice belongs to Edward: a technical practitioner who has been building in the AI infrastructure space and speaks from direct experience. Not a company broadcasting. Not a marketing team. A person who understands the governance problem because he has watched organizations struggle with it firsthand.
 
 The voice carries authority on AI governance without being academic. It is the CTO's peer, not their vendor.
 
@@ -32,8 +32,8 @@ The voice carries authority on AI governance without being academic. It is the C
 ### Practical
 - **We are**: specific, grounded in real implementation, showing not telling, focused on what the CTO needs to hear
 - **We are not**: theoretical, vague, full of empty promises
-- **This sounds like**: "Deploy under your brand. Your teams get standardized Claude usage with full observability. You do not maintain a single line of governance code."
-- **This also sounds like**: "Clone the template. Point it at your PostgreSQL. Your team has governed Claude Code by Friday."
+- **This sounds like**: "Pick the workflow with a baseline and an executive who owns the KPI. Measure it at 30, 60 and 90 days. No vendor percentages."
+- **This also sounds like**: "Sales owns why. Business Analyst owns what. Development owns how. A certified partner brings all three to your first workflow."
 - **This does NOT sound like**: "Our platform leverages cutting-edge technology to optimize your AI workflow."
 
 ### Sophisticated
@@ -52,13 +52,14 @@ The voice carries authority on AI governance without being academic. It is the C
 
 ## Tone Adaptation by Audience
 
+**Speaking to consultancies and system integrators (partners, identity ICP 1):** Practice-builder to practice-builder. Business of delivery: method, credentials, tiers, pillar specialisations, what their clients are asking for. Lead to "Become a partner".
+
+**Speaking to enterprise buyers (CIO, CISO, COO, CRO, CFO, CHRO; identity ICP 2):** Outcome first, then the certified partner who delivers it, then mechanism evidence lower down. Lead to "Find a certified partner". The CISO and CTO registers below still apply when the buyer is security or engineering.
+
 **Speaking to CISOs and security leaders (enterprise security, ICP 1):** Defence-in-depth framing. Compliance and audit language. Reference SIEM, SOC, RBAC naturally. The tone is a security engineer presenting a control to the CISO, not a vendor pitching a product. Technical precision matters more than narrative. Lead with what is provable, not what is promised. No marketing superlatives.
 
 **Speaking to CTOs and engineering leaders (mid-market, ICP 2):** Peer-to-peer. Technical confidence. Focus on governance, observability, standards, and the build-vs-buy calculus. No hand-holding. Enablement and productivity framing, grounded in specific capabilities (skill marketplace, usage dashboard, cost attribution).
 
-**Speaking to SaaS partners (white-label, ICP 3):** Business opportunity framing. Focus on what their customers are asking for, the cost of building it themselves, and the speed of deployment. Revenue and competitive advantage language.
-
-**Speaking to individual users (ICP 4):** Warmer, more accessible. Focus on ownership, portability, and getting started. But still authoritative, never cute or casual.
 
 ## CRITICAL RULES (non-negotiable)
 
@@ -84,7 +85,7 @@ Banned: revolutionize, game-changer, unlock, supercharge, seamlessly, harness th
 - Use specific details instead of generic claims
 - Include observations that only someone building AI governance infrastructure would make
 - Avoid perfectly parallel structures (real writing is slightly asymmetric)
-- No corporate voice. Write like a technical founder talking to a peer.
+- No corporate voice. Write like a technical practitioner talking to a peer.
 - Read the content aloud. If it sounds like a press release, rewrite it.
 
 ### 6. Use Anthropic's terminology
@@ -94,10 +95,26 @@ Banned: revolutionize, game-changer, unlock, supercharge, seamlessly, harness th
 - Connectors (not "integrations" or "bridges")
 - MCP servers (not "APIs" or "services")
 - Claude Cowork (not "the desktop app")
-- systemprompt.io, the system, or the infrastructure (never "the systemprompt platform", "tool", or "app")
+- systemprompt.io, the software, or the runtime (never "the systemprompt platform", "library", "framework", "template", "tool", or "app")
 
-### 7. Lead with ownership
-Every piece of content should reinforce systemprompt.io's position as the only AI infrastructure you actually own. Not memory. Not persistence. Not plugin management. Ownership first, then what owning it gives you: control, observability, enforcement, standards.
+### 7. Lead with AI architecture delivered by certified partners
+Every piece of content reinforces the core message: the software for AI architecture, delivered by certified partners. Not ownership, not self-hosting, not the binary. "Runs inside your environment" is a property, used once per page at most, never the headline.
+
+### 8. Three tracks, seven pillars (naming rule)
+- **The three tracks** are Sales, Business Analyst, Development. They are jobs. Never call them pillars.
+- **The seven pillars** are Revenue & Growth, People & Performance, Engineering Productivity, Governance Security & Compliance, Customer Operations, AI FinOps & Platform Operations, Knowledge & Content. They are outcome areas. Never call them tracks, domains, verticals or modules.
+- Spell the names exactly. Use the identity vocabulary table for Foundation, credential, tier, pillar specialisation, Opportunity Brief, Solution Blueprint, Architecture Pack, value model and the five levers.
+
+### 9. Two CTAs only
+- **Become a partner** → `/partners/apply`
+- **Find a certified partner** → `/partners/find`
+- Track and pillar pages may add "See the certification". Nothing else: no "Book a call", "Request a demo", "Start free", "Clone the template", GitHub or install links.
+
+### 10. Pivot banned list
+Banned everywhere in public copy (grep before publishing): `open source`, `open-source`, `source-available`, `BSL`, `Business Source`, `MIT licen`, `template repo`, `systemprompt-template`, `clone the`, `cargo `, `crates.io`, `brew install`, `docker run`, `helm install`, `1-click deploy`, `evaluate on your laptop`, `Book a call`, `book a call`, `Evaluate the template`, `founder`, `solo`, `indie`, `platform` (except the `self-hosted-ai-platform` slug and the pillar name "AI FinOps & Platform Operations"), `framework`, `SystemPrompt`, em dashes, `powerful`, `seamless`, `robust`, `comprehensive`, `cutting-edge`, `enterprise-grade`, `next-generation`, `revolutionize`, `game-changer`, `unlock`, `supercharge`, `leverage`, `harness`, `transform`, `empower`, `delve`.
+- **"library" as the product noun is banned.** Use "software" or "runtime". ("It's a library, not a framework" in engineering docs describes code architecture and is not website copy.)
+- **No numbers** except the programme's own (question counts, lab durations, tier thresholds) and the customer's-own-baseline framing. No percentages, no "X hours saved".
+- **Provider neutrality:** Anthropic, OpenAI, Google and others appear only in lists of supported providers.
 
 ## Preferred Language
 
@@ -121,17 +138,16 @@ Use these phrases when they are accurate. They are tested, specific, and grounde
 - shared knowledge base
 - adoption metrics
 - "governed by default"
-- "see your team's AI usage by Friday"
 
 **Cross-ICP (always appropriate):**
-- own the binary, own the data
-- "stop renting AI, own the system"
-- one binary, complete stack
-- the build trap
-- governance at the transport layer
-- source-available
-- self-hosted
-- "same binary, same features, different story"
+- the software for AI architecture
+- certified partner, partner network
+- three tracks, seven pillars
+- "Sales owns why. Business Analyst owns what. Development owns how."
+- value model, the five levers, measured against your own baseline
+- "governance is an operating boundary, not another dashboard"
+- "start with work, not AI"
+- runs inside your environment (once per page at most)
 
 ## Content Framing by ICP
 
@@ -141,17 +157,16 @@ Same binary. Same features. Different story. Use this table to calibrate framing
 |-----|-----------|-------------|-------------------|
 | 1: Enterprise Security | Defence, compliance, audit | SIEM integration, 35+ secret patterns, air-gap, RBAC, 16 event hooks | Rigorous, measured, precise |
 | 2: Mid-Market | Enablement, productivity, cost | Usage dashboard, shared skills, cost attribution, role-based distribution | Practical, peer-to-peer, direct |
-| 3: SaaS White-Label | Revenue, competitive advantage | White-label deployment, branded gateway, source-available | Business opportunity, strategic |
-| 4: Individual Users | Ownership, portability | Free tier, no lock-in, your data, your skills | Warmer, accessible, still authoritative |
+| Partners (consultancies, SIs) | Practice, method, credential | Three tracks, seven pillars, tiers, pillar specialisations | Practice-builder to practice-builder |
 
 Do not mix ICP frames in a single piece of content. A blog post targeting CISOs should not detour into skill marketplace features. A LinkedIn post about Claude Code standardisation should not lead with SIEM integration.
 
 ## Messaging Pillars (in priority order)
 
-1. **Ownership of your AI** - The only AI infrastructure you actually own. Your binary, your data, your skills, agents, and connectors. Installed on your systems, built on, kept forever. Every alternative is rented. (All ICPs. This is the lead pillar everywhere.)
-2. **Control and governance** - Owning the system is what makes control real. Standardized implementation, observability, and enforcement across the org. (Especially ICP 1 and ICP 2.)
-3. **Build vs. buy** - You could build AI governance in-house. But the landscape moves too fast. By the time you ship it, you will need to rebuild it. systemprompt handles continuous adaptation. (ICP 2 and ICP 3 primarily.)
-4. **Infrastructure, not a tool** - systemprompt is the governance layer other companies build on. White-label deployment. Your brand. Our infrastructure. (ICP 3, and enterprise credibility for ICP 1.)
+1. **AI architecture, delivered** - The software for AI architecture, delivered by certified partners. (All audiences. This is the lead pillar everywhere.)
+2. **Three tracks, seven pillars** - The method: the three jobs on every implementation and the seven outcome areas. (Partners first, buyers second.)
+3. **Governance as the operating boundary** - Identity-bound requests, default-deny authorisation, audit correlated by trace id, inside your environment. (CISOs and engineers.)
+4. **Value against your own baseline** - The value model and the five levers, measured at 30, 60 and 90 days. (CFOs, COOs and every buyer.)
 
 ## LinkedIn Strategy
 
@@ -196,7 +211,7 @@ Do not mix ICP frames in a single piece of content. A blog post targeting CISOs 
 - Match subreddit tone exactly
 - Share genuine experiences building AI governance infrastructure
 - Only mention systemprompt if directly relevant and helpful
-- Be a helpful community member first, a founder second
+- Be a helpful community member first, a vendor never
 
 ## Blog/SEO Strategy
 
@@ -218,4 +233,5 @@ Do not mix ICP frames in a single piece of content. A blog post targeting CISOs 
 - Subject lines under 50 characters
 - Plain text with minimal formatting
 - Treat the reader as a technical peer
-- **ICP 2 only for outreach.** Do not cold-email CISOs (ICP 1). Enterprise security is a content and credibility audience, not an outreach target.
+- **Partner outreach only.** Outreach goes to consultancies, SIs and AI practices. Do not cold-email enterprise executives; they are a content and inbound audience routed to "Find a certified partner".
+- Qualify, never offer a call. No unsubscribe footer.

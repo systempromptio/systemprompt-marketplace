@@ -15,7 +15,7 @@
       "name": "commons",
       "source": "./plugins/commons",
       "description": "Shared infrastructure: daily master brief (single autonomous entry point with Yesterday Debrief gate, Key Stats headline block, and reports/summary/ trend store), product identity, brand voice, brand review, marketing identity, marketing strategy, marketing briefs, hypothesis ledgers (H-###), CLI reference, and patterns for hypothesis ledgers, strategy documents, and daily briefs used across all domains",
-      "version": "2.4.0",
+      "version": "2.5.0",
       "category": "platform",
       "author": {
         "name": "systemprompt.io",

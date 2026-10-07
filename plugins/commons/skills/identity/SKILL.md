@@ -1,231 +1,214 @@
 ---
 name: identity
-description: "The foundational source of truth for what systemprompt.io is, who it serves, and how it goes to market. Load this skill before any other content skill. Defines product identity, ICP, go-to-market strategy, competitive positioning, and messaging hierarchy."
+description: "The foundational source of truth for what systemprompt.io is, who it serves, and how it goes to market. Load this skill before any other content skill. Defines product identity, ICP, partner-led go-to-market, competitive positioning, vocabulary, and messaging hierarchy."
 metadata:
-  version: "3.0.0"
+  version: "4.0.0"
   git_hash: "a5b0f4d"
 ---
 
-# systemprompt Identity
+# systemprompt.io Identity
 
-The single source of truth for what systemprompt is, who it serves, and how it goes to market. Every other systemprompt skill must align with this document. Load it first, always.
+The single source of truth for what systemprompt.io is, who it serves, and how it goes to market. Every other systemprompt.io skill must align with this document. Load it first, always.
 
-## What systemprompt Is
+Upstream source: `/var/www/html/systemprompt-web/reports/pivot/positioning.md` (approved 2026-10-07) and `/var/www/html/systemprompt-web/reports/pivot/handbook.md` (pillars, value model, KPIs, tiers, exam blueprints). If this skill and positioning.md disagree, positioning.md wins. Copy facts from the handbook; never invent KPIs, controls or numbers.
 
-**One sentence:** systemprompt.io is the only AI infrastructure you actually own.
+## What systemprompt.io Is
 
-**The differentiation principle:** The AI market is a sea of indistinguishable rented tools. systemprompt.io stands out on the one claim nobody else can make: you install it on your own systems, build on it, and keep it forever. Ownership is the lead message everywhere; control and governance are the first elaboration of what owning it gives you.
+**One sentence:** systemprompt.io is the software for AI architecture: one governed runtime that connects an organisation's people and agents to models, tools and data, delivered and supported by certified partners worldwide.
 
-**Full definition:** systemprompt.io is AI governance infrastructure. It lets organizations own, standardize, and control how AI is used (Claude, Codex, Gemini, or in-house agents) across their teams, their departments, and (through white-label deployment) their customers. Provider support is verified in source: Anthropic, OpenAI, and Gemini providers plus a /v1 gateway that routes to any compatible upstream. Claude remains the best-supported client and the main SEO surface, but positioning is provider-neutral, Claude-aware: lead with governing every AI client, name Claude as one of them.
+**Short form:** The software for AI architecture, delivered by certified partners.
 
-systemprompt is not a consumer app. It is not a prompt library. It is not an MCP server (though it includes one). It is infrastructure that other companies build on.
+**Two sentences for a buyer:** Your organisation wants its people and agents to use AI across the systems that run the business, under controls the security team can defend. systemprompt.io is the software that makes that possible, and a certified partner designs, implements and operates it with you.
 
-**The product has four faces:**
+**Two sentences for a partner:** AI implementation is a services business with a software core. systemprompt.io gives your consultancy the software, the method (three tracks, seven pillars) and the certification that lets you sell, design and build governed AI inside enterprise customers.
 
-1. **For enterprise security teams:** A governance pipeline that integrates with existing security infrastructure. SIEM-compatible structured JSON audit logs, role-based access control with six tiers, end-to-end request tracing, and provable compliance for every AI agent interaction. Runs on-premises, air-gapped if needed, no data leaves the perimeter.
+**What it is:** AI architecture software. A runtime and control plane installed inside the customer's environment.
 
-2. **For mid-market engineering teams (SMEs):** Standardized AI implementation across the organization. A centralised skill marketplace, shared knowledge base, usage analytics, and cost visibility. Every team member uses AI with the same knowledge, the same rules, the same processes, whichever client they run. Full observability of what AI you have, how it is used, and where it is used.
+**How it is sold:** exclusively through a global network of certified partners. Customers find a certified partner. Partners certify their people on three tracks and earn tiers and pillar specialisations. There is no direct sales motion.
 
-3. **For individual users:** A free tier that provides ownership and portability of your Claude plugins. Your skills, agents, and connectors stored securely in a third-party cloud, decoupled from any single ecosystem. Reusable, shareable, yours.
+systemprompt.io is not a consumer app. It is not a prompt library. It is not an MCP server (though it includes governed MCP access). It is not sold as a library, framework, platform or open-source project.
 
-4. **For white-label partners (SaaS companies):** AI governance infrastructure deployed under their own brand. A custom-branded gateway (like the Dynapps Enterprise Intelligence Gateway) that lets SaaS companies offer AI governance to their own customers without building it themselves.
+## What the Software Does (Capabilities)
 
-**The common thread across all four:** Ownership of your AI. You are firmly in control of what AI you have, how it is used, and where it is used, with full observability and permissions.
+The product capability list. Use these as supporting proof, never as the lead:
 
-## What the Product Actually Is (Technical)
+- **Identity.** Every request is bound to a person or agent identity. OIDC SSO and roles. Default-deny authorisation.
+- **Gateway.** One gateway to model providers with routing, quotas, policy and safety screening. Provider choice: Anthropic, OpenAI, Google and other compatible providers are named only in lists of supported providers.
+- **Governed MCP tool access.** Tools served by governed MCP servers with least-privilege scopes.
+- **Agents.** Agents run on the runtime under the same identity and policy.
+- **Skills and marketplaces.** Skills, plugins and agents distributed through scoped marketplaces.
+- **Audit.** Audit records correlated by trace id, stored in the customer's database.
+- **Runs inside the customer's environment.** One runtime plus PostgreSQL, in the customer's cloud or on premises, secrets in the customer's key management. Say this once per page at most, as a property, never as the headline.
 
-These are the concrete proof points that content skills should draw from when specificity is needed:
+**What it does not govern:** activity that bypasses the gateway, governed MCP servers and runtime agents is outside the governance boundary. A certified partner pairs the software with network controls that close it. Every certified person must be able to say this.
 
-- **Single compiled Rust binary** (~50 MB). No runtime dependencies beyond PostgreSQL. One artifact to deploy, audit, and secure.
-- **Air-gap capable.** Self-hosted, no phone-home, no telemetry. Runs entirely inside the customer's perimeter.
-- **4-layer synchronous governance pipeline.** Every AI tool call passes through scope check, secret scan (35+ patterns), blocklist evaluation, and rate limiting before execution. Real-time enforcement, not retroactive analysis.
-- **16 event hooks.** Sessions, tool calls, prompts, configuration changes, permission grants/denials, and subagent lifecycle, all captured as structured JSONB in PostgreSQL.
-- **SIEM-compatible structured JSON logs.** Direct ingestion by Splunk, ELK, Datadog, Sumo Logic, or any log aggregator. No custom adapters.
-- **Transport-layer MCP governance.** Governance sits at the protocol layer (MCP transport), not as a proxy bolted on top. Every client, every model, every tool inherits the policy.
-- **Source-available licensing.** The customer owns the binary, the codebase, and the deployment.
+## Proof Points That Remain True
 
-## What systemprompt Is NOT
+- Technical due diligence at some of the largest technology companies in the world.
+- Production deployments.
+- Registered copyright on the software.
 
-- It is not just an MCP server (the infrastructure is much broader)
-- It is not competing with Anthropic (it works with the Anthropic ecosystem, making it governable)
-- It is not a developer tool (built for organizations, accessible to non-technical users)
-- It is not a consumer product (the free tier exists to demonstrate the technology and build brand awareness, not as the core business)
-- It is not a prompt template library (it is governance infrastructure)
+Never invent customer names, counts, percentages or "hours saved".
 
-## The Core Narrative
+## The Method: Three Tracks, Seven Pillars
 
-Every organization using Claude faces the same problem: AI adoption without governance is chaos. Different team members get different results. Knowledge disappears between sessions. There are no standards, no observability, no enforcement. The bigger the organization, the worse it gets.
+**The three tracks** are the three jobs on every AI implementation. Everyone starts with **Foundation** (SP-FND), then certifies for the job they do.
 
-Some try to build governance in-house. This is a trap. The AI landscape moves so fast that whatever you build today will need rewriting in three months. Anthropic ships new features, new plugin architectures, new capabilities constantly. Maintaining internal AI governance tooling means dedicating engineering resources to a problem that never stops moving.
+| Track | Owns | Produces | Credential(s) |
+|---|---|---|---|
+| **Sales** | WHY | Opportunity Brief | Certified Sales Consultant (SP-SAL) |
+| **Business Analyst** | WHAT | Solution Blueprint | Certified Functional Consultant (SP-CON) + Pillar Specialist endorsements |
+| **Development** | HOW | Working implementation, then Architecture Pack | Certified Technical Implementer (SP-TIM), then Certified Solution Architect (SP-ARC) |
 
-systemprompt solves this permanently. Organizations get a governance layer that evolves with the ecosystem. When Anthropic ships something new, systemprompt supports it. When new governance requirements emerge, systemprompt handles them. The organization stays current without maintaining a single line of governance code.
+**The seven pillars** are the business outcome areas: Revenue & Growth, People & Performance, Engineering Productivity, Governance Security & Compliance, Customer Operations, AI FinOps & Platform Operations, Knowledge & Content.
 
-**The value proposition is ownership without the maintenance burden. You own the infrastructure; we keep it current.**
+**The one-sentence rule:** a credential says what a person can be trusted to do on a customer engagement, not how much training they have consumed.
+
+**How an engagement works:** Opportunity Brief, then Solution Blueprint, then working implementation, then measured at 30, 60 and 90 days.
+
+**Partner tiers** (organisation level): Registered, Silver, Gold, Platinum. Partners also earn **pillar specialisations**. Commercial terms are in the partner agreement and are never published.
+
+## The Value Model
+
+**Data source + implementation + control = expected benefit, then lever, then KPI, then value.**
+
+**The five levers:** Revenue, Performance, Efficiency, Cost control, Risk.
+
+Value is always measured against the customer's own baseline. Every pillar names leading and lagging KPIs; the partner baselines them before configuration and measures at 30, 60 and 90 days. We never quote a vendor percentage. Never call it an "ROI calculator".
+
+## Vocabulary
+
+Use these words exactly.
+
+| Term | Meaning | Never |
+|---|---|---|
+| **systemprompt.io** | the company and the software | SystemPrompt, System Prompt |
+| **the software** / **the runtime** / **AI architecture software** | the product | library, framework, platform, open-source project, template |
+| **certified partner** | a consultancy or integrator in the programme | reseller (unless describing the partner_type field), vendor |
+| **partner network** | all certified partners together | ecosystem, marketplace (reserved for skill marketplaces in the product) |
+| **the three tracks** | Sales, Business Analyst, Development: the three jobs on every AI implementation | the three pillars |
+| **the seven pillars** | the business outcome areas listed above | domains, verticals, modules |
+| **Foundation** | the shared entry certification everyone takes first | Associate, L1 |
+| **credential** | an individual certification | badge (except "Pillar Specialist endorsement") |
+| **tier** | partner organisation level: Registered, Silver, Gold, Platinum | level |
+| **pillar specialisation** | a partner-organisation badge for a pillar | |
+| **Opportunity Brief**, **Solution Blueprint**, **Architecture Pack** | the three deliverables, one per track | proposal, spec |
+| **value model** | data source + implementation + control = expected benefit, lever, KPI, value | ROI calculator |
+| **the five levers** | Revenue, Performance, Efficiency, Cost control, Risk | |
 
 ## ICP (Ideal Customer Profile)
 
-systemprompt serves four audiences. **ICP 1 is the content and credibility audience. ICP 2 is the primary sales and outreach target.** This distinction matters: downstream marketing, CRM, and outreach skills must respect it.
+Two audiences. Every page and every piece of content serves one or both.
 
-### ICP 1: Enterprise Security (Content and Credibility Audience)
+### ICP 1: Consultancies, system integrators and AI practices (partners)
 
-**Buyer:** CISO, Security Engineering Lead, VP Security at companies of 1,000+ employees with dedicated security teams.
+**Who:** practice leads, alliance leads, managing partners and delivery heads at consultancies, system integrators and AI practices who want a certified AI implementation practice.
 
-**Entry point:** Governance pipeline, SIEM integration, audit trails, secret detection.
+**The moment of pain:** their clients ask for governed AI across the business. The firm has smart people but no repeatable method, no software core and no credential that tells a client "these people can be trusted on this engagement".
 
-**The moment of pain:** Security teams discover that AI agents are a blind spot in the SOC. Agents make tool calls, access external APIs, and process sensitive data with no centralised record. SIEM systems have no visibility. There is no policy enforcement on AI tool calls, no audit trail for compliance, and no secret protection. The CISO asks "what are our AI agents doing?" and nobody can answer.
+**What they get:** the software, the method (three tracks, seven pillars), certification for their people, tiers and pillar specialisations, partner directory listing and inbound lead sharing at higher tiers.
 
-**What they say:** "We need visibility into AI agent activity." "Our SIEM has a blind spot." "We need provable governance, not a dashboard."
+**CTA:** Become a partner, `/partners/apply`.
 
-**Value frame:** Defence, compliance, provable governance. systemprompt is a control, not a feature.
+### ICP 2: Enterprise buyers who engage a certified partner
 
-**Vocabulary:** governance pipeline, SIEM integration, RBAC, transport-layer governance, end-to-end request trace, audit trail, secret detection, air-gap, policy enforcement, provable governance.
+**Who:** CIO, CISO, COO, CRO, CFO, CHRO at organisations that want a governed AI implementation with a measurable KPI.
 
-**Outreach rule:** This is a content and credibility audience. Do not cold-email CISOs. Build authority through governance-focused content that security leaders find when they search for AI agent governance solutions.
+**The moment of pain:** AI is everywhere and governed nowhere. Security is blocking adoption, the board asks what AI spend buys, or one department has a burning workflow nobody can safely automate.
 
-### ICP 2: Mid-Market Claude Code (Primary Outreach Target)
+**What they get:** a certified partner who runs discovery, designs the solution, implements and supports it, and measures value against their own baseline.
 
-**Buyer:** VP Engineering, Head of AI, CTO, Platform Engineering Lead at companies of 50 to 500 employees that have already standardised on Claude Code.
+**Where to start:** the pillar with the clearest baseline and an executive who owns the KPI. Security blocking AI: Governance. Board asking what AI spend buys: FinOps. One burning workflow: start there and land Governance controls alongside it.
 
-**Entry point:** Skill marketplace, plugin management, usage dashboard, cost visibility.
+**CTA:** Find a certified partner, `/partners/find`.
 
-**The moment of pain:** A CTO realises that 30 people in their org are all using Claude differently, with different context, different quality, and no visibility into what is happening. Knowledge is siloed in individual developers. There is no centralised skill library. No one knows what AI costs per department. There is no way to enforce standards. They need governance, and they need it without building it.
-
-**What they say:** "How do we standardise Claude Code across teams?" "I can't tell who's using it or what it costs." "We need shared skills and MCP servers." "Our security team is starting to ask about agent governance."
-
-**Value frame:** Enablement, productivity, knowledge sharing, cost visibility. systemprompt turns fragmented individual AI usage into a governed, shared, measured capability.
-
-**Vocabulary:** centralised skill library, usage analytics, cost attribution, role-based distribution, shared knowledge base, adoption metrics, governed by default.
-
-**Outreach rule:** This is the primary sales and outreach target. Direct, relationship-driven engagement. The template hook ("clone the template, own the binary, see your team's AI usage by Friday") is calibrated for this audience.
-
-### ICP 3: SaaS White-Label Partners
-
-SaaS companies whose customers are asking for AI governance capabilities. These companies face a build-vs-buy decision: dedicate engineering resources to building AI governance (and maintaining it as the landscape evolves), or partner with systemprompt and deploy a white-labelled solution.
-
-**The moment of pain:** A SaaS company's customers start asking "can we govern how our teams use AI through your platform?" and the SaaS company realizes building this would consume their engineering team for months, and by the time they ship it, the AI landscape will have moved.
-
-### ICP 4: Individual Users (Awareness and Brand Building)
-
-Individual Claude users who want ownership and portability of their plugins. These users matter for brand awareness and credibility, not for direct revenue. When a CTO Googles systemprompt after receiving a cold email, these users and their activity create the signal that this is real, actively used software.
+Engineers still matter: they should find mechanism evidence and documentation lower on every page, but they are not the lead audience and not a separate funnel.
 
 ## Go-to-Market Strategy
 
-### Distribution Model: Partnership Into White-Label
+**Partner-led. No direct sales motion.** systemprompt.io does not sell the software directly to end customers. Certified partners sell, design, implement and support it.
 
-systemprompt's primary go-to-market is direct, relationship-driven:
+1. Recruit consultancies, system integrators and AI practices into the partner programme.
+2. Partners certify their people: Foundation, then Sales, Business Analyst and Development tracks.
+3. Partners progress through tiers (Registered, Silver, Gold, Platinum) on certified people, live deployments and referenceable customers, and earn pillar specialisations.
+4. Enterprise buyers find a certified partner, who runs discovery and a pilot, then delivers and measures.
 
-1. **Identify SaaS companies in the local network** that are already using Claude
-2. **Implement systemprompt as their internal AI governance layer** (direct enterprise sale, reference implementation)
-3. **The partner experiences the value firsthand** as an end user
-4. **Propose white-label:** "You could offer this to your customers under your own brand"
-5. **The partner becomes a distribution channel,** white-labelling systemprompt to their customer base
+**Exactly two CTAs, everywhere:**
 
-This solves the trust problem twice. The partner trusts the technology because they use it internally. Their customers trust it because it comes from a brand they already have a relationship with.
+- **Become a partner** → `/partners/apply` (header button, partner-facing pages, final CTA on every page).
+- **Find a certified partner** → `/partners/find` (hero secondary, pillar pages, customer-facing pages).
 
-Content and SEO are supporting channels that build credibility and inbound discovery. They are not the primary growth engine. The primary motion is direct, relationship-driven outreach. Content exists to ensure that when a prospect researches systemprompt after a direct touch, they find authoritative, governance-focused material. Content also serves ICP 1 (enterprise security), where direct outreach is not appropriate but search-driven discovery is.
+Pillar and track pages may add a contextual third link ("See the certification"). No "Book a call", no "Request a demo", no "Start free". The recorded demo stays at `/features/demo` as "Watch the software in action".
 
-### Role of the Website (systemprompt.io)
+### Role of the Website
 
-The website's primary job is **enterprise credibility.** When a CTO who has received a cold email visits systemprompt.io to vet the company before taking a meeting, the site must communicate "this is AI infrastructure you own" within 10 seconds. When a CISO searches for AI agent governance solutions, the site must demonstrate technical depth and security-first infrastructure.
-
-The website's secondary job is supporting the free tier for individual users, which builds visible activity and brand familiarity.
-
-The website must NOT look like a consumer product. The first impression must be enterprise-grade AI governance infrastructure.
-
-### Role of the Free Tier
-
-The free tier is a **demonstration environment.** It proves the technology works. It creates visible user activity that signals real, active software. It gives individual users genuine value (ownership and portability of their plugins). But it is not the business model. It is a credibility engine.
+Every page splits by audience. A buyer gets the outcome and the "find a partner" route from the hero and first section. A partner finds the track, credential and "become a partner" route. An engineer still finds mechanism evidence and documentation links lower down.
 
 ### Channels
 
-- **Primary:** Direct outreach (warm and cold) to CTOs at SMEs in local network (ICP 2)
-- **Secondary:** LinkedIn thought leadership (Edward's personal profile) building credibility in the AI governance space (ICP 1 and ICP 2)
-- **Supporting:** Content (blog, guides) targeting AI governance search queries for enterprise security credibility (ICP 1) and Claude Code standardisation queries for mid-market discovery (ICP 2)
-- **Supporting:** Free tier driving brand awareness and platform activity (ICP 4)
+- **Primary:** partner recruitment (consultancies, SIs, AI practices).
+- **Supporting:** LinkedIn thought leadership from Edward's personal profile on AI architecture, the paradigm shifts and the value model.
+- **Supporting:** content and SEO that bring buyers and partners to the pillar, track and partner pages.
 
 ## Competitive Positioning
 
-### The Competitive Frame: Build vs. Buy
+The frame is no longer build vs. buy for engineers. The frame is: AI implementation done by people certified to do it, on software designed for governed AI, measured against the customer's baseline, versus ad hoc pilots, tool sprawl and vendor percentages.
 
-The primary competitor is not another vendor. It is the internal engineering team that says "we can build this ourselves."
+**One-liner:** Other vendors sell you a tool and leave the implementation to you. systemprompt.io is the software plus a certified partner network that designs, implements and measures it.
 
-**The argument against building in-house:**
-The AI landscape evolves so rapidly that internal governance tooling becomes a maintenance burden that never ends. Anthropic ships new features, plugin architectures, and capabilities continuously. An in-house solution requires a dedicated team tracking every change, rewriting integrations, and maintaining compatibility. systemprompt absorbs that complexity. The organization gets governance that evolves with the ecosystem, maintained by a team whose entire focus is staying current with the AI landscape.
+Secondary context (do not lead with competitor names):
 
-**The one-line version:** You could build it yourself. But by the time you ship it, you will need to rebuild it.
-
-### Secondary Competitors
-
-- **Anthropic Enterprise plugins:** Enterprise-only, requires custom pricing and SSO/SAML. Does not serve SMEs. Does not offer white-label.
-- **Microsoft Agent Governance Toolkit:** A toolkit, not a platform. Requires assembly. Does not offer a single-binary deployment.
-- **Rubrik Agent Govern:** SaaS, not self-hosted. Post-hoc analysis, not synchronous enforcement. No air-gap capability.
-- **MCP directories** (mcpmarket.com, mcpservers.org): Discovery tools, not governance platforms. Different problem entirely.
-- **Prompt management tools** (PromptHub, Braintrust, etc.): Developer-focused, prompt versioning in production. Different audience, different problem.
-
-### Differentiation
-
-- **You own it outright:** Source-available under BSL 1.1, installed on your own systems, everything built on it is the customer's property. Every alternative is rented access; this is the only complete AI infrastructure a company owns. Lead with this.
-- **Governance, not just management:** systemprompt enforces rules, permissions, and standards. It does not just store prompts.
-- **One binary, complete stack:** A single ~50 MB Rust binary consolidates what others assemble from multiple services.
-- **White-label infrastructure:** No competitor offers brandable, deployable AI governance that SaaS companies can offer to their customers.
-- **Continuous adaptation:** systemprompt evolves with the AI ecosystem so customers do not have to maintain governance tooling.
-- **Accessible to non-technical users:** Enterprise governance that does not require a developer to configure or maintain.
-- **Self-hosted, air-gap capable:** The binary runs inside the customer's perimeter. No data leaves. No vendor dependency at runtime.
-- **Decoupled from any single ecosystem:** Portable, standards-based. No vendor lock-in.
+- **Single-vendor enterprise AI suites:** tied to one provider. systemprompt.io is provider-neutral and governs people and agents across providers.
+- **Governance toolkits:** require assembly by the customer. systemprompt.io arrives through a partner with a method and a credential.
+- **SaaS governance products:** post-hoc analysis outside the customer's environment. systemprompt.io enforces at request time inside it.
 
 ## Messaging Hierarchy
 
 ### Tier 1: The Core Message
-**"systemprompt.io is the only AI infrastructure you actually own."**
+**"The software for AI architecture, delivered by certified partners."**
 
-Use this as the anchor. Control of every AI client your organisation uses is the first elaboration of ownership; everything else follows from it.
+Homepage register: "AI architecture, delivered." Highlight: "Software, method and certified partners for governed AI inside your business."
 
 ### Tier 2: Audience-Specific Messages
 
-**To a CISO or security leader evaluating governance:**
-"Every AI agent request traced end-to-end. SIEM-compatible audit logs. RBAC at the transport layer. One binary, your infrastructure, provable governance."
+**To a consultancy or SI:**
+"AI implementation is a services business with a software core. Get the software, the method and the certification to sell, design and build governed AI inside enterprise customers."
 
-**To a CTO evaluating for their org:**
-"Standardize how your organization uses AI. Full observability, enforcement, and permissions across every team and every client."
+**To a CIO or COO:**
+"Your people and agents using AI across the systems that run the business, designed and implemented by a certified partner, measured against your own baseline."
 
-**To a SaaS company evaluating white-label:**
-"Give your customers AI governance without building it yourself. Deploy under your own brand. We handle the infrastructure."
+**To a CISO:**
+"Every request identity-bound, default-deny authorisation, audit correlated by trace id, running inside your environment. A certified partner designs the controls with you and can state exactly what the software does not govern."
 
-**To an individual user:**
-"Own your Claude plugins. Portable, shareable, securely stored, not locked to any ecosystem."
+**To a CFO:**
+"Value measured against your own baseline at 30, 60 and 90 days. No vendor percentages."
 
 ### Tier 3: Supporting Messages
 
-- "Rent a thousand indistinguishable AI tools, or own one system that runs them all."
-- "You could build it yourself. But by the time you ship it, you will need to rebuild it."
-- "AI adoption without governance is chaos. systemprompt brings order."
-- "The AI landscape moves too fast to maintain governance tooling in-house."
-- "One system. Your brand. Full control."
-- "Same binary. Same features. Different story."
-
-## Pricing Context
-
-- **Free tier:** Up to 10 skills. Demonstrates the technology. Builds brand awareness.
-- **Pro ($15/month):** Unlimited skills, team workspaces, analytics. For individuals and very small teams who want more.
-- **Enterprise (custom):** White-label gateways, SSO/SAML, HTTP hooks, policy enforcement, SLA. The core revenue driver.
+- "Three tracks. Seven pillars."
+- "Three tracks. One implementation."
+- "Seven pillars. One runtime."
+- "Sales owns why. Business Analyst owns what. Development owns how."
+- "Start with work, not AI."
+- "Governance is an operating boundary, not another dashboard."
+- "A credential says what a person can be trusted to do on a customer engagement."
 
 ## What the Name Means
 
-"System prompt" is a technical term in AI. It is the foundational instruction that controls how an AI behaves. The name is an asset: it signals to CTOs and technical leaders that this infrastructure operates at the foundational layer of AI control. It communicates authority and depth to the people who matter most (the primary ICP).
+"System prompt" is the foundational instruction that controls how an AI behaves. The name signals that the software operates at the foundational layer of AI architecture.
 
 ## Rules for All Content
 
-All content created using any systemprompt skill must align with this identity document. Specifically:
-
-1. **Lead with ownership, then governance and control,** not memory or persistence
-2. **Position as infrastructure,** not as a consumer product
-3. **Speak to CTOs first,** individual users second
-4. **The free tier is a demonstration environment,** not the product
-5. **The competitive frame is build vs. buy,** not systemprompt vs. other platforms
-6. **White-label is the strategic direction,** but content should lead with direct enterprise value (white-label follows naturally once trust is established)
-7. **Never fabricate evidence.** No invented statistics, customer stories, or anecdotes. Use placeholders.
-8. **Never use hashtags.** On any platform.
-9. **Never use em dashes.** Use commas, periods, parentheses, or restructure.
-10. **Avoid AI cliches.** Banned: revolutionize, game-changer, unlock, supercharge, seamlessly, harness the power of, next-generation, cutting-edge, paradigm shift, disrupt, empower, leverage (as verb), transform (without specifics), reimagine.
-11. **Use Anthropic terminology.** Plugins, skills, agents, connectors, MCP servers, Claude Cowork. Not apps, extensions, bots, integrations, APIs, the desktop app.
-12. **Content must not read as AI-generated.** Vary sentence length. Use specific details. Include observations only a real person in this space would make. No corporate voice.
+1. **Lead with AI architecture delivered by certified partners**, not ownership, not self-hosting, not the binary.
+2. **Brand name is always lowercase `systemprompt.io`.** Never SystemPrompt or System Prompt.
+3. **Exactly two CTAs:** Become a partner, Find a certified partner.
+4. **Say "three tracks" and "seven pillars"** exactly; never confuse the two.
+5. **The product noun is "software" or "runtime".** Never library, framework, platform, open-source project or template.
+6. **Never reference** the template repo, cloning, BSL, MIT, source-available, a free tier, crates.io, cargo or install commands in public copy.
+7. **No numbers except the programme's own** (question counts, lab durations, tier thresholds) and the customer's-own-baseline framing.
+8. **Never fabricate evidence.** No invented statistics, customer stories, or anecdotes. Use placeholders.
+9. **Never use hashtags.**
+10. **Never use em dashes.**
+11. **Avoid AI cliches** (see brand-voice banned list).
+12. **Provider neutrality:** name Anthropic, OpenAI, Google and others only in lists of supported providers.
+13. **Content must not read as AI-generated.** Vary sentence length. Use specific details. No corporate voice.

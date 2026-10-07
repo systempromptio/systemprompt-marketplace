@@ -1,68 +1,82 @@
 ---
 name: marketing-identity
-description: "Lead-generation positioning for systemprompt.io. Defines the ICP for the template-based funnel, where they live online, the template hook, and the rules every outreach draft must follow. Load FIRST before any marketing skill."
+description: "Lead-generation positioning for systemprompt.io after the partner pivot. Defines the two funnels (partner programme for consultancies, find-a-partner for enterprise buyers), where each audience lives online, the hooks, and the rules every outreach draft must follow. Load FIRST before any marketing skill."
 metadata:
-  version: "0.2.0"
+  version: "1.0.0"
   git_hash: "a8d5b1e"
 ---
 
-# Marketing Identity — Lead-Gen Layer
+# Marketing Identity: Lead-Gen Layer
 
-Single source of truth for **who we're chasing and with what hook**. Every marketing-related skill loads this first. This skill complements `commons:identity` (brand-level positioning) with the distribution-and-lead-gen layer it omits.
+Single source of truth for **who we're chasing and with what hook**. Every marketing-related skill loads this first. This skill complements `commons:identity` (brand-level positioning) with the distribution-and-lead-gen layer.
 
 ## Upstream Sources of Truth (read before drafting)
 
 Load these once per session in order:
 
-1. `commons:identity` — brand positioning, voice, banned words, 4-segment ICP definitions (ICP 1: Enterprise Security, ICP 2: Mid-Market, ICP 3: White-Label, ICP 4: Individual)
-2. `/var/www/html/systemprompt-web/reports/marketing/drafts/midmarket-value-prop.md` — **ICP 2 detailed value prop, the lead-gen target**
-3. `/var/www/html/systemprompt-web/reports/marketing/drafts/enterprise-value-prop.md` — ICP 1 detailed value prop (content audience, **not** outreach target)
-4. `/var/www/html/systemprompt-web/COMPETITOR_ANALYSIS.md` — positioning wedges (provable governance, single binary, own-it)
-5. `/var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md` — current strategy state (read-only here, written by `marketing-strategy-master` skill)
+1. `commons:identity`: positioning, vocabulary, the two ICPs, the two CTAs
+2. `/var/www/html/systemprompt-web/reports/pivot/positioning.md`: approved pivot positioning (wins on any conflict)
+3. `/var/www/html/systemprompt-web/reports/pivot/handbook.md`: pillars, value model, KPIs, tiers (copy facts from here, never invent)
+4. `/var/www/html/systemprompt-web/reports/marketing/marketing-strategy-master.md`: current strategy state (read-only here, written by `marketing-strategy-master`)
 
 If any file is missing, stop and tell Ed.
 
 ## The Lead Definition
 
-A **lead** = someone who clones `systempromptio/systemprompt-template`, runs it, and gives feedback (any channel: GH Issue labelled `feedback`, email to `hello@systemprompt.io`, DM reply, form submission).
+Two kinds of lead, tracked separately:
 
-Activation requires **all three**: clone + run + feedback. Clones alone are not leads. Feedback without a run is not a lead.
+- **Partner lead:** a consultancy, system integrator or AI practice that submits a partner application at `/partners/apply`, or replies to outreach asking how the programme works. Qualified when the firm has a delivery practice and named people who would certify.
+- **Buyer lead:** an enterprise buyer who submits a request at `/partners/find`. Qualified when they name a workflow, an executive owner and a likely pillar. Buyer leads are routed to certified partners; we do not sell to them directly.
 
-## Primary Lead-Gen ICP (ICP2)
+Page views, follows and likes are not leads.
 
-VP Eng / Head of AI / CTO / Platform Eng lead at a **50–500-person** company that has already decided to standardise on Claude Code. Their pain: fragmented usage, no shared knowledge, no visibility, no governance — and they don't want to build infrastructure themselves.
+## Funnel 1 (primary): Partner programme for consultancies
+
+**Who:** practice leads, alliance leads, managing partners and delivery heads at consultancies, system integrators and AI practices.
 
 **What they say out loud:**
-- "How do we standardise Claude Code across teams?"
-- "I can't tell who's using it or what it costs."
-- "We need shared skills / prompts / MCP servers."
-- "Our security team is asking about agent governance."
+- "Our clients want governed AI and we have no repeatable method."
+- "We need an AI practice that is more than prompt workshops."
+- "How do we prove our people can deliver this?"
 
-**Where they live online (in rough priority order — validate with data, do not assume):**
+**The hook:** *"AI implementation is a services business with a software core. Get the software, the method (three tracks, seven pillars) and the certification to sell, design and build governed AI inside your enterprise clients."*
 
-| Channel | Sub-segment | Signal |
+**CTA:** Become a partner → `https://systemprompt.io/partners/apply`
+
+## Funnel 2: Find a certified partner, for enterprise buyers
+
+**Who:** CIO, CISO, COO, CRO, CFO, CHRO at organisations that want a governed AI implementation with a measurable KPI.
+
+**What they say out loud:**
+- "Security keeps blocking our AI rollout."
+- "The board asks what our AI spend buys."
+- "We have one workflow that is drowning and nobody can safely automate it."
+
+**The hook:** *"Governed AI across the systems that run your business, designed and implemented by a certified partner and measured against your own baseline."*
+
+**CTA:** Find a certified partner → `https://systemprompt.io/partners/find`
+
+Buyers are a content and inbound audience. Do not cold-email executives at enterprise buyers; build authority through pillar content they find when they search.
+
+## Where They Live Online (validate with data, do not assume)
+
+| Channel | Audience | Signal |
 |---|---|---|
-| Reddit | r/ClaudeAI, r/mcp, r/LocalLLaMA, r/ExperiencedDevs, r/devops, r/selfhosted | Standardisation, governance, cost questions |
-| GitHub | `awesome-claude-code`, `awesome-mcp`, Anthropic cookbooks, plugin registries, `modelcontextprotocol/*` discussions | Ecosystem discovery, contribution threads |
-| crates.io / docs.rs | Rust AI/MCP crates | **Already a referrer to systemprompt-core** — active surface |
-| LinkedIn | Head of AI / VP Eng / Platform Eng at 50–500-emp cos | Public signals: job posts mentioning Claude, posts about AI rollout |
-| X (Twitter) | MCP/AI-eng community, Simon Willison orbit, Anthropic devrel | Thread engagement, quote-tweets |
-| Discord | Anthropic, MCP | Slow, but high-trust |
-| Newsletters (target) | Latent Space, Ben's Bites, TLDR AI, Pragmatic Engineer | Placement goals, not owned |
+| LinkedIn | Practice and alliance leads at consultancies and SIs; CIO/CISO/COO at buyers | AI practice launches, hiring for AI consultants, posts about AI rollout and governance |
+| Consultancy and SI communities | Partner-ecosystem groups, AI practice leaders | Practice building, certification, delivery method |
+| Industry newsletters and events | Both | AI architecture, governance, FinOps, operating model |
+| Search (pillar and track pages) | Both | Pillar outcome queries, AI governance queries, AI certification queries |
 
-**Not a target for outreach** (content only): CISOs, Fortune-100 procurement, consumer AI users.
+**Never use as funnels:** GitHub repos, crates.io, docs.rs, install pages or the template repo. Those are not CTAs any more.
 
-## The Template Hook
+## CTA Rule
 
-All distribution must drive to one of:
+All distribution drives to exactly one of the two CTAs:
 
-1. **Primary CTA:** `https://github.com/systempromptio/systemprompt-template` — "clone the template, own the binary, see your team's AI usage by Friday"
-2. **Secondary CTA:** `https://github.com/systempromptio/systemprompt-core` — for Rust/crate audiences
-3. **Tertiary CTA:** `https://systemprompt.io/` — for high-funnel awareness posts
+1. **Become a partner** → `/partners/apply` (partner-facing content)
+2. **Find a certified partner** → `/partners/find` (buyer-facing content)
 
-Never link to multiple CTAs in one post. Pick one per hypothesis.
-
-**The one-liner:** *"A single Rust binary that turns your team's scattered Claude Code usage into a governed, shared, measured capability. Clone the template. Own it."*
+Pillar and track content may use "See the certification" as a contextual link. Never "Book a call", "Request a demo", "Start free", "clone the template" or a GitHub link. One CTA per post.
 
 ## Hypothesis Format (mandatory for every action)
 
@@ -77,25 +91,29 @@ Every logged action must include:
 Example:
 
 ```
-[H-012] If we post a teardown of "Microsoft AGT vs one-binary governance" on r/mcp,
-        then systemprompt-template unique cloners (7d) will increase from baseline 47
-        to ≥70 within 7 days. Reason: r/mcp audience is pre-qualified and actively
-        comparing governance options (COMPETITOR_ANALYSIS §2.1).
+[H-112] If we post a breakdown of "Sales owns why, Business Analyst owns what,
+        Development owns how" on LinkedIn targeting practice leads at SIs,
+        then /partners/apply submissions (14d) will increase from baseline [N]
+        to ≥[N+2] within 14 days. Reason: the three-track split answers the
+        "how do we staff an AI practice" question directly.
 ```
 
-Ambiguous metrics ("more engagement", "better reach") are rejected — the skill must pick a metric from `lead-tracker`'s output.
+Ambiguous metrics ("more engagement", "better reach") are rejected. Pick a metric from `lead-tracker`'s output.
 
 ## Rules for Every Draft
 
 Inherits everything from `commons:brand-voice`, plus:
 
 1. **No em dashes.** Commas, parens, periods, or restructure.
-2. **No banned cliches** (see commons:identity list). Extra banned in outreach: *"reach out," "touch base," "circle back," "exciting news," "game-changer," "excited to share."*
-3. **Never fabricate traction.** No made-up stars, clones, customer quotes. Use real numbers from `lead-tracker` or omit.
-4. **One CTA per post.** One link.
-5. **Specificity beats enthusiasm.** "47 unique cloners in 14d, referrers are crates.io and docs.rs" is better than "growing fast."
-6. **It's a library, not a platform or framework.**
-7. **Brand is `systemprompt.io`** — always lowercase.
-8. **No hashtags on any platform.**
-9. **Ed posts everything himself.** Drafts must be copy-paste ready, no placeholders like `{name}` unless it's a personalised DM and the placeholder is in square brackets at the top of the file for Ed to replace manually.
-10. **Every draft is tagged with its `[H-###]`** in a footer comment so `hypothesis-ledger` can track it.
+2. **No banned words** (see commons:brand-voice pivot banned list). Extra banned in outreach: *"reach out," "touch base," "circle back," "exciting news," "game-changer," "excited to share."*
+3. **Qualify, never offer a call.** Ask the question that qualifies (practice size, delivery capability, workflow, executive owner, pillar). Never offer a call, meeting or demo. Route to the CTA.
+4. **No unsubscribe footer.** Outreach is personal 1:1 from Ed.
+5. **Never fabricate traction.** No made-up partner counts, customer quotes or percentages. Use real numbers from `lead-tracker` or omit.
+6. **One CTA per post.** One link.
+7. **Specificity beats enthusiasm.**
+8. **The product is "the software" or "the runtime".** Never library, platform, framework, template or open-source project.
+9. **Brand is `systemprompt.io`**, always lowercase.
+10. **Say "three tracks" and "seven pillars"** exactly.
+11. **No hashtags on any platform.**
+12. **Ed posts everything himself.** Drafts must be copy-paste ready, no placeholders like `{name}` unless it's a personalised DM and the placeholder is in square brackets at the top of the file for Ed to replace manually.
+13. **Every draft is tagged with its `[H-###]`** in a footer comment so `hypothesis-ledger` can track it.
