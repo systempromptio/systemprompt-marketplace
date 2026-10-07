@@ -3,7 +3,7 @@ name: marketing-identity
 description: "Lead-generation positioning for systemprompt.io after the partner pivot. Defines the two funnels (partner programme for consultancies, find-a-partner for enterprise buyers), where each audience lives online, the hooks, and the rules every outreach draft must follow. Load FIRST before any marketing skill."
 metadata:
   version: "1.0.0"
-  git_hash: "a8d5b1e"
+  git_hash: "2c36b10"
 ---
 
 # Marketing Identity: Lead-Gen Layer

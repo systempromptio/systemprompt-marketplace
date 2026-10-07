@@ -3,7 +3,7 @@ name: brand-review
 description: "Review any content against systemprompt.io's identity, brand voice, and governance infrastructure positioning before publishing. Pre-publish quality gate for blog posts, docs, website copy, and marketing content."
 metadata:
   version: "2.0.0"
-  git_hash: "a8d5b1e"
+  git_hash: "2c36b10"
 ---
 
 # systemprompt.io Brand Review
